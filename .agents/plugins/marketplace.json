@@ -1,0 +1,21 @@
+{
+  "name": "hiveku",
+  "interface": {
+    "displayName": "Hiveku",
+    "shortDescription": "Operate a Hiveku account from Codex."
+  },
+  "plugins": [
+    {
+      "name": "hiveku",
+      "source": {
+        "source": "local",
+        "path": "./plugins/hiveku"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

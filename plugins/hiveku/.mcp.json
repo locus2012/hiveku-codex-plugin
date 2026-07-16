@@ -1,0 +1,10 @@
+{
+  "hiveku": {
+    "url": "https://core.hiveku.com/mcp",
+    "bearer_token_env_var": "HIVEKU_TOKEN"
+  },
+  "playwright": {
+    "command": "npx",
+    "args": ["-y", "@playwright/mcp@latest"]
+  }
+}
