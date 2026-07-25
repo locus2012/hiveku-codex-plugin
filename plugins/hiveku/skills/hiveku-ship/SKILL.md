@@ -7,10 +7,17 @@ Hiveku hosts website projects on its own VCS + serverless CDN (no GitHub require
 ## The safe flow
 1. **Resolve the project.** `list_projects` / `get_project` → the `project_id`. Most project tools need it.
 2. **Know what's current before you edit** (`project_version_log`) — you are not the only writer.
-3. **Save code in ONE bulk call**, not N singles: `project_files_bulk_save`. SVGs are **text** — save
-   with `utf-8` (the default), never base64. Whole-tree / large / binary or byte-exact pushes use the
-   tarball import lane: `project_import_presign` → upload → `project_import_finalize`. ALWAYS `dry_run:
-   true` before any `delete_missing`, and read the would-delete list.
+3. **Save code in ONE bulk call**, not N singles: `project_files_bulk_save`. This is the default and it
+   works for essentially everything, including large trees (batch it). SVGs are **text** — save with
+   `utf-8` (the default), NEVER base64: an SVG pasted into a base64 field is rejected (and previously
+   produced a 6-byte file). Binaries (png/jpg/woff/...) go through `assets_upload` as real base64.
+   ALWAYS `dry_run: true` before any `delete_missing`, and read the would-delete list.
+   - **Presigned lanes (`project_import_presign`, `project_files_presign`) upload from YOUR machine
+     directly to S3, so they can fail with `403 ... explicit deny ...` even though the presign call
+     succeeded** — the URL is signed server-side but the PUT comes from your IP, which the platform's
+     network controls may refuse. If you hit that: do NOT retry the lane. Fall back to
+     `project_files_bulk_save` (code) + `assets_upload` (binaries), which upload *through* the API and
+     are unaffected, and report the 403 to Hiveku with the bucket name.
 4. **Verify before shipping**: `verify_typecheck` / `verify_lint` / `project_test_build`. On a failed
    build read `project_build_error_get` + `preview_logs`. A framework project MUST include its root
    files (package.json, next.config.*, tsconfig.json) — without package.json Hiveku classifies it as a
