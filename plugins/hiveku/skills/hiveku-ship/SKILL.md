@@ -22,7 +22,10 @@ Hiveku hosts website projects on its own VCS + serverless CDN (no GitHub require
    build read `project_build_error_get` + `preview_logs`. A framework project MUST include its root
    files (package.json, next.config.*, tsconfig.json) — without package.json Hiveku classifies it as a
    static site and would ship raw source (403).
-5. **Version + deploy**: `project_vcs_commit` (on `main`), then
+5. **Version + deploy**: `project_vcs_commit` (default `main`; pass `branch` to version work
+   off to the side without touching the live project — merge later with `project_vcs_merge`,
+   whose `into` targets any branch, or atomically via `project_vcs_pr_create` +
+   `project_vcs_pr_merge`), then
    `deploy_site({ project_id, environment })` — **development first**, then production. A real build
    takes minutes; a sub-minute "build" means it took the static path.
 6. **READ the deploy response `warnings[]`.** Every deploy is smoke-verified — the pipeline requests the
