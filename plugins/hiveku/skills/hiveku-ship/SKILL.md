@@ -40,4 +40,20 @@ Hiveku hosts website projects on its own VCS + serverless CDN (no GitHub require
 7. **Confirm** the live URL returns 200 (allow a few minutes for CDN propagation on a first production
    deploy). Reserve production for go-live; iterate on development.
 
+## When the preview breaks
+Match the error to its source, then take exactly one branch:
+1. **Error names a file NOT in the project** (check the project file list): starter leftover in the
+   container. Fix it with `preview_force_recompile`. Never add the starter's package to the customer's
+   package.json, and never delete or edit the container file by hand (container edits reverse-sync
+   into the saved project). If the identical error persists after a plain run, run
+   `preview_force_recompile` with `refresh_image: true` once.
+2. **Error from inside node_modules**: `preview_reinstall_deps`. It is async - poll
+   `preview_read_file({ path: '/tmp/hiveku-reinstall.log', tail_lines: 40 })` every ~15s until a
+   `hiveku-reinstall: exit=` line appears (installs typically run 1-4 minutes).
+3. **Error names a project-owned file**: fix the code. This is the only branch where you edit.
+4. **Blank page but HTML serves**: `preview_client_errors` (hydration).
+
+`preview_health` phase `installing`/`downloading` means a 2-5 minute dependency install: wait and
+re-check; `ready: true` does not prove project files landed.
+
 Deep flows: `hiveku_playbook_get("deploy-without-github")`, `("files-crud")`, `("rollback-a-file")`.
