@@ -2,7 +2,540 @@
   "hiveku": {
     "url": "https://core.hiveku.com/mcp",
     "bearer_token_env_var": "HIVEKU_TOKEN",
-    "default_tools_approval_mode": "approve"
+    "default_tools_approval_mode": "approve",
+    "tools": {
+      "deploy_site": {
+        "approval_mode": "prompt"
+      },
+      "deploy_run": {
+        "approval_mode": "prompt"
+      },
+      "project_files_bulk_save": {
+        "approval_mode": "prompt"
+      },
+      "project_vcs_commit": {
+        "approval_mode": "prompt"
+      },
+      "project_vcs_merge": {
+        "approval_mode": "prompt"
+      },
+      "project_vcs_pr_merge": {
+        "approval_mode": "prompt"
+      },
+      "project_vcs_env_bind": {
+        "approval_mode": "prompt"
+      },
+      "project_vcs_branch_delete": {
+        "approval_mode": "prompt"
+      },
+      "project_vcs_stash": {
+        "approval_mode": "prompt"
+      },
+      "project_vcs_prune": {
+        "approval_mode": "prompt"
+      },
+      "project_vcs_branch_preview_teardown": {
+        "approval_mode": "prompt"
+      },
+      "project_vcs_revert": {
+        "approval_mode": "prompt"
+      },
+      "site_delete": {
+        "approval_mode": "prompt"
+      },
+      "content_publish_to_site": {
+        "approval_mode": "prompt"
+      },
+      "content_schedule": {
+        "approval_mode": "prompt"
+      },
+      "email_campaign_send_now": {
+        "approval_mode": "prompt"
+      },
+      "email_campaign_schedule": {
+        "approval_mode": "prompt"
+      },
+      "email_campaign_resend_non_openers": {
+        "approval_mode": "prompt"
+      },
+      "email_campaign_test_send": {
+        "approval_mode": "prompt"
+      },
+      "crm_envelope_send": {
+        "approval_mode": "prompt"
+      },
+      "crm_estimate_send": {
+        "approval_mode": "prompt"
+      },
+      "helpdesk_ticket_send_reply": {
+        "approval_mode": "prompt"
+      },
+      "marketing_report_send": {
+        "approval_mode": "prompt"
+      },
+      "ppc_budget_update": {
+        "approval_mode": "prompt"
+      },
+      "ppc_platform_budget_update": {
+        "approval_mode": "prompt"
+      },
+      "ppc_bid_modifier_update": {
+        "approval_mode": "prompt"
+      },
+      "ppc_keyword_bid_update": {
+        "approval_mode": "prompt"
+      },
+      "ppc_platform_keyword_bid_update": {
+        "approval_mode": "prompt"
+      },
+      "ppc_bidding_strategy_update": {
+        "approval_mode": "prompt"
+      },
+      "ppc_platform_bidding_strategy_update": {
+        "approval_mode": "prompt"
+      },
+      "ppc_campaign_create": {
+        "approval_mode": "prompt"
+      },
+      "accounting_bill_record_payment": {
+        "approval_mode": "prompt"
+      },
+      "accounting_invoice_record_payment": {
+        "approval_mode": "prompt"
+      },
+      "crm_contact_email_send": {
+        "approval_mode": "prompt"
+      },
+      "crm_enroll_sequence": {
+        "approval_mode": "prompt"
+      },
+      "crm_sequence_enroll_bulk": {
+        "approval_mode": "prompt"
+      },
+      "email_sequence_enroll": {
+        "approval_mode": "prompt"
+      },
+      "email_sequence_activate": {
+        "approval_mode": "prompt"
+      },
+      "voice_sms_send": {
+        "approval_mode": "prompt"
+      },
+      "voice_sms_send_to_contact": {
+        "approval_mode": "prompt"
+      },
+      "voice_sms_thread_reply": {
+        "approval_mode": "prompt"
+      },
+      "crm_remove_dnc": {
+        "approval_mode": "prompt"
+      },
+      "outbound_campaign_status_set": {
+        "approval_mode": "prompt"
+      },
+      "outbound_campaign_sequences_save": {
+        "approval_mode": "prompt"
+      },
+      "outbound_reply_draft_send": {
+        "approval_mode": "prompt"
+      },
+      "voice_number_purchase": {
+        "approval_mode": "prompt"
+      },
+      "voice_number_release": {
+        "approval_mode": "prompt"
+      },
+      "voice_e911_address_create": {
+        "approval_mode": "prompt"
+      },
+      "voice_extension_delete": {
+        "approval_mode": "prompt"
+      },
+      "voice_ivr_create": {
+        "approval_mode": "prompt"
+      },
+      "voice_ivr_update": {
+        "approval_mode": "prompt"
+      },
+      "voice_ivr_delete": {
+        "approval_mode": "prompt"
+      },
+      "voice_ring_group_delete": {
+        "approval_mode": "prompt"
+      },
+      "voice_queue_delete": {
+        "approval_mode": "prompt"
+      },
+      "voice_pool_delete": {
+        "approval_mode": "prompt"
+      },
+      "voice_call_tracking_setup": {
+        "approval_mode": "prompt"
+      },
+      "voice_call_originate": {
+        "approval_mode": "prompt"
+      },
+      "voice_sms_bulk_send": {
+        "approval_mode": "prompt"
+      },
+      "voice_sms_brand_submit": {
+        "approval_mode": "prompt"
+      },
+      "voice_sms_campaign_submit": {
+        "approval_mode": "prompt"
+      },
+      "voice_sms_campaign_resubmit": {
+        "approval_mode": "prompt"
+      },
+      "voice_sms_campaign_delete": {
+        "approval_mode": "prompt"
+      },
+      "voice_sms_number_assign_campaign": {
+        "approval_mode": "prompt"
+      },
+      "voice_sms_toll_free_verification_submit": {
+        "approval_mode": "prompt"
+      },
+      "voice_port_order_create": {
+        "approval_mode": "prompt"
+      },
+      "voice_port_order_action": {
+        "approval_mode": "prompt"
+      },
+      "voice_settings_update": {
+        "approval_mode": "prompt"
+      },
+      "voice_number_update": {
+        "approval_mode": "prompt"
+      },
+      "voice_blocked_numbers_remove": {
+        "approval_mode": "prompt"
+      },
+      "voice_tenant_repair": {
+        "approval_mode": "prompt"
+      },
+      "seo_gbp_review_reply": {
+        "approval_mode": "prompt"
+      },
+      "seo_gbp_review_reply_delete": {
+        "approval_mode": "prompt"
+      },
+      "seo_gbp_location_update": {
+        "approval_mode": "prompt"
+      },
+      "seo_gbp_attributes_update": {
+        "approval_mode": "prompt"
+      },
+      "seo_gsc_delete_sitemap": {
+        "approval_mode": "prompt"
+      },
+      "seo_report_clear": {
+        "approval_mode": "prompt"
+      },
+      "seo_deliverable_delete": {
+        "approval_mode": "prompt"
+      },
+      "seo_task_implement": {
+        "approval_mode": "prompt"
+      },
+      "seo_connection_delete": {
+        "approval_mode": "prompt"
+      },
+      "seo_gbp_services_update": {
+        "approval_mode": "prompt"
+      },
+      "seo_gbp_media_add": {
+        "approval_mode": "prompt"
+      },
+      "seo_gbp_media_delete": {
+        "approval_mode": "prompt"
+      },
+      "seo_gtm_publish": {
+        "approval_mode": "prompt"
+      },
+      "seo_gtm_install": {
+        "approval_mode": "prompt"
+      },
+      "seo_ga4_key_event_delete": {
+        "approval_mode": "prompt"
+      },
+      "seo_ga4_event_create_rule_delete": {
+        "approval_mode": "prompt"
+      },
+      "seo_tracking_project_delete": {
+        "approval_mode": "prompt"
+      },
+      "seo_rankings_platforms_set": {
+        "approval_mode": "prompt"
+      },
+      "seo_listings_scan": {
+        "approval_mode": "prompt"
+      },
+      "seo_connection_test": {
+        "approval_mode": "prompt"
+      },
+      "seo_competitor_delete": {
+        "approval_mode": "prompt"
+      },
+      "seo_keyword_cluster_delete": {
+        "approval_mode": "prompt"
+      },
+      "seo_topic_cluster_delete": {
+        "approval_mode": "prompt"
+      },
+      "seo_backlink_tracker_delete": {
+        "approval_mode": "prompt"
+      },
+      "seo_backlink_opportunity_delete": {
+        "approval_mode": "prompt"
+      },
+      "seo_automated_report_delete": {
+        "approval_mode": "prompt"
+      },
+      "seo_page_schema_delete": {
+        "approval_mode": "prompt"
+      },
+      "workflow_run": {
+        "approval_mode": "prompt"
+      },
+      "workflow_enable": {
+        "approval_mode": "prompt"
+      },
+      "workflow_delete": {
+        "approval_mode": "prompt"
+      },
+      "workflow_delete_schedule": {
+        "approval_mode": "prompt"
+      },
+      "workflow_stranded_replay": {
+        "approval_mode": "prompt"
+      },
+      "workflow_run_replay": {
+        "approval_mode": "prompt"
+      },
+      "workflow_run_retry": {
+        "approval_mode": "prompt"
+      },
+      "workflow_dead_letter_resolve": {
+        "approval_mode": "prompt"
+      },
+      "workflow_set_recipient": {
+        "approval_mode": "prompt"
+      },
+      "hiveboard_restore_version": {
+        "approval_mode": "prompt"
+      },
+      "hiveboard_delete": {
+        "approval_mode": "prompt"
+      },
+      "hiveboard_elements_prune": {
+        "approval_mode": "prompt"
+      },
+      "customer_avatar_version_restore": {
+        "approval_mode": "prompt"
+      },
+      "before_after_grid_version_restore": {
+        "approval_mode": "prompt"
+      },
+      "customer_journey_version_restore": {
+        "approval_mode": "prompt"
+      },
+      "customer_avatar_delete": {
+        "approval_mode": "prompt"
+      },
+      "customer_journey_delete": {
+        "approval_mode": "prompt"
+      },
+      "before_after_grid_delete": {
+        "approval_mode": "prompt"
+      },
+      "customer_journey_stage_delete": {
+        "approval_mode": "prompt"
+      },
+      "media_delete": {
+        "approval_mode": "prompt"
+      },
+      "media_folder_delete": {
+        "approval_mode": "prompt"
+      },
+      "brand_guide_delete": {
+        "approval_mode": "prompt"
+      },
+      "brand_guide_purge": {
+        "approval_mode": "prompt"
+      },
+      "marketing_storyboard_delete": {
+        "approval_mode": "prompt"
+      },
+      "marketing_generate_video": {
+        "approval_mode": "prompt"
+      },
+      "marketing_video_pipeline_retry_scene": {
+        "approval_mode": "prompt"
+      },
+      "design_voiceover_create": {
+        "approval_mode": "prompt"
+      },
+      "generate_image_set": {
+        "approval_mode": "prompt"
+      },
+      "media_upscale": {
+        "approval_mode": "prompt"
+      },
+      "marketing_testimonial_media_replace": {
+        "approval_mode": "prompt"
+      },
+      "marketing_form_upload_settings_update": {
+        "approval_mode": "prompt"
+      },
+      "social_publish_post": {
+        "approval_mode": "prompt"
+      },
+      "social_delete_post": {
+        "approval_mode": "prompt"
+      },
+      "social_comment_reply": {
+        "approval_mode": "prompt"
+      },
+      "social_linkedin_comment_add": {
+        "approval_mode": "prompt"
+      },
+      "social_linkedin_reaction_add": {
+        "approval_mode": "prompt"
+      },
+      "social_linkedin_comment_delete": {
+        "approval_mode": "prompt"
+      },
+      "social_post_reject": {
+        "approval_mode": "prompt"
+      },
+      "social_pillar_delete": {
+        "approval_mode": "prompt"
+      },
+      "social_hashtags_delete": {
+        "approval_mode": "prompt"
+      },
+      "social_calendar_delete": {
+        "approval_mode": "prompt"
+      },
+      "social_schedule_slot_delete": {
+        "approval_mode": "prompt"
+      },
+      "social_post_retry": {
+        "approval_mode": "prompt"
+      },
+      "webflow_project_cms_provider_set": {
+        "approval_mode": "prompt"
+      },
+      "webflow_site_publish": {
+        "approval_mode": "prompt"
+      },
+      "webflow_cms_item_publish": {
+        "approval_mode": "prompt"
+      },
+      "webflow_cms_item_unpublish": {
+        "approval_mode": "prompt"
+      },
+      "webflow_cms_item_delete": {
+        "approval_mode": "prompt"
+      },
+      "webflow_page_customcode_set": {
+        "approval_mode": "prompt"
+      },
+      "webflow_page_customcode_delete": {
+        "approval_mode": "prompt"
+      },
+      "webflow_cms_collection_delete": {
+        "approval_mode": "prompt"
+      },
+      "webflow_cms_field_delete": {
+        "approval_mode": "prompt"
+      },
+      "webflow_cms_item_unpublish_bulk": {
+        "approval_mode": "prompt"
+      },
+      "webflow_cms_item_delete_bulk": {
+        "approval_mode": "prompt"
+      },
+      "webflow_asset_delete": {
+        "approval_mode": "prompt"
+      },
+      "webflow_site_customcode_set": {
+        "approval_mode": "prompt"
+      },
+      "webflow_site_customcode_delete": {
+        "approval_mode": "prompt"
+      },
+      "webflow_hiveku_snippet_install": {
+        "approval_mode": "prompt"
+      },
+      "webflow_google_tag_upsert": {
+        "approval_mode": "prompt"
+      },
+      "webflow_google_tag_delete": {
+        "approval_mode": "prompt"
+      },
+      "webflow_form_submission_delete": {
+        "approval_mode": "prompt"
+      },
+      "webflow_webhook_create": {
+        "approval_mode": "prompt"
+      },
+      "webflow_webhook_update": {
+        "approval_mode": "prompt"
+      },
+      "webflow_webhook_delete": {
+        "approval_mode": "prompt"
+      },
+      "webflow_order_fulfill": {
+        "approval_mode": "prompt"
+      },
+      "webflow_order_refund": {
+        "approval_mode": "prompt"
+      },
+      "webflow_redirect_create": {
+        "approval_mode": "prompt"
+      },
+      "webflow_redirect_delete": {
+        "approval_mode": "prompt"
+      },
+      "webflow_robots_update": {
+        "approval_mode": "prompt"
+      },
+      "webflow_robots_replace": {
+        "approval_mode": "prompt"
+      },
+      "webflow_robots_delete": {
+        "approval_mode": "prompt"
+      },
+      "webflow_wellknown_create": {
+        "approval_mode": "prompt"
+      },
+      "webflow_wellknown_delete": {
+        "approval_mode": "prompt"
+      },
+      "webflow_llms_txt_set": {
+        "approval_mode": "prompt"
+      },
+      "webflow_llms_txt_delete": {
+        "approval_mode": "prompt"
+      },
+      "cms_publish": {
+        "approval_mode": "prompt"
+      },
+      "cms_delete_entry": {
+        "approval_mode": "prompt"
+      },
+      "cms_bulk_delete": {
+        "approval_mode": "prompt"
+      },
+      "cms_delete_collection": {
+        "approval_mode": "prompt"
+      },
+      "cms_remove_field": {
+        "approval_mode": "prompt"
+      }
+    }
   },
   "playwright": {
     "command": "npx",

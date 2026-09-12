@@ -35,6 +35,24 @@ in", HIVEKU_TOKEN is unset or wrong: run the `hiveku-connect` skill.
   can skim: benefit first, no alarm vocabulary, no self-blaming narration, accurate.
 - Video generation is paid + capped — `marketing_generate_video` with `dry_run: true` first.
 
+## Sending email
+A campaign send reaches real inboxes and cannot be recalled, so it is a ladder, never one call:
+1. `email_campaign_send_now({ id, dry_run: true })` — materializes the recipient list and reports
+   totalQueued / totalSkipped / noOptInCount WITHOUT sending or changing status. A call without `dry_run`
+   on a draft IS the send.
+2. `email_campaign_test_send({ id, to: [a real mailbox you own] })` — real mail, up to 5 addresses. Never
+   a test address on a reserved domain (example.com, test.com, localhost, .invalid): the server refuses it
+   with `reserved_test_address`, because a bounce there counts against the account's sender reputation
+   and two of them caused a platform-wide outage on 2026-08-07. The no-inbox check is
+   success@simulator.amazonses.com.
+3. Confirm the recipient count with the operator — name the totalQueued figure from the dry run — and only
+   on their explicit yes call `email_campaign_send_now({ id })` or `email_campaign_schedule({ id, scheduled_for })`.
+   Relay refusal codes verbatim (`email_service_suspended`, `audience_not_opted_in`, `empty_audience`,
+   `plan_cap`, `domain_unverified`, `tenant_identity_not_attached`). `email_campaign_pause` / `_resume` hold
+   and continue an in-flight send.
+The `hiveku` server is configured to prompt before every send-class tool (the list in the Claude Code
+plugin's `data/permission-critical-tools.json`), so expect an approval request on steps 2 and 3.
+
 ## Finding the right tool (there are ~1,000)
 Don't guess tool names. Discover with `hiveku_docs_search` / `hiveku_docs_get`, and use
 `hiveku_playbooks_list` / `hiveku_playbook_get` for step-by-step flows (deploying, files CRUD, rollback,

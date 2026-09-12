@@ -47,10 +47,12 @@ npx @hiveku-apps/sync init <account-slug> --codex
 - The plugin's MCP auth uses `bearer_token_env_var`, so the token is **never** baked into the published
   plugin — it lives only in your environment. Keep any inlined token (`.codex/config.toml`, `.env*`) out
   of git.
-- **Hiveku tool calls are pre-approved** (`default_tools_approval_mode: "approve"`): the plugin exists to
-  let the agent operate your account, so per-call approval prompts are off for the `hiveku` server —
-  including in headless `codex exec`. If you prefer to review each call, change the mode to `"prompt"`
-  in the installed plugin's `.mcp.json`. The safe-work rules ship as **instructions** (the
+- **Reads and ordinary writes are pre-approved** (`default_tools_approval_mode: "approve"`), but every
+  tool that sends, publishes, deploys, deletes or spends (the names in the Claude plugin's
+  `data/permission-critical-tools.json`, including `email_campaign_send_now`, `email_campaign_schedule`
+  and `email_campaign_test_send`) is set to `"prompt"` per tool in `.mcp.json`, so a headless
+  `codex exec` blocks on an approval request for those instead of running them. If you prefer to
+  review every call, change the server default to `"prompt"`. The safe-work rules ship as **instructions** (the
   `hiveku-orient` skill + the SessionStart hook); Codex's sandbox still governs local shell/file access.
 
 ## License
