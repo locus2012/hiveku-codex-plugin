@@ -12,6 +12,9 @@ desktop. This plugin bundles:
   - `hiveku-connect` — get your account key and set `HIVEKU_TOKEN`.
   - `hiveku-ship` — save → verify → deploy a website project safely.
   - `hiveku-diagnose-deploy` — a deploy reported ready but the live URL 403s/404s/blank.
+  - Phone system, SMS and call tracking doctrine (`hiveku-phone-agency`) ships with the Claude plugin, not
+    here; the Hiveku VS Code extension's **Set Up Codex Support** mirrors it, with its `references/`, into
+    `.agents/skills/` in the account folders it scaffolds.
 - **A SessionStart hook** that warns if `HIVEKU_TOKEN` is unset and reinforces the two disciplines that
   prevent the most common incidents.
 
@@ -49,11 +52,13 @@ npx @hiveku-apps/sync init <account-slug> --codex
   of git.
 - **Reads and ordinary writes are pre-approved** (`default_tools_approval_mode: "approve"`), but every
   tool that sends, publishes, deploys, deletes or spends (the names in the Claude plugin's
-  `data/permission-critical-tools.json`, including `email_campaign_send_now`, `email_campaign_schedule`
-  and `email_campaign_test_send`) is set to `"prompt"` per tool in `.mcp.json`, so a headless
-  `codex exec` blocks on an approval request for those instead of running them. If you prefer to
-  review every call, change the server default to `"prompt"`. The safe-work rules ship as **instructions** (the
-  `hiveku-orient` skill + the SessionStart hook); Codex's sandbox still governs local shell/file access.
+  `data/permission-critical-tools.json`, including `email_campaign_send_now`, `email_campaign_schedule`,
+  `email_campaign_test_send`, and the call-tracking tools that hold a live tracking number or rewrite a
+  pool's routing, such as `voice_swap_test` and `voice_pool_update`) is set to `"prompt"` per tool in
+  `.mcp.json`, so a headless `codex exec` blocks on an approval request for those instead of running
+  them. If you prefer to review every call, change the server default to `"prompt"`. The safe-work rules
+  ship as **instructions** (the `hiveku-orient` skill + the SessionStart hook); Codex's sandbox still
+  governs local shell/file access.
 
 ## License
 

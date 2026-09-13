@@ -214,6 +214,75 @@
       "voice_tenant_repair": {
         "approval_mode": "prompt"
       },
+      "voice_swap_test": {
+        "approval_mode": "prompt"
+      },
+      "voice_call_tracking_live_probe": {
+        "approval_mode": "prompt"
+      },
+      "voice_phone_tracking_config_set": {
+        "approval_mode": "prompt"
+      },
+      "voice_phone_tracking_config_delete": {
+        "approval_mode": "prompt"
+      },
+      "voice_pool_update": {
+        "approval_mode": "prompt"
+      },
+      "voice_pool_create": {
+        "approval_mode": "prompt"
+      },
+      "voice_pool_numbers_add": {
+        "approval_mode": "prompt"
+      },
+      "voice_pool_numbers_remove": {
+        "approval_mode": "prompt"
+      },
+      "voice_pool_e911_apply": {
+        "approval_mode": "prompt"
+      },
+      "voice_webhook_create": {
+        "approval_mode": "prompt"
+      },
+      "voice_webhook_update": {
+        "approval_mode": "prompt"
+      },
+      "voice_webhook_delete": {
+        "approval_mode": "prompt"
+      },
+      "voice_sms_registration_share_link_create": {
+        "approval_mode": "prompt"
+      },
+      "voice_sms_registration_share_link_revoke": {
+        "approval_mode": "prompt"
+      },
+      "voice_port_order_share_link_create": {
+        "approval_mode": "prompt"
+      },
+      "voice_port_order_share_link_revoke": {
+        "approval_mode": "prompt"
+      },
+      "voice_ivrs_reprovision": {
+        "approval_mode": "prompt"
+      },
+      "voice_ai_agent_config_update": {
+        "approval_mode": "prompt"
+      },
+      "voice_number_cnam_set": {
+        "approval_mode": "prompt"
+      },
+      "voice_sms_campaign_appeal": {
+        "approval_mode": "prompt"
+      },
+      "voice_port_order_verification_codes_send": {
+        "approval_mode": "prompt"
+      },
+      "voice_sms_scheduled_cancel": {
+        "approval_mode": "prompt"
+      },
+      "voice_numbers_search": {
+        "approval_mode": "prompt"
+      },
       "seo_gbp_review_reply": {
         "approval_mode": "prompt"
       },
