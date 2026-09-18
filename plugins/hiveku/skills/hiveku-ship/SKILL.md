@@ -37,8 +37,10 @@ Hiveku hosts website projects on its own VCS + serverless CDN (no GitHub require
    - A deploy that FAILS with "live site FAILS verification" → the artifacts shipped but the site is not
      serving. Do NOT blindly retry (it reproduces the same result). Switch to the
      `hiveku-diagnose-deploy` skill.
-7. **Confirm** the live URL returns 200 (allow a few minutes for CDN propagation on a first production
-   deploy). Reserve production for go-live; iterate on development.
+7. **Confirm** the live URL returns 200 - from a terminal send `-A 'Hiveku-Session/1.0 (+https://hiveku.com)'`
+   or use `curl -I`; a 202 with an empty body is the edge firewall challenging a bare GET, not the site
+   (allow a few minutes for CDN propagation on a first production deploy). Reserve production for
+   go-live; iterate on development.
 
 ## When the preview breaks
 Match the error to its source, then take exactly one branch:

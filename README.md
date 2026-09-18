@@ -12,6 +12,9 @@ desktop. This plugin bundles:
   - `hiveku-connect` — get your account key and set `HIVEKU_TOKEN`.
   - `hiveku-ship` — save → verify → deploy a website project safely.
   - `hiveku-diagnose-deploy` — a deploy reported ready but the live URL 403s/404s/blank.
+  - `hiveku-firewall` — an automated client sees a 202 or a blank page from a hosted site: read what
+    the edge firewall challenged or blocked in the last 7 days and allow one client by its product
+    token (never `Mozilla`) with `site_firewall_get` / `site_firewall_allow` / `site_firewall_remove`.
   - Phone system, SMS and call tracking doctrine (`hiveku-phone-agency`) ships with the Claude plugin, not
     here; the Hiveku VS Code extension's **Set Up Codex Support** mirrors it, with its `references/`, into
     `.agents/skills/` in the account folders it scaffolds.
@@ -44,6 +47,21 @@ with its own token. For a full per-account bootstrap (per-folder config + an acc
 ```bash
 npx @hiveku-apps/sync init <account-slug> --codex
 ```
+
+## Fetching a Hiveku-hosted site from your terminal
+
+Every Hiveku-hosted site sits behind Hiveku's edge firewall, which challenges unidentified automated
+clients with HTTP 202 and an empty body (header `x-amzn-waf-action: challenge`). Identify yourself and
+the check is skipped:
+
+```bash
+curl -A 'Hiveku-Session/1.0 (+https://hiveku.com)' https://<site>/   # a GET that identifies as Hiveku
+curl -I https://<site>/                                             # HEAD is never challenged
+```
+
+A 202 with an empty body is the challenge, not an empty site and not a failed deploy. `fetch_url` and
+`deploy_doctor` run from Hiveku's own servers and are exempt; `web_scrape` and the other Firecrawl-backed
+tools run from third-party browsers, so on a Hiveku-hosted site use a rendering format or `fetch_url`.
 
 ## Notes
 
