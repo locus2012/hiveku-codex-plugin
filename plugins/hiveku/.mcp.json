@@ -43,6 +43,12 @@
       "site_delete": {
         "approval_mode": "prompt"
       },
+      "site_firewall_allow": {
+        "approval_mode": "prompt"
+      },
+      "site_firewall_remove": {
+        "approval_mode": "prompt"
+      },
       "content_publish_to_site": {
         "approval_mode": "prompt"
       },
