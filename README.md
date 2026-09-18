@@ -59,8 +59,9 @@ curl -A 'Hiveku-Session/1.0 (+https://hiveku.com)' https://<site>/   # a GET tha
 curl -I https://<site>/                                             # HEAD is never challenged
 ```
 
-A 202 with an empty body is the challenge, not an empty site and not a failed deploy. The `hiveku`
-tools (`fetch_url`, `web_scrape`, `deploy_doctor`, ...) run from Hiveku's own servers and are exempt.
+A 202 with an empty body is the challenge, not an empty site and not a failed deploy. `fetch_url` and
+`deploy_doctor` run from Hiveku's own servers and are exempt; `web_scrape` and the other Firecrawl-backed
+tools run from third-party browsers, so on a Hiveku-hosted site use a rendering format or `fetch_url`.
 
 ## Notes
 

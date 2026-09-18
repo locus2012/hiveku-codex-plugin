@@ -34,10 +34,14 @@ in", HIVEKU_TOKEN is unset or wrong: run the `hiveku-connect` skill.
   status and headers matter. Never spoof `Googlebot` or `Mozilla`: a spoofed Googlebot is challenged
   on purpose. A 202 with an empty body, or any response carrying `x-amzn-waf-action`, is the edge
   firewall's challenge to an unidentified client - not an empty site and not a failed deploy. Say
-  "the edge firewall challenged this client", then identify and retry before reporting. `fetch_url`,
-  `web_scrape` and every other Hiveku tool run from Hiveku's own servers and are exempt; a bare GET
-  from this machine is not. A customer's own monitor or audit tool that is challenged is allowed by
-  its product token (never by `Mozilla`) in Site > Hosting > Firewall: the `hiveku-firewall` skill.
+  "the edge firewall challenged this client", then identify and retry before reporting. `fetch_url`
+  runs from Hiveku's own servers as `Hiveku-Agent/1.0` and is exempt; a bare GET from this machine
+  is not. `web_scrape` and the other Firecrawl-backed web tools run from third-party browsers: a
+  rendering format (a screenshot, `web_actions`, `waitFor`) passes the challenge, and a plain-fetch
+  format on a Hiveku-hosted site can answer `scrape_failed` with `reason: 'bot_challenge'` and a
+  202 - switch format or use `fetch_url`, do not report a fetcher defect. A customer's own monitor
+  or audit tool that is challenged is allowed by its product token (never by `Mozilla`) in
+  Site > Hosting > Firewall: the `hiveku-firewall` skill.
 - **PM tasks are required** — create one when you start work, comment as you go, complete it when done,
   attributed to the authenticated user (resolve via `crm_list_users`).
 - **Every completed task ends with an "Owner update"** — 2–4 calm, plain-language sentences a busy owner
