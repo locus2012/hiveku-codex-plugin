@@ -376,6 +376,9 @@
       "workflow_enable": {
         "approval_mode": "prompt"
       },
+      "workflow_trigger_update": {
+        "approval_mode": "prompt"
+      },
       "workflow_delete": {
         "approval_mode": "prompt"
       },

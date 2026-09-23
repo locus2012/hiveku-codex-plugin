@@ -43,7 +43,12 @@ in", HIVEKU_TOKEN is unset or wrong: run the `hiveku-connect` skill.
   or audit tool that is challenged is allowed by its product token (never by `Mozilla`) in
   Site > Hosting > Firewall: the `hiveku-firewall` skill.
 - **PM tasks are required** — create one when you start work, comment as you go, complete it when done,
-  attributed to the authenticated user (resolve via `crm_list_users`).
+  attributed to the authenticated user when `crm_list_users` lists them. That list is the account's Team
+  Members only (home users plus invited members); agency/SaaS staff working the account without an
+  invitation are not on it and cannot be assigned. If it is empty or lacks the connected email, that is a
+  real answer: create tasks unassigned (omit `assigned_to_id`), sign comments with `author_codename` set to
+  the connected person's name, and tell the user once that inviting them under Team Members makes them
+  assignable. Never borrow another member's id or an id from another account.
 - **Every completed task ends with an "Owner update"** — 2–4 calm, plain-language sentences a busy owner
   can skim: benefit first, no alarm vocabulary, no self-blaming narration, accurate.
 - Video generation is paid + capped — `marketing_generate_video` with `dry_run: true` first.
