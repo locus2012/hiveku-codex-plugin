@@ -1,6 +1,6 @@
 {
   "name": "hiveku",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Operate a Hiveku account from Codex \u2014 the Hiveku MCP server (~1,000 tools for content, CRM, website projects, deploys, analytics, email, social, voice) plus the safe-work doctrine, deploy diagnostics and the edge firewall play. Set HIVEKU_TOKEN to your account key.",
   "author": {
     "name": "Hiveku",
