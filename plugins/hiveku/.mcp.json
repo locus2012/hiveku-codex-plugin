@@ -49,6 +49,21 @@
       "site_firewall_remove": {
         "approval_mode": "prompt"
       },
+      "account_memory_append": {
+        "approval_mode": "prompt"
+      },
+      "memory_update": {
+        "approval_mode": "prompt"
+      },
+      "memory_delete": {
+        "approval_mode": "prompt"
+      },
+      "memory_restore_version": {
+        "approval_mode": "prompt"
+      },
+      "memory_bulk_create": {
+        "approval_mode": "prompt"
+      },
       "content_publish_to_site": {
         "approval_mode": "prompt"
       },
