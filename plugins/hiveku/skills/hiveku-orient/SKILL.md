@@ -20,6 +20,11 @@ in", HIVEKU_TOKEN is unset or wrong: run the `hiveku-connect` skill.
   file you did not send may be someone else's NEW work, not a leftover. Never blind-overwrite.
 - **Start strategic work with `account_context_get({ domain })`** — it returns persona, brand voice,
   avatars, memory, skills, rules. Skipping it is the #1 cause of off-brand output.
+- **The account memory is the owners' document.** Its `account` section in `account_context_get` (or
+  `account_memory_get` for the whole text) holds the business facts every department agent reads.
+  Owners and admins edit it on the Hiveku dashboard (Account memory); no tool sets or replaces it.
+  `account_memory_append({ text })` only suggests one line for an owner to keep or remove. It is
+  internal: never quote it to customers or publish it unless the user asks.
 - **Generative/strategic work → `talk_to_department({ domain, message })`** (runs the department agent
   with full hydration), then persist with the matching direct tool (`content_create`, `crm_create_deal`,
   …). Pure CRUD (status flips, list queries, metadata) → direct tools.
