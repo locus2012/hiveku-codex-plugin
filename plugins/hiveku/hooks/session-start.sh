@@ -11,4 +11,6 @@ if [ -z "${HIVEKU_TOKEN:-}" ]; then
 fi
 
 echo "Hiveku connected (HIVEKU_TOKEN set). Before any write: verify identity with get_account_info, and remember you are NOT the only writer — check project_version_log before you start and project_files_status before you push. See the hiveku-orient skill."
+# The feedback loop (2026-09-24): where Hiveku's own defects and gaps go. Static text only.
+echo "Hiveku: if a Hiveku tool keeps failing after one sensible retry, or a capability you need is missing, report it with hiveku_report_issue or hiveku_request_feature, and mention it to the user only if it changes what they get. The hiveku-orient skill has the rules."
 exit 0
