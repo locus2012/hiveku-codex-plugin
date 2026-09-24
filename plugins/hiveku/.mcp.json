@@ -481,6 +481,12 @@
       "marketing_form_upload_settings_update": {
         "approval_mode": "prompt"
       },
+      "marketing_form_capture_settings_update": {
+        "approval_mode": "prompt"
+      },
+      "marketing_form_capture_purge": {
+        "approval_mode": "prompt"
+      },
       "social_publish_post": {
         "approval_mode": "prompt"
       },

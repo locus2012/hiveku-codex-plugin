@@ -15,6 +15,9 @@ desktop. This plugin bundles:
   - `hiveku-firewall` — an automated client sees a 202 or a blank page from a hosted site: read what
     the edge firewall challenged or blocked in the last 7 days and allow one client by its product
     token (never `Mozilla`) with `site_firewall_get` / `site_firewall_allow` / `site_firewall_remove`.
+  - `hiveku-form-capture` — choose which forms Hiveku captures on a hosted site (the capture switch,
+    Marketing site or Web app, path and per-form rules, previewed before saving) and erase what was
+    captured by mistake: permanent, dry run first.
   - Phone system, SMS and call tracking doctrine (`hiveku-phone-agency`) ships with the Claude plugin, not
     here; the Hiveku VS Code extension's **Set Up Codex Support** mirrors it, with its `references/`, into
     `.agents/skills/` in the account folders it scaffolds.
@@ -71,10 +74,11 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
 - **Reads and ordinary writes are pre-approved** (`default_tools_approval_mode: "approve"`), but every
   tool that sends, publishes, deploys, deletes or spends (the names in the Claude plugin's
   `data/permission-critical-tools.json`, including `email_campaign_send_now`, `email_campaign_schedule`,
-  `email_campaign_test_send`, and the call-tracking tools that hold a live tracking number or rewrite a
-  pool's routing, such as `voice_swap_test` and `voice_pool_update`) is set to `"prompt"` per tool in
-  `.mcp.json`, so a headless `codex exec` blocks on an approval request for those instead of running
-  them. If you prefer to review every call, change the server default to `"prompt"`. The safe-work rules
+  `email_campaign_test_send`, the call-tracking tools that hold a live tracking number or rewrite a
+  pool's routing, such as `voice_swap_test` and `voice_pool_update`, and the form capture write and
+  erase, `marketing_form_capture_settings_update` and `marketing_form_capture_purge`) is set to
+  `"prompt"` per tool in `.mcp.json`, so a headless `codex exec` blocks on an approval request for those
+  instead of running them. If you prefer to review every call, change the server default to `"prompt"`. The safe-work rules
   ship as **instructions** (the `hiveku-orient` skill + the SessionStart hook); Codex's sandbox still
   governs local shell/file access.
 

@@ -111,3 +111,6 @@ debugging a failed deploy). Most project tools need a `project_id` (from `list_p
 - `hiveku-firewall` — an automated client (a monitor, an audit tool, a script) sees a 202 or a blank
   page from a hosted site; read what the edge firewall challenged or blocked, allow one client by
   its product token, never by `Mozilla`.
+- `hiveku-form-capture` — which forms Hiveku captures on a hosted site (an app's sign-ins or screens
+  showing up as leads, a form that went quiet after a capture change), and the permanent erase of
+  what was captured by mistake, dry run first.
