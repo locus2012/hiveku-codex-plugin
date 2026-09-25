@@ -48,17 +48,20 @@ in", HIVEKU_TOKEN is unset or wrong: run the `hiveku-connect` skill.
   too). Secrets belong in `project_secrets_*`, never in project code. Never read or print `.env.local`.
 - **Fetching a Hiveku-hosted site: identify as Hiveku.** Every terminal `curl` against a customer
   site carries `-A 'Hiveku-Session/1.0 (+https://hiveku.com)'`, or is a `curl -I` (HEAD) when only
-  status and headers matter. Never spoof `Googlebot` or `Mozilla`: a spoofed Googlebot is challenged
-  on purpose. A 202 with an empty body, or any response carrying `x-amzn-waf-action`, is the edge
-  firewall's challenge to an unidentified client - not an empty site and not a failed deploy. Say
-  "the edge firewall challenged this client", then identify and retry before reporting. `fetch_url`
-  runs from Hiveku's own servers as `Hiveku-Agent/1.0` and is exempt; a bare GET from this machine
-  is not. `web_scrape` and the other Firecrawl-backed web tools run from third-party browsers: a
-  rendering format (a screenshot, `web_actions`, `waitFor`) passes the challenge, and a plain-fetch
-  format on a Hiveku-hosted site can answer `scrape_failed` with `reason: 'bot_challenge'` and a
-  202 - switch format or use `fetch_url`, do not report a fetcher defect. A customer's own monitor
-  or audit tool that is challenged is allowed by its product token (never by `Mozilla`) in
-  Site > Hosting > Firewall: the `hiveku-firewall` skill.
+  status and headers matter. Never spoof `Googlebot` or `Mozilla`: a spoofed Googlebot is refused
+  on purpose. An automated client the firewall cannot identify gets a 202 challenge (empty body,
+  `x-amzn-waf-action: challenge`) or a 403 with `x-hiveku-firewall: blocked`; a request from a known
+  bulk-scraper network gets a 403 with `x-hiveku-firewall: blocked-network`; a 403 without that
+  header comes from the site itself. The firewall's answers are not an empty site and not a failed
+  deploy. Say "the edge firewall refused this client", then identify and retry before reporting.
+  `fetch_url` runs from Hiveku's own servers as `Hiveku-Agent/1.0` and is exempt; a bare GET from
+  this machine is not. `web_scrape` and the other Firecrawl-backed web tools run from third-party
+  browsers: a rendering format (a screenshot, `web_actions`, `waitFor`) passes the challenge, and a
+  plain-fetch format on a Hiveku-hosted site can answer `scrape_failed` with
+  `reason: 'bot_challenge'` and a 202 or 403 - switch format or use `fetch_url`, do not report a
+  fetcher defect. A customer's own monitor or audit tool that is refused at the browser check is
+  allowed by its product token (never by `Mozilla`) in Site > Hosting > Firewall: the
+  `hiveku-firewall` skill.
 - **PM tasks are required** — create one when you start work, comment as you go, complete it when done,
   attributed to the authenticated user when `crm_list_users` lists them. That list is the account's Team
   Members only (home users plus invited members); agency/SaaS staff working the account without an
@@ -120,9 +123,10 @@ debugging a failed deploy). Most project tools need a `project_id` (from `list_p
 - `hiveku-connect` — set HIVEKU_TOKEN / fix 401s.
 - `hiveku-ship` — save → verify → deploy a website project safely.
 - `hiveku-diagnose-deploy` — a deploy reported ready but the live URL 403s/404s/blank.
-- `hiveku-firewall` — an automated client (a monitor, an audit tool, a script) sees a 202 or a blank
-  page from a hosted site; read what the edge firewall challenged or blocked, allow one client by
-  its product token, never by `Mozilla`.
+- `hiveku-firewall` — an automated client (a monitor, an audit tool, a script) sees a 202, a 403 or
+  a blank page from a hosted site; tell the firewall's 403 (`x-hiveku-firewall`) from the site's
+  own, read what the edge firewall challenged or blocked (search it for a crawler such as
+  Googlebot), allow one client by its product token, never by `Mozilla`.
 - `hiveku-form-capture` — which forms Hiveku captures on a hosted site (an app's sign-ins or screens
   showing up as leads, a form that went quiet after a capture change), and the permanent erase of
   what was captured by mistake, dry run first.

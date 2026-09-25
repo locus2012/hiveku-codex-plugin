@@ -12,9 +12,11 @@ desktop. This plugin bundles:
   - `hiveku-connect` — get your account key and set `HIVEKU_TOKEN`.
   - `hiveku-ship` — save → verify → deploy a website project safely.
   - `hiveku-diagnose-deploy` — a deploy reported ready but the live URL 403s/404s/blank.
-  - `hiveku-firewall` — an automated client sees a 202 or a blank page from a hosted site: read what
-    the edge firewall challenged or blocked in the last 7 days and allow one client by its product
-    token (never `Mozilla`) with `site_firewall_get` / `site_firewall_allow` / `site_firewall_remove`.
+  - `hiveku-firewall` — an automated client sees a 202, a 403 or a blank page from a hosted site: tell
+    the firewall's 403 (`x-hiveku-firewall`) from the site's own, read what the edge firewall
+    challenged or blocked in the last 7 days (searchable, e.g. for Googlebot), and allow one client
+    by its product token (never `Mozilla`) with `site_firewall_get` / `site_firewall_client_get` /
+    `site_firewall_allow` / `site_firewall_remove`.
   - `hiveku-form-capture` — choose which forms Hiveku captures on a hosted site (the capture switch,
     Marketing site or Web app, path and per-form rules, previewed before saving) and erase what was
     captured by mistake: permanent, dry run first.
@@ -53,16 +55,18 @@ npx @hiveku-apps/sync init <account-slug> --codex
 
 ## Fetching a Hiveku-hosted site from your terminal
 
-Every Hiveku-hosted site sits behind Hiveku's edge firewall, which challenges unidentified automated
-clients with HTTP 202 and an empty body (header `x-amzn-waf-action: challenge`). Identify yourself and
-the check is skipped:
+Every Hiveku-hosted site sits behind Hiveku's edge firewall. An automated client the firewall cannot
+identify gets a 202 challenge (empty body, `x-amzn-waf-action: challenge`) or a 403 with
+`x-hiveku-firewall: blocked`; a request from a known bulk-scraper network gets a 403 with
+`x-hiveku-firewall: blocked-network`; a 403 without that header comes from the site itself. Identify
+yourself and the browser check is skipped:
 
 ```bash
 curl -A 'Hiveku-Session/1.0 (+https://hiveku.com)' https://<site>/   # a GET that identifies as Hiveku
-curl -I https://<site>/                                             # HEAD is never challenged
+curl -I https://<site>/                                             # HEAD is never challenged or blocked
 ```
 
-A 202 with an empty body is the challenge, not an empty site and not a failed deploy. `fetch_url` and
+The firewall's 202 or 403 is a refusal, not an empty site and not a failed deploy. `fetch_url` and
 `deploy_doctor` run from Hiveku's own servers and are exempt; `web_scrape` and the other Firecrawl-backed
 tools run from third-party browsers, so on a Hiveku-hosted site use a rendering format or `fetch_url`.
 

@@ -7,13 +7,17 @@ verification), do **not** guess and do **not** propose deleting or recreating a 
 The serving path has layers you can't see from tool output; diagnose it.
 
 ## Steps
-0. **Rule out the edge firewall first.** If YOUR probe of the live URL (a terminal `curl`, a script,
-   or the customer's monitor) returned 202 with an empty body, or a response carrying
-   `x-amzn-waf-action: challenge`, that is Hiveku's edge firewall challenging an unidentified client,
-   not a serving failure: re-probe with `curl -A 'Hiveku-Session/1.0 (+https://hiveku.com)'` or
-   `curl -I` before running the doctor. A blank page seen in a real browser is not the firewall. The
-   doctor and the deploy smoke run from Hiveku's servers and are exempt. A customer's own client that
-   is challenged is allowed in Site > Hosting > Firewall: the `hiveku-firewall` skill.
+0. **Rule out the edge firewall first.** An automated client the firewall cannot identify gets a
+   202 challenge (empty body, `x-amzn-waf-action: challenge`) or a 403 with
+   `x-hiveku-firewall: blocked`; a request from a known bulk-scraper network gets a 403 with
+   `x-hiveku-firewall: blocked-network`; a 403 without that header comes from the site itself. If
+   YOUR probe of the live URL (a terminal `curl`, a script, or the customer's monitor) got one of
+   the firewall's answers, that is not a serving failure: re-probe with
+   `curl -A 'Hiveku-Session/1.0 (+https://hiveku.com)'` or `curl -I` before running the doctor. A
+   403 without `x-hiveku-firewall`, and a blank page seen in a real browser, are not the firewall:
+   run the doctor. The doctor and the deploy smoke run from Hiveku's servers and are exempt. A
+   customer's own client that is refused at the browser check is allowed in Site > Hosting >
+   Firewall: the `hiveku-firewall` skill.
 1. **Run the doctor.** `deploy_doctor({ project_id, environment })`. Read-only. It checks: CloudFront
    wiring (is the default origin the right kind for this project?), the attached edge function, a
    CDN-vs-origin-direct probe of the same routes, and project-tree red flags.

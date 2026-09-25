@@ -38,8 +38,9 @@ Hiveku hosts website projects on its own VCS + serverless CDN (no GitHub require
      serving. Do NOT blindly retry (it reproduces the same result). Switch to the
      `hiveku-diagnose-deploy` skill.
 7. **Confirm** the live URL returns 200 - from a terminal send `-A 'Hiveku-Session/1.0 (+https://hiveku.com)'`
-   or use `curl -I`; a 202 with an empty body is the edge firewall challenging a bare GET, not the site
-   (allow a few minutes for CDN propagation on a first production deploy). Reserve production for
+   or use `curl -I`; a 202 with an empty body, or a 403 with `x-hiveku-firewall: blocked`, is the edge
+   firewall refusing a bare GET, not the site; a 403 without that header comes from the site itself.
+   Allow a few minutes for CDN propagation on a first production deploy. Reserve production for
    go-live; iterate on development.
 
 ## When the preview breaks
