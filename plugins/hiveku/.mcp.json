@@ -40,6 +40,18 @@
       "project_vcs_revert": {
         "approval_mode": "prompt"
       },
+      "project_checkpoint_restore": {
+        "approval_mode": "prompt"
+      },
+      "checkpoint_restore": {
+        "approval_mode": "prompt"
+      },
+      "history_restore_to_time": {
+        "approval_mode": "prompt"
+      },
+      "checkpoint_delete": {
+        "approval_mode": "prompt"
+      },
       "site_delete": {
         "approval_mode": "prompt"
       },
