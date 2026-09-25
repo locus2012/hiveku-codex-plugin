@@ -20,6 +20,10 @@ desktop. This plugin bundles:
   - `hiveku-form-capture` — choose which forms Hiveku captures on a hosted site (the capture switch,
     Marketing site or Web app, path and per-form rules, previewed before saving) and erase what was
     captured by mistake: permanent, dry run first.
+  - `hiveku-website-chat` — website chats in the helpdesk: which ones wait for a person and which the
+    website assistant is answering (`ai_handling`), replying to a chat as staff (a reply takes it from
+    the assistant, so it waits for a yes), and what the assistant answers from, read with
+    `helpdesk_assistant_knowledge_status` and explained to the owner in plain words.
   - Phone system, SMS and call tracking doctrine (`hiveku-phone-agency`) ships with the Claude plugin, not
     here; the Hiveku VS Code extension's **Set Up Codex Support** mirrors it, with its `references/`, into
     `.agents/skills/` in the account folders it scaffolds.
