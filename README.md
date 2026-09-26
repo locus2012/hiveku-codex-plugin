@@ -83,7 +83,9 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   tool that sends, publishes, deploys, deletes or spends (the names in the Claude plugin's
   `data/permission-critical-tools.json`, including `email_campaign_send_now`, `email_campaign_schedule`,
   `email_campaign_test_send`, the call-tracking tools that hold a live tracking number or rewrite a
-  pool's routing, such as `voice_swap_test` and `voice_pool_update`, and the form capture write and
+  pool's routing, such as `voice_swap_test` and `voice_pool_update`, the calls that switch ads on,
+  `ppc_enable_resource`, `ppc_platform_enable_resource`, `ppc_bulk_edit`, `ppc_linkedin_creatives` and
+  `ppc_tiktok_split_tests` (whole tool, so their pauses and reads prompt too), and the form capture write and
   erase, `marketing_form_capture_settings_update` and `marketing_form_capture_purge`) is set to
   `"prompt"` per tool in `.mcp.json`, so a headless `codex exec` blocks on an approval request for those
   instead of running them. `hiveku_batch` prompts too: a batch runs its calls on the Hiveku server, and
