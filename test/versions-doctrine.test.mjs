@@ -78,12 +78,16 @@ function assertShip(text) {
     'Apply only on their explicit yes',
     'dry_run: false, expected_head_commit_id: <the dry run\'s head_commit_id>, expected_live_fingerprint: <the dry run\'s live_fingerprint> })',
     'On a branch: add branch and send expected_head_commit_id only.',
-    '409 branch_changed = someone saved since: run the dry run again and ask again',
+    // A re-send after a timeout can answer branch_changed although files were
+    // written, so the plain rule defers to the timeout bullet.
+    '409 branch_changed = someone saved since (unless it answers a re-send after a timeout: see the last bullet): run the dry run again and ask again',
     // rollback_incomplete: files WERE changed; failed[] is what was not put back; finish with THIS answer's head.
     '409 rollback_incomplete (Your site only) = the rollback is not finished and files WERE changed',
     'applied were put back and failed were not',
     "when the answer's head_commit_id is the dry run's head_commit_id or saved_before.id, apply again with expected_head_commit_id set to THIS answer's head_commit_id and without expected_live_fingerprint",
     'Any other head_commit_id means someone else saved as well: run the dry run again',
+    // Someone else saved, so the counts can differ from what the person agreed to: a new yes.
+    'show it to the person, and apply with its head_commit_id only on their new yes',
     // content_unavailable: the checkpoint's own dry-run tool first, and nothing when there is no checkpoint.
     '409 content_unavailable',
     'first project_checkpoint_restore_dry_run({ project_id, checkpoint_hash })',
@@ -191,6 +195,17 @@ test('the checks fail on the old wording (negative control)', () => {
     )),
   );
   assert.throws(() => assertShip(read(SHIP).replace(/,\s*expected_live_fingerprint:\s*<the dry run's live_fingerprint>/, '')));
+  // The Wave 2 wording applied after only showing the new dry run, with no new yes.
+  assert.throws(() =>
+    assertShip(read(SHIP).replace(/apply with its `head_commit_id` only on their\s+new yes\./, 'apply with its `head_commit_id`.')),
+  );
+  // The plain branch_changed rule, with no pointer to the timeout case, fails.
+  assert.throws(() =>
+    assertShip(read(SHIP).replace(
+      /someone saved since \(unless it answers a re-send after a timeout: see the\s+last bullet\)/,
+      'someone saved since',
+    )),
+  );
   const oldOrient =
     '- **You are NOT the only writer.** Check what is current.\n' +
     'Most project tools need a `project_id` (from `list_projects` / `get_project`).\n';

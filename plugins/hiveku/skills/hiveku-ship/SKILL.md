@@ -82,7 +82,8 @@ in History is lost. It moves Your site (or a branch) and its preview, never a de
    <the dry run's live_fingerprint> })`. `expected_head_commit_id` is required there; the fingerprint
    keeps an automatic save made while the person was deciding from counting as a change. On a branch:
    add `branch` and send `expected_head_commit_id` only. Answers:
-   - 409 `branch_changed` = someone saved since: run the dry run again and ask again.
+   - 409 `branch_changed` = someone saved since (unless it answers a re-send after a timeout: see the
+     last bullet): run the dry run again and ask again.
    - 409 `ai_turn_running` = an AI request is still changing the site: wait, then retry.
    - 409 `rollback_incomplete` (Your site only) = the rollback is not finished and files WERE changed,
      so never tell the person nothing changed. `applied` were put back and `failed` were not (an empty
@@ -91,12 +92,29 @@ in History is lost. It moves Your site (or a branch) and its preview, never a de
      `head_commit_id` or `saved_before.id`, apply again with `expected_head_commit_id` set to THIS
      answer's `head_commit_id` and without `expected_live_fingerprint` (their yes for this same version
      still stands). Any other `head_commit_id` means someone else saved as well: run the dry run again,
-     show it to the person, and apply with its `head_commit_id`.
+     show it to the person, and apply with its `head_commit_id` only on their new yes.
    - 409 `content_unavailable` = that version's files can no longer be read. When the answer names a
      checkpoint (`checkpoint_hash` is not null), offer it: first
      `project_checkpoint_restore_dry_run({ project_id, checkpoint_hash })` and tell the person what it
      would change, then `project_checkpoint_restore({ project_id, checkpoint_hash })` only on their
      explicit yes. When `checkpoint_hash` is null there is nothing to restore from: say so and stop.
+   - A 524 or a timeout on the apply does NOT mean it failed: a big rollback can outlast the edge's
+     limit of about 100 seconds and keep running. Call again with exactly the same arguments: an
+     identical call answers 409 `idempotency_pending` while the first run is still going (wait, then
+     call again). Once that run is done, the same call gives back its answer only when it succeeded and
+     nothing was saved since; otherwise the call runs again, and it is refused as 409 `branch_changed`
+     when the first run finished, so it never rolls back twice. When unsure, read `project_vcs_history`
+     first: a version newer than the dry run's `head_commit_id` whose `rolled_back_to` is the target
+     means it finished. Do not start a new dry run until you know. If the re-send answers 409
+     `branch_changed`, the first run may have finished or stopped part way, so never say nothing
+     changed: read `project_vcs_history`. A version newer than the dry run's `head_commit_id` whose
+     `rolled_back_to` is the target means it finished. A "Saved before rollback" version at the top
+     (the `branch_changed` answer's `head_commit_id`) that is the ONLY version newer than the dry run's
+     `head_commit_id` means it stopped part way: finish it as for `rollback_incomplete` (apply with that
+     `head_commit_id` as `expected_head_commit_id`, without `expected_live_fingerprint`, on the same
+     yes). Anything else, including a "Saved before rollback" version with other versions between it
+     and the dry run's `head_commit_id`, means someone else saved as well: run a new dry run and ask
+     again.
 4. **Deploying is a separate step with its own yes.** A rollback never changes a live site. When the
    dry run said `live_includes_undone_work: true`, offer `deploy_site({ project_id, environment })`.
 5. **Undo a rollback** by rolling back again, to the version it replaced (its `rolled_back_from`).
