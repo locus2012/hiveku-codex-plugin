@@ -10,7 +10,8 @@ desktop. This plugin bundles:
   - `hiveku-orient` — read first: identity, the you-are-not-the-only-writer rule, scratch/secrets
     hygiene, department agents, PM tasks + the Owner update.
   - `hiveku-connect` — get your account key and set `HIVEKU_TOKEN`.
-  - `hiveku-ship` — save → verify → deploy a website project safely.
+  - `hiveku-ship` — save → verify → version → deploy a website project safely, and go back to an
+    earlier version (`project_vcs_rollback`: a dry run first, append-only, so it can be undone).
   - `hiveku-diagnose-deploy` — a deploy reported ready but the live URL 403s/404s/blank.
   - `hiveku-firewall` — an automated client sees a 202, a 403 or a blank page from a hosted site: tell
     the firewall's 403 (`x-hiveku-firewall`) from the site's own, read what the edge firewall
@@ -27,8 +28,11 @@ desktop. This plugin bundles:
   - Phone system, SMS and call tracking doctrine (`hiveku-phone-agency`) ships with the Claude plugin, not
     here; the Hiveku VS Code extension's **Set Up Codex Support** mirrors it, with its `references/`, into
     `.agents/skills/` in the account folders it scaffolds.
-- **A SessionStart hook** that warns if `HIVEKU_TOKEN` is unset and reinforces the two disciplines that
-  prevent the most common incidents.
+- **A SessionStart hook** that warns if `HIVEKU_TOKEN` is unset and reinforces the disciplines that
+  prevent the most common incidents, including saving each change as a version.
+- **A versions reminder** (PreToolUse, PostToolUse and Stop hooks, see [Versions](#versions)): when a
+  session changed a website project and did not save the change as a version, the agent is asked once,
+  before it finishes, to save one.
 
 ## Install
 
@@ -56,6 +60,36 @@ with its own token. For a full per-account bootstrap (per-folder config + an acc
 ```bash
 npx @hiveku-apps/sync init <account-slug> --codex
 ```
+
+## Versions
+
+A save to a website project is live in the preview at once, but it is not a version. A version is a
+named point the site owner sees in History and can roll back to. The skills teach one version per
+change: save and verify, then `project_vcs_commit({ project_id, message })` with no files and a
+plain-language name, before `deploy_site`. Going back is `project_vcs_rollback`: a dry run by default,
+applied only on an explicit yes, and it never changes a live site (deploying is a separate step).
+
+The plugin backs this up with three hooks (bash with grep, sed and tr only; no node, no credentials, no
+network):
+
+- `hooks/post-tool-use.sh` notes which projects the session changed and which it saved as a version, in
+  `$TMPDIR/hiveku-vcs/<session id>.jsonl`.
+- `hooks/pre-tool-use.sh` notes each attempt to save a version or apply a rollback. Codex runs
+  PostToolUse only for calls that succeed, so the Stop hook reads how an attempt ended (for example
+  "already a version") from the session transcript. It also refuses a `hiveku_batch` that carries a
+  tool Codex asks about (see [Notes](#notes)), so each such call is asked about on its own.
+- `hooks/stop.sh` asks the agent once, before it finishes, to save a version of any change that is not
+  one yet. If the agent stops again without saving (for example because you asked it not to), you get
+  a one-line notice instead and it does not ask again until the next change. When it cannot tell how a
+  version attempt ended, it says nothing rather than guess.
+
+To turn the reminder off for a folder, put `{"version_reminder": false}` in `.hiveku/guardrails.json`
+there (or in a parent folder, below your home folder). The nearest `.hiveku/guardrails.json` decides: a
+file without `version_reminder` keeps the reminder on.
+
+The hooks need Codex 0.131 or later, and Codex runs a plugin's hooks only after you trust them: when it
+starts it lists new or changed hooks under "Hooks need review" (Review hooks, or Trust all and
+continue). Until then they do not run, and the skills still carry the same rule.
 
 ## Fetching a Hiveku-hosted site from your terminal
 
@@ -86,7 +120,11 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   pool's routing, such as `voice_swap_test` and `voice_pool_update`, and the form capture write and
   erase, `marketing_form_capture_settings_update` and `marketing_form_capture_purge`) is set to
   `"prompt"` per tool in `.mcp.json`, so a headless `codex exec` blocks on an approval request for those
-  instead of running them. If you prefer to review every call, change the server default to `"prompt"`. The safe-work rules
+  instead of running them. That includes saving a version (`project_vcs_commit`, whose files form
+  writes the live project) and every `project_vcs_rollback` call, dry runs included: Codex cannot look
+  at a call's arguments before it asks. `hiveku_batch` asks too, because it can carry any of these
+  tools, and the plugin's PreToolUse hook refuses a batch that carries one, so the agent calls it on its
+  own and you are asked about that call. If you prefer to review every call, change the server default to `"prompt"`. The safe-work rules
   ship as **instructions** (the `hiveku-orient` skill + the SessionStart hook); Codex's sandbox still
   governs local shell/file access.
 

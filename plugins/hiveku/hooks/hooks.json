@@ -10,6 +10,41 @@
           }
         ]
       }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "^mcp__hiveku__(project_vcs_commit|project_vcs_rollback|hiveku_batch)$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${PLUGIN_ROOT}/hooks/pre-tool-use.sh\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "^mcp__hiveku__(project_file_save|project_file_save_async|project_files_bulk_save|project_file_delete|project_files_bulk_delete|project_file_restore|project_file_move|project_folder_create|project_folder_delete|project_import_finalize|project_files_finalize|project_checkpoint_restore|checkpoint_restore|history_restore_to_time|project_vcs_commit|project_vcs_rollback|deploy_site|hiveku_batch)$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${PLUGIN_ROOT}/hooks/post-tool-use.sh\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${PLUGIN_ROOT}/hooks/stop.sh\"",
+            "timeout": 20
+          }
+        ]
+      }
     ]
   }
 }
