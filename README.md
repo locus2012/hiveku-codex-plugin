@@ -86,7 +86,10 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   pool's routing, such as `voice_swap_test` and `voice_pool_update`, and the form capture write and
   erase, `marketing_form_capture_settings_update` and `marketing_form_capture_purge`) is set to
   `"prompt"` per tool in `.mcp.json`, so a headless `codex exec` blocks on an approval request for those
-  instead of running them. If you prefer to review every call, change the server default to `"prompt"`. The safe-work rules
+  instead of running them. `hiveku_batch` prompts too: a batch runs its calls on the Hiveku server, and
+  Codex asks by the name of the tool it calls, so without that entry a prompted tool placed inside a batch
+  would run with no prompt. A batch of reads waits for a yes as well; single reads do not. If you prefer
+  to review every call, change the server default to `"prompt"`. The safe-work rules
   ship as **instructions** (the `hiveku-orient` skill + the SessionStart hook); Codex's sandbox still
   governs local shell/file access.
 
