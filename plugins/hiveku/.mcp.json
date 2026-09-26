@@ -190,6 +190,36 @@
       "ppc_meta_lead_quality_test": {
         "approval_mode": "prompt"
       },
+      "ppc_experiment_schedule": {
+        "approval_mode": "prompt"
+      },
+      "ppc_experiment_graduate": {
+        "approval_mode": "prompt"
+      },
+      "ppc_offline_conversion_upload": {
+        "approval_mode": "prompt"
+      },
+      "ppc_customer_match_upload": {
+        "approval_mode": "prompt"
+      },
+      "ppc_goals_set": {
+        "approval_mode": "prompt"
+      },
+      "ppc_budget_target_set": {
+        "approval_mode": "prompt"
+      },
+      "ppc_connection_update": {
+        "approval_mode": "prompt"
+      },
+      "agent_approval_approve": {
+        "approval_mode": "prompt"
+      },
+      "seo_ga4_key_event_update": {
+        "approval_mode": "prompt"
+      },
+      "seo_ga4_event_create_rule_update": {
+        "approval_mode": "prompt"
+      },
       "accounting_bill_record_payment": {
         "approval_mode": "prompt"
       },
