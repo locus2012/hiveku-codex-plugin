@@ -117,8 +117,13 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   tool that sends, publishes, deploys, deletes or spends (the names in the Claude plugin's
   `data/permission-critical-tools.json`, including `email_campaign_send_now`, `email_campaign_schedule`,
   `email_campaign_test_send`, the call-tracking tools that hold a live tracking number or rewrite a
-  pool's routing, such as `voice_swap_test` and `voice_pool_update`, and the form capture write and
-  erase, `marketing_form_capture_settings_update` and `marketing_form_capture_purge`) is set to
+  pool's routing, such as `voice_swap_test` and `voice_pool_update`, the calls that switch ads on or
+  restart them, `ppc_enable_resource`, `ppc_platform_enable_resource`, `ppc_bulk_edit`,
+  `ppc_linkedin_creatives`, `ppc_tiktok_split_tests`, `ppc_recommendation_apply`, `ppc_meta_campaign_update`,
+  `ppc_linkedin_campaign_update` and `ppc_linkedin_campaign_group_update` (whole tool, so their pauses, reads
+  and renames prompt too), the calls that switch a workflow on or clear its automatic pause,
+  `workflow_enable` and `workflow_resume`, and the form capture write and erase,
+  `marketing_form_capture_settings_update` and `marketing_form_capture_purge`) is set to
   `"prompt"` per tool in `.mcp.json`, so a headless `codex exec` blocks on an approval request for those
   instead of running them. That includes saving a version (`project_vcs_commit`, whose files form
   writes the live project) and every `project_vcs_rollback` call, dry runs included: Codex cannot look
