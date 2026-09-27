@@ -18,6 +18,23 @@ in", HIVEKU_TOKEN is unset or wrong: run the `hiveku-connect` skill.
   (`project_files_status` — `changed` = they edited it, `only_remote` = they added files you lack).
   Before any tree-replace (`delete_missing: true`), `dry_run` first and READ the would-delete list — a
   file you did not send may be someone else's NEW work, not a leftover. Never blind-overwrite.
+- **A save is not a version: save one version per change before you finish.** On Your site (`main`;
+  call it "Your site" to a person) a file save is live in the preview at once but is NOT a version.
+  One version per logical change the site owner would recognize, usually one per user request. Save as
+  many files or batches as the change needs, verify, then call project_vcs_commit ONCE. Never per file
+  or per batch. Two unrelated changes in one session get two versions. Always version before
+  deploy_site. The automatic version after a few quiet minutes is a safety net, not the plan. The call
+  is `project_vcs_commit({ project_id, message })` with NO files (add `branch` on a branch); 409
+  `nothing_to_commit` means it is already a version. The `message` is a plain-language name for this
+  version, written for a non-technical site owner, describing what changed for their visitors. Good
+  examples: 'Updated the pricing section on the Home page', 'Added a contact form to the About page'.
+  Never file paths, file extensions, code terms, 'fix:'/'feat:' prefixes, tool names or an 'AI:'
+  byline. To go back, `project_vcs_rollback` is a dry run by default: apply only on the person's
+  explicit yes, with the dry run's `head_commit_id` as `expected_head_commit_id` (on Your site also its
+  `live_fingerprint` as `expected_live_fingerprint`), and deploy as a separate step (the `hiveku-ship`
+  skill). If you are about to finish with changes that are not a version, the plugin asks you once to
+  save one; a folder turns that reminder off with `.hiveku/guardrails.json` set to
+  `{"version_reminder": false}`.
 - **Start strategic work with `account_context_get({ domain })`** — it returns persona, brand voice,
   avatars, memory, skills, rules. Skipping it is the #1 cause of off-brand output.
 - **The account memory is the owners' document.** Its `account` section in `account_context_get` (or
@@ -109,7 +126,8 @@ plugin's `data/permission-critical-tools.json`), so expect an approval request o
 ## Finding the right tool (there are ~1,000)
 Don't guess tool names. Discover with `hiveku_docs_search` / `hiveku_docs_get`, and use
 `hiveku_playbooks_list` / `hiveku_playbook_get` for step-by-step flows (deploying, files CRUD, rollback,
-debugging a failed deploy). Most project tools need a `project_id` (from `list_projects` / `get_project`).
+debugging a failed deploy). Most project tools need a website `project_id` (from `sites_list` /
+`project_get`; `list_projects` / `get_project` are project-management projects, a different id space).
 
 ## When Hiveku itself gets in your way
 - **A Hiveku tool fails** — it errors, returns wrong or missing data, contradicts its description, or keeps
@@ -136,7 +154,8 @@ debugging a failed deploy). Most project tools need a `project_id` (from `list_p
 
 ## Related skills
 - `hiveku-connect` — set HIVEKU_TOKEN / fix 401s.
-- `hiveku-ship` — save → verify → deploy a website project safely.
+- `hiveku-ship` — save → verify → version → deploy a website project safely, and go back to an
+  earlier version.
 - `hiveku-diagnose-deploy` — a deploy reported ready but the live URL 403s/404s/blank.
 - `hiveku-firewall` — an automated client (a monitor, an audit tool, a script) sees a 202, a 403 or
   a blank page from a hosted site; tell the firewall's 403 (`x-hiveku-firewall`) from the site's
