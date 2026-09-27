@@ -40,6 +40,9 @@
       "project_vcs_revert": {
         "approval_mode": "prompt"
       },
+      "hiveku_batch": {
+        "approval_mode": "prompt"
+      },
       "project_checkpoint_restore": {
         "approval_mode": "prompt"
       },
@@ -59,6 +62,9 @@
         "approval_mode": "prompt"
       },
       "site_firewall_remove": {
+        "approval_mode": "prompt"
+      },
+      "project_indexing_set": {
         "approval_mode": "prompt"
       },
       "account_memory_append": {
