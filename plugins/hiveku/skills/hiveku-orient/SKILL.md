@@ -100,7 +100,12 @@ in", HIVEKU_TOKEN is unset or wrong: run the `hiveku-connect` skill.
   an unassigned task into a section with a default assigns it. Review feedback tasks can have their own
   assignee: `project_annotation_settings_set({ project_id, review_assignee_id })` on the website project.
   Take the id from `project_annotation_settings_get`'s `review_assignee.people`, which lists the team even
-  before a PM project is linked. Without one they follow the PM project's default.
+  before a PM project is linked. Without one they follow the PM project's default. Review feedback lands in
+  the site's oldest linked PM project that is not archived (`review_assignee.pm_project`), and the review
+  assignee must be on that project's team. To move it, unlink each older one (`pm_projects_update` with
+  `website_project_id: null`); archive it (`status: 'archived'`) only when its work is finished, because
+  archiving hides it and all its open tasks from every list. When no linked project is left the next
+  writer creates one, so read `review_assignee.pm_project` rather than assuming a name.
 - **Every completed task ends with an "Owner update"** — 2–4 calm, plain-language sentences a busy owner
   can skim: benefit first, no alarm vocabulary, no self-blaming narration, accurate.
 - Video generation is paid + capped — `marketing_generate_video` with `dry_run: true` first.
