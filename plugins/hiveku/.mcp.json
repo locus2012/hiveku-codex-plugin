@@ -67,6 +67,9 @@
       "site_firewall_remove": {
         "approval_mode": "prompt"
       },
+      "project_indexing_set": {
+        "approval_mode": "prompt"
+      },
       "account_memory_append": {
         "approval_mode": "prompt"
       },

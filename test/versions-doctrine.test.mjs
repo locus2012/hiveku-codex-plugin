@@ -146,7 +146,9 @@ test('both version tools prompt in Codex, and so does the batch that can carry t
   // batched rollback apply with no question.
   assert.equal(mcp.tools.hiveku_batch?.approval_mode, 'prompt');
   assert.equal(mcp.tools.project_vcs_status, undefined, 'project_vcs_status inherits approve');
-  assert.match(flat(read('README.md')), /hiveku_batch asks too, because it can carry any of these tools/);
+  const readme = flat(read('README.md'));
+  assert.match(readme, /hiveku_batch prompts too: a batch runs its calls on the Hiveku server/);
+  assert.match(readme, /refuses a batch that carries a version save or a rollback/);
 });
 
 test('no shipped copy says a version is optional, and none carries an emoji', () => {

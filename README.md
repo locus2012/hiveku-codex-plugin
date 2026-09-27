@@ -122,9 +122,12 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   `"prompt"` per tool in `.mcp.json`, so a headless `codex exec` blocks on an approval request for those
   instead of running them. That includes saving a version (`project_vcs_commit`, whose files form
   writes the live project) and every `project_vcs_rollback` call, dry runs included: Codex cannot look
-  at a call's arguments before it asks. `hiveku_batch` asks too, because it can carry any of these
-  tools, and the plugin's PreToolUse hook refuses a batch that carries one, so the agent calls it on its
-  own and you are asked about that call. If you prefer to review every call, change the server default to `"prompt"`. The safe-work rules
+  at a call's arguments before it asks. `hiveku_batch` prompts too: a batch runs its calls on the Hiveku
+  server, and Codex asks by the name of the tool it calls, so without that entry a prompted tool placed
+  inside a batch would run with no prompt. A batch of reads waits for a yes as well; single reads do not.
+  The plugin's PreToolUse hook also refuses a batch that carries a version save or a rollback, so the
+  agent calls it on its own and you are asked about that call. If you prefer to review every call,
+  change the server default to `"prompt"`. The safe-work rules
   ship as **instructions** (the `hiveku-orient` skill + the SessionStart hook); Codex's sandbox still
   governs local shell/file access.
 
