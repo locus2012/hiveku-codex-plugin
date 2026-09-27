@@ -1,6 +1,6 @@
 /**
  * Codex prompts before the calls that can switch ads on or restart them, and
- * before the calls that switch a workflow on (release 0.1.17).
+ * before the calls that switch a workflow on (release 0.1.18).
  *
  * Budgets, bids, bidding strategy and campaign create already prompted here,
  * but the call that turns a paused campaign, ad set, ad group or ad back on did
