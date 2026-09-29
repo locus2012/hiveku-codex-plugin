@@ -8,9 +8,15 @@ desktop. This plugin bundles:
 - **`playwright`** — for visual verification of previews.
 - **Skills** carrying Hiveku's operating doctrine and workflows:
   - `hiveku-orient` — read first: identity, the you-are-not-the-only-writer rule, scratch/secrets
-    hygiene, department agents, PM tasks + the Owner update, and connecting Google products: every one
+    hygiene, department agents, whose memory is whose (the agent that owns a rule, and what is shared
+    with every agent), PM tasks + the Owner update, and connecting Google products: every one
     but Gmail runs on Hiveku's own Google app, so the agent never asks for a developer token or an own
     Google app.
+  - `hiveku-remember` — save what you learned where the agents read it: an agent's Notes, a rule,
+    skill, shortcut or specialist for one agent or for every agent (it asks the person which, and
+    sends `department` on `memory_create`), or a one-line suggestion for About your business.
+  - `hiveku-memory-changes` — what changed in the account's memory since a date, by agent: who
+    changed it, from which app, when and why. Read-only.
   - `hiveku-connect` — get your account key and set `HIVEKU_TOKEN`.
   - `hiveku-ship` — save → verify → version → deploy a website project safely, and go back to an
     earlier version (`project_vcs_rollback`: a dry run first, append-only, so it can be undone).
@@ -129,9 +135,13 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   `"prompt"` per tool in `.mcp.json`, so a headless `codex exec` blocks on an approval request for those
   instead of running them. That includes saving a version (`project_vcs_commit`, whose files form
   writes the live project) and every `project_vcs_rollback` call, dry runs included: Codex cannot look
-  at a call's arguments before it asks. `hiveku_batch` prompts too: a batch runs its calls on the Hiveku
-  server, and Codex asks by the name of the tool it calls, so without that entry a prompted tool placed
-  inside a batch would run with no prompt. A batch of reads waits for a yes as well; single reads do not.
+  at a call's arguments before it asks. Every memory write prompts too: `memory_create`,
+  `memory_update`, `memory_delete`, `memory_restore_version`, `memory_bulk_create` and
+  `account_memory_append`. A rule, skill, shortcut or specialist created without an agent is shared
+  with every agent, so `memory_create` prompts on every call, a new agent's Notes included.
+  `hiveku_batch` prompts too: a batch runs its calls on the Hiveku server, and Codex asks by the
+  name of the tool it calls, so without that entry a prompted tool placed inside a batch would run
+  with no prompt. A batch of reads waits for a yes as well; single reads do not.
   The plugin's PreToolUse hook also refuses a batch that carries a version save or a rollback, so the
   agent calls it on its own and you are asked about that call. If you prefer to review every call,
   change the server default to `"prompt"`. The safe-work rules

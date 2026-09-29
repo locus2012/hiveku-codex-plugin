@@ -73,6 +73,9 @@
       "account_memory_append": {
         "approval_mode": "prompt"
       },
+      "memory_create": {
+        "approval_mode": "prompt"
+      },
       "memory_update": {
         "approval_mode": "prompt"
       },
