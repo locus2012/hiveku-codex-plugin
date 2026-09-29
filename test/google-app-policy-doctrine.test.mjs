@@ -24,8 +24,9 @@
  *     token, the Google Ads 'unverified app' screen, 'Access blocked');
  *   - the orient description naming it, so the skill loads for a connect ask;
  *   - no prose (README, skills) offering an own Google app, own Google client
- *     credentials, a developer token or a Cloud project of the customer's own,
- *     unless the sentence refuses it;
+ *     credentials, a developer token or a Cloud project of the customer's own:
+ *     a sentence that names one must refuse it, name Hiveku's own, be the move
+ *     onto Hiveku's app, or be about Gmail or a provider that is not Google;
  *   - every 'unverified app' screen tied to Google Ads.
  *
  * Run: node --test test/*.test.mjs
@@ -94,16 +95,78 @@ const OLD_OFFERS = [
 const EXTEND_GOOGLE_APP = /add_products: \[\s*'(?:google_analytics|google_ads|google_search_console|google_business_profile)'/g;
 
 /**
- * Any new wording: a sentence that mentions a developer token, or a Google
- * Cloud project or console, must refuse it, say it is Hiveku's, or be the
- * Gmail exception. A sentence that just tells the agent to get one is flagged.
+ * Any new wording, one sentence at a time. A sentence that names one of the
+ * ASKS below is flagged unless it refuses it, the thing it names is Hiveku's
+ * own ("Hiveku's developer token"), it is the move onto Hiveku's app and asks
+ * for nothing, or it is about Gmail or a provider that is not Google and names
+ * no Google product that runs on Hiveku's app. "Hiveku's" or "Gmail" elsewhere
+ * in the sentence excuses nothing: "Paste the owner's developer token into
+ * Hiveku's form" is still an ask.
  */
-const DEV_TOKEN = /developer[_ ]token/i;
-const CLOUD_PROJECT = /\bGoogle Cloud (?:Console|project)\b|\bCloud (?:Console|project)\b/i;
-const REFUSING = /\bnever\b|\brefus|\bdropped\b|Hiveku's|_not_allowed|\bGmail\b/i;
+const REFUSING = /\bnever\b|\brefus|\bdropped\b|_not_allowed\b|\bnot allowed\b/i;
+/** Right before a mention: the thing named is Hiveku's own. */
+const HIVEKUS_OWN = /\bHiveku['’]s (?:own )?$/i;
+/** The move onto Hiveku's app, which names the own app or token it leaves behind. */
+const MOVE = /\b(?:oauth_app_id|target_client):? ['"]platform['"]/i;
+/** A verb that has someone hand something over or set something up. */
+const ASK_VERB = /\b(?:ask|collect|get|obtain|request|paste|enter|provide|supply|share|copy|create|register|enable|generate|apply|add|use)(?:s|ed|ing)?\b|\bset(?:s|ting)? up\b/i;
+/**
+ * Every Google product but Gmail, by name or slug: each runs on Hiveku's app.
+ * Calendar counts only as "Google Calendar" or google_calendar: Gmail's own
+ * app carries a calendar of its own (crm_email_calendar), so a bare
+ * "Calendar" next to Gmail can be right.
+ */
+const HIVEKU_APP_PRODUCT = /\bGoogle (?:Ads|Calendar)\b|\b(?:Analytics|Tag Manager|Search Console|Business Profile|GA4|GTM|GSC|GBP)\b|\bgoogle_(?:ads|analytics|search_console|business_profile|calendar)|\bgbp_social\b/i;
+const GMAIL = /\bGmail\b/i;
+/** Providers that are not Google, where an own app is still allowed. */
+const OTHER_PROVIDER = /\b(?:Outlook|Microsoft|Azure|Bing|Meta|Facebook|Instagram|LinkedIn|TikTok|X|Twitter|Shopify|Webflow|Amazon)\b/;
+const GOOGLE = /\bGoogle\b|\bgoogle_/i;
+/** "Google Cloud" on its own counts in a sentence about a project, an app, a client, an API, a consent screen or credentials. */
+const GOOGLE_CLOUD = /\bGoogle Cloud\b|\bGCP\b/gi;
+const CLOUD_SETUP = /\b(?:projects?|apps?|applications?|OAuth|clients?|APIs?|consent|credentials?|redirect|service accounts?)\b/i;
 
+/**
+ * What a sentence may not ask for. gmail / otherProvider: whether a sentence
+ * about Gmail, or only about providers that are not Google, may name it.
+ */
+const ASKS = [
+  // Gmail has no developer token.
+  { what: 'a developer token', re: /\bdeveloper[_ -]?tokens?\b/gi, gmail: false, otherProvider: true },
+  { what: 'own client credentials', re: /\bclient[_ -]?(?:ids?|secrets?)\b|\brefresh[_ -]?tokens?\b|\bclient credentials?\b/gi, gmail: true, otherProvider: true },
+  // No other provider has a Google Cloud project.
+  { what: 'a Google Cloud project', re: /\b(?:Google )?Cloud (?:Console|project)s?\b|\bconsole\.cloud\.google\.com\b/gi, cloud: true, gmail: true, otherProvider: false },
+  { what: 'an own app', re: /\bown (?:Google )?(?:OAuth )?apps?\b|\bown oauth_app_id\b|\bbring[- ]your[- ]own[- ]app\b|\bOAuth (?:apps?|clients?)\b/gi, gmail: true, otherProvider: true },
+];
+
+/**
+ * Sentences, never across a blank line, a heading, a list item, a table row or
+ * the front matter's closing ---, so one bullet's "never" cannot excuse the
+ * next bullet.
+ */
 function sentences(text) {
-  return flat(text).split(/(?<=[.!?])\s+(?=[A-Z`*(-])/);
+  return text
+    .split(/\n(?=[ \t]*(?:\n|#|[-*+] |\d+[.)] |\||---))|(?<=^[ \t]*#[^\n]*)\n/m)
+    .flatMap((block) => flat(block).trim().split(/(?<=[.!?])\s+(?=[A-Z`*(-])/))
+    .filter(Boolean);
+}
+
+function excused(s, at, ask) {
+  if (REFUSING.test(s)) return true;
+  if (HIVEKUS_OWN.test(s.slice(Math.max(0, at - 20), at))) return true;
+  if (MOVE.test(s) && !ASK_VERB.test(s)) return true;
+  if (HIVEKU_APP_PRODUCT.test(s)) return false;
+  return (ask.gmail && GMAIL.test(s)) || (ask.otherProvider && OTHER_PROVIDER.test(s) && !GOOGLE.test(s));
+}
+
+/** What one sentence asks for without refusing it. */
+function unrefusedAsks(s) {
+  const found = [];
+  for (const ask of ASKS) {
+    const at = [...s.matchAll(ask.re)].map((m) => m.index);
+    if (ask.cloud && CLOUD_SETUP.test(s)) at.push(...[...s.matchAll(GOOGLE_CLOUD)].map((m) => m.index));
+    if (at.some((i) => !excused(s, i, ask))) found.push(ask.what);
+  }
+  return found;
 }
 
 function offersIn(text) {
@@ -114,7 +177,8 @@ function offersIn(text) {
     if (!/refuse|never/i.test(before)) hits.push(`extends an own Google app: ${m[0]}`);
   }
   for (const s of sentences(text)) {
-    if ((DEV_TOKEN.test(s) || CLOUD_PROJECT.test(s)) && !REFUSING.test(s)) hits.push(`unrefused: ${s.slice(0, 160)}`);
+    const asks = unrefusedAsks(s);
+    if (asks.length) hits.push(`unrefused ${asks.join(', ')}: ${s.slice(0, 160)}`);
   }
   return hits;
 }
@@ -133,7 +197,7 @@ test("the orient skill states Hiveku's Google app policy, both refusals, the con
     'Google Ads needs nothing up front',
     'integration_connect_link_status({ link_id, wait_seconds: 8 })',
     "whose client_source is 'byok'",
-    "integration_connect_link_create({ connector, target_connection_id, oauth_app_id: 'platform' })",
+    "integration_connect_link_create({ connector, target_connection_id, oauth_app_id: 'platform', source: 'plugin' })",
     'It keeps its id, bindings and history',
     'Own apps stay for Gmail, Outlook, Microsoft Ads, Meta, LinkedIn and TikTok.',
   ]) {
@@ -175,7 +239,7 @@ test('no skill or README offers an own Google app, own Google credentials, a dev
   assert.deepEqual(hits, []);
 });
 
-test('flags each old wording and a new unrefused ask (positive controls)', () => {
+test('flags each old wording and each kind of new unrefused ask (positive controls)', () => {
   for (const old of [
     "- `google_ads` create with the account's OWN Google app: `developer_token` and `customer_id` up\n  front (the server refuses without them).",
     '| Ads platform by BYOK credentials | `ppc_connection_create({ platform, ... })`. Per-platform requirements differ: google_ads needs developer_token + client_id + client_secret + refresh_token + customer_id |',
@@ -190,15 +254,35 @@ test('flags each old wording and a new unrefused ask (positive controls)', () =>
     'Ask the owner for their Google Ads developer token and customer id.',
     "Collect the `developer_token` from the MCC's API Center.",
     'Have the owner enable the Tag Manager API in their Google Cloud project.',
+    // "Hiveku's" or "Gmail" elsewhere in the sentence excuses nothing.
+    "Paste the owner's Google Ads developer token into Hiveku's connection form.",
+    'Ask the owner for their developer token; Gmail stays on its own app.',
+    // Own client credentials, with no developer token or Cloud project named.
+    'For Search Console, ask the owner for a client id and client secret, then call `seo_connection_create`.',
+    'Ask the owner for a client id and client secret, then call `seo_connection_create`.',
+    // "Google Cloud" on its own, in an instruction to create or use a project or app.
+    'Have the owner create an OAuth client in Google Cloud for Google Ads.',
+    'Have the owner create a project in Google Cloud for Search Console.',
+    // An own app, with no credential named.
+    "Register the account's own Google app for Search Console with `oauth_app_create`.",
+    // The move excuses nothing it also asks for.
+    "After the move (`oauth_app_id: 'platform'`), ask the owner for their developer token.",
+    // One bullet's "never" does not excuse the next bullet.
+    '- Never register an own Google app for Search Console\n- Ask the owner for their Google Ads developer token.',
   ]) {
     assert.ok(offersIn(old).length > 0, `not flagged: ${old}`);
   }
-  // Wordings that refuse, or name the Gmail exception, are not flagged.
+  // Wordings that refuse, name Hiveku's own, keep to Gmail or a provider that
+  // is not Google, or mention Google Cloud with no setup in it, are not flagged.
   for (const ok of [
     "`oauth_app_update` refuses\n   `add_products: ['google_analytics']` with 400 `google_own_app_not_allowed`",
     'Never ask for a developer token, a client id, a client secret or a refresh token.',
     "A Google Ads connection's own developer token is dropped (Hiveku's is used).",
     'Google Cloud project work is only ever for the Gmail app.',
+    "Google Ads runs on Hiveku's own Google app and Hiveku's developer token.",
+    "For Gmail, register the account's own Google app with its client id and client secret.",
+    "Outlook needs the account's own Azure app: its client id and client secret.",
+    'A Googlebot row on Google Cloud (`asn` 396982) is usually an impostor: anyone can rent a server there.',
   ]) {
     assert.deepEqual(offersIn(ok), [], ok);
   }

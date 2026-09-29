@@ -149,9 +149,9 @@ Google Ads, Hiveku's developer token. The only Google app an account may own is 
 - **Move a connection that still runs on the account's own app.** A Google connection other than Gmail
   whose `client_source` is `'byok'` (its own Google app, or a Google Ads row that keeps a developer
   token of its own) moves with `integration_connect_link_create({ connector, target_connection_id,
-  oauth_app_id: 'platform' })`. It keeps its id, bindings and history, and nothing changes until the
-  consent completes. Never fix one by enabling an API or editing a consent screen in the account's own
-  Cloud project.
+  oauth_app_id: 'platform', source: 'plugin' })`. It keeps its id, bindings and history, and nothing
+  changes until the consent completes. Never fix one by enabling an API or editing a consent screen in
+  the account's own Cloud project.
 - **Tell the owner before you send the link.** On a move: it moves onto Hiveku's own Google app, and a
   Google Ads connection's own developer token is dropped (Hiveku's is used). For Google Ads, Google
   first shows an 'unverified app' screen (Advanced, then continue); if Google says 'Access blocked'
