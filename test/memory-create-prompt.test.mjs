@@ -1,6 +1,8 @@
 /**
- * Codex asks before memory_create, as it does before every other memory write
- * (memory surfaces audit 2026-09-27, G7, Codex part; release 0.3.0).
+ * Codex asks before memory_create, as it does before memory_update,
+ * memory_delete, memory_restore_version, memory_bulk_create and
+ * account_memory_append (memory surfaces audit 2026-09-27, G7, Codex part;
+ * release 0.3.0).
  *
  * A rule, skill, shortcut (command) or specialist (agent) created without an
  * agent is "Shared with every agent" on the Memory page, and every agent
@@ -23,6 +25,13 @@
  * not on that list (its hook asks by argument), so it needs a
  * CODEX_ONLY_PROMPTS entry there.
  *
+ * Not every memory write prompts (PR #25 review, F5):
+ * onboarding_write_department_memory, the onboarding interview's own write to
+ * an agent's Notes, is not in this map, and the Claude Code plugin keeps it
+ * silent too (its tool-safety negative control). The README and the
+ * hiveku-remember skill say so, so this test pins that it stays unprompted:
+ * give it a prompt and change those two together.
+ *
  * Run: node --test test/*.test.mjs
  */
 import { test } from 'node:test';
@@ -38,7 +47,7 @@ const PLUGIN = path.join(root, 'plugins', 'hiveku');
 const MCP_JSON = path.join(PLUGIN, '.mcp.json');
 const LONG = 600_000; // the machine can be heavily loaded
 
-/** Every memory write: each one asks the person first. */
+/** The memory writes the skills and the README name: each one asks the person first. */
 const MEMORY_WRITES = [
   'memory_create',
   'memory_update',
@@ -47,6 +56,8 @@ const MEMORY_WRITES = [
   'memory_bulk_create',
   'account_memory_append',
 ];
+/** Memory writes the skills and the README say do not prompt (F5). */
+const UNPROMPTED_MEMORY_WRITES = ['onboarding_write_department_memory'];
 /** The memory reads: none of them may prompt, or every look at memory stalls. */
 const MEMORY_READS = [
   'memory_list',
@@ -69,6 +80,13 @@ function assertMemoryPrompts(cfg) {
   for (const name of MEMORY_READS) {
     assert.notEqual(tools[name]?.approval_mode, 'prompt', `${name} only reads; it must not prompt`);
   }
+  for (const name of UNPROMPTED_MEMORY_WRITES) {
+    assert.notEqual(
+      tools[name]?.approval_mode,
+      'prompt',
+      `${name}: the README and hiveku-remember say it does not prompt; change them together with this entry`,
+    );
+  }
 }
 
 const readConfig = () => JSON.parse(fs.readFileSync(MCP_JSON, 'utf8'));
@@ -77,13 +95,16 @@ test('memory_create prompts with the other memory writes, and the memory reads d
   assertMemoryPrompts(readConfig());
 });
 
-test('the check fails when memory_create is missing, or a read prompts (negative control)', () => {
+test('the check fails when memory_create is missing, a read prompts, or the doctrine goes stale (negative control)', () => {
   const without = readConfig();
   delete without.hiveku.tools.memory_create;
   assert.throws(() => assertMemoryPrompts(without), /memory_create/);
   const readPrompts = readConfig();
   readPrompts.hiveku.tools.memory_list = { approval_mode: 'prompt' };
   assert.throws(() => assertMemoryPrompts(readPrompts), /memory_list/);
+  const onboardingPrompts = readConfig();
+  onboardingPrompts.hiveku.tools.onboarding_write_department_memory = { approval_mode: 'prompt' };
+  assert.throws(() => assertMemoryPrompts(onboardingPrompts), /onboarding_write_department_memory/);
 });
 
 const batchPayload = (calls) => ({

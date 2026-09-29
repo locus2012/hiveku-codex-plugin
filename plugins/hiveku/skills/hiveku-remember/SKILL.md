@@ -3,10 +3,17 @@ name: hiveku-remember
 description: "Save what you learned to the Hiveku account so its agents use it: a note in one agent's Notes, a rule, skill, shortcut or specialist for one agent or for every agent, or a one-line suggestion for About your business. Load before memory_create, memory_update, memory_bulk_create or account_memory_append, and when someone says 'remember this', 'make this a rule', 'from now on always...' or 'teach the agents'. Asks the person which agent a new rule is for, or whether every agent should follow it."
 ---
 Save a learning to Hiveku, where the account's agents and its Memory page read it. Files in this
-folder are not memory: nothing reaches the agents until it is saved here. Codex asks the person
-before every memory write (`memory_create`, `memory_update`, `memory_delete`,
-`memory_restore_version`, `memory_bulk_create` and `account_memory_append`), so before each call say
-in one line what will change and for which agent.
+folder are not memory: nothing reaches the agents until it is saved here. Before each memory write,
+say in one line what will change and for which agent.
+
+With this plugin's settings, Codex asks the person before `memory_create`, `memory_update`,
+`memory_delete`, `memory_restore_version`, `memory_bulk_create` and `account_memory_append`. A
+folder whose own `.codex/config.toml` defines the `hiveku` server (one set up with
+`npx @hiveku-apps/sync init <account> --codex`) takes its prompts from that file instead, and it
+may not ask before `memory_create`: there the person's answer to the question in section 3 is the
+only check before a rule is created. Do not save a note with `onboarding_write_department_memory`:
+it is the onboarding interview's own write, Codex does not ask before it, and its `replace` mode
+replaces an agent's whole Notes.
 
 ## The Memory page's words
 
@@ -24,12 +31,15 @@ words with people, not "department memory", "account memory" or a tool name:
 
 The agents and the key each takes: `sales` (Sales), `helpdesk` (Support), `comms` (Communications,
 which also answers the phone), `production` (Production), `accounting` (Accounting), `coder`
-(Website), `orchestrator` (Chief of staff), and `marketing` (the Marketing lead) with its topics:
-`content`, `seo`, `social`, `ppc` (Paid ads), `outbound`, `branding`, `customer_avatar` (Ideal
-customers), `customer_journey`, `website_design`, `knowledge_base`, `workflow`,
-`before_after_grid` (Before and after) and `email`. Analytics is a Marketing topic too, but Hiveku
-does not file new entries under `analytics` yet: use `marketing`. For work with no agent of its own,
-use `coder` for development, `sales` for commerce and `website_design` for web design.
+(Website), and `marketing` (the Marketing lead) with its topics: `content`, `seo`, `social`, `ppc`
+(Paid ads), `outbound`, `branding`, `customer_avatar` (Ideal customers), `customer_journey`,
+`website_design`, `knowledge_base`, `workflow`, `before_after_grid` (Before and after) and `email`.
+Analytics is a Marketing topic too, but Hiveku does not file new entries under `analytics` yet: use
+`marketing`. The Chief of staff (`orchestrator`) takes no new entries from Codex yet either: her own
+rules and notes are kept on the Memory page, so for something meant for her, say that it can be
+added there, or that she can be told it in her own chat. Never file it under another agent, or
+share it with every agent, in her place without asking. For work with no agent of its own, use `coder` for
+development, `sales` for commerce and `website_design` for web design.
 
 ## 1. A fact about the whole business: suggest it for About your business
 
@@ -78,8 +88,9 @@ An agent's Notes are ONE document, and `memory_update` REPLACES it whole.
      means one exists: go back to step 1 rather than making a second.
 
    `content` is concise markdown: what you did, what you learned, why it matters, how to apply it
-   next time. Notes named anything but an agent's key (`pm`, `crm`, `dev`, `web`, `commerce`)
-   belong to no agent, and no agent reads them.
+   next time. Notes named anything but the key of an agent that takes entries (`pm`, `crm`, `dev`,
+   `web`, `commerce`, and `orchestrator` too, since the Chief of staff keeps her own) reach no
+   agent: no agent reads them.
 
 ## 3. A rule, skill, shortcut or specialist: ask who follows it
 
@@ -90,9 +101,12 @@ default: an entry created without an agent is Shared with every agent.
    follow it.** Suggest the agent the work points to (a refund-wording rule from a support ticket:
    Support) and say what each answer means:
    - One agent: that agent follows it. For the Marketing lead (`marketing`), every Marketing topic
-     and the Website agent follow it too. A Marketing topic such as `seo` is followed by that topic,
-     and by the Website agent when the topic shapes the website. A rule for Communications also
-     applies on phone calls.
+     and the Website agent follow it too. A Marketing topic's entry is followed by that topic, and
+     by the Website agent when the topic shapes the website (`branding`, `content`,
+     `website_design`, `customer_avatar`, `customer_journey`, `knowledge_base`,
+     `before_after_grid`). The Website agent also follows the SEO topic's skills (not its rules),
+     so an SEO skill reaches the website builds too. A rule for Communications also applies on
+     phone calls.
    - Every agent: it goes under Shared with every agent, and every agent follows it in chats. Phone
      calls never follow shared rules.
 
@@ -112,12 +126,22 @@ default: an entry created without an agent is Shared with every agent.
    text. For every agent, send `department: "shared"` and no such line. Leave `department` out for
    Notes and Profiles, and with `project_id`: a website's own entries always belong to the Website
    agent. `memory_bulk_create` takes the same `department` on each entry.
-4. **Read the answer.** An `invalid_department` refusal means the value is not an agent's key and
-   nothing was written: ask again. A 409 means the name is taken: read that entry and change it
-   instead. An answer whose `_dropped_params` lists `department` comes from a Hiveku server that does
-   not take it yet: the entry was saved, and its first line files it under that agent, so do not
-   create it again. If Hiveku refuses a shared entry, rules for every agent are added by an owner or
-   admin on the Memory page: say so, and do not file it under one agent instead without asking.
+4. **Read the answer.** Each of these refusals means nothing was written:
+   - `invalid_department`: the value is not an agent's key. Ask the person again.
+   - `department_not_available`: Hiveku does not file entries under that agent yet (today the Chief
+     of staff). Tell the person where it can be kept instead, as above, and do not pick another
+     agent or every agent without asking.
+   - `department_conflict`: the text's own department line names a different agent than
+     `department` (or any agent, with "shared"). Make the first line name the agent the person
+     chose, with no line for every agent, and send it again.
+   - `department_not_used`: `department` went on Notes, a Profile or a website's own entry, whose
+     name decides where it belongs. Send it again without `department`.
+
+   A 409 means the name is taken: read that entry and change it instead. An answer whose
+   `_dropped_params` lists `department` comes from a Hiveku server that does not take it yet: the
+   entry was saved, and its first line files it under that agent, so do not create it again. If
+   Hiveku refuses a shared entry, rules for every agent are added by an owner or admin on the Memory
+   page: say so, and do not file it under one agent instead without asking.
 5. **Tell the person where it is**, in the page's words: "Saved as a Support rule. It is on the
    Memory page under Support, Rules."
 

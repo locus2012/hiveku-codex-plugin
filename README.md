@@ -135,10 +135,16 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   `"prompt"` per tool in `.mcp.json`, so a headless `codex exec` blocks on an approval request for those
   instead of running them. That includes saving a version (`project_vcs_commit`, whose files form
   writes the live project) and every `project_vcs_rollback` call, dry runs included: Codex cannot look
-  at a call's arguments before it asks. Every memory write prompts too: `memory_create`,
+  at a call's arguments before it asks. These memory writes prompt too: `memory_create`,
   `memory_update`, `memory_delete`, `memory_restore_version`, `memory_bulk_create` and
   `account_memory_append`. A rule, skill, shortcut or specialist created without an agent is shared
   with every agent, so `memory_create` prompts on every call, a new agent's Notes included.
+  `onboarding_write_department_memory`, the onboarding interview's own write to an agent's Notes,
+  does not prompt, and the skills do not use it to save notes. A folder set up with
+  `npx @hiveku-apps/sync init <account-slug> --codex` writes its own `[mcp_servers.hiveku]`, and
+  Codex then takes every tool's prompt from that entry, not from this plugin: until hiveku-sync
+  copies this list again, `memory_create` runs there without a prompt, and the `hiveku-remember`
+  skill's question about who follows a new rule is the check.
   `hiveku_batch` prompts too: a batch runs its calls on the Hiveku server, and Codex asks by the
   name of the tool it calls, so without that entry a prompted tool placed inside a batch would run
   with no prompt. A batch of reads waits for a yes as well; single reads do not.
