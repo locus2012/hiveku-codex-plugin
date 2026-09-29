@@ -1,6 +1,6 @@
 ---
 name: hiveku-orient
-description: "How to operate a Hiveku account safely from Codex — read this FIRST before any Hiveku work. Identity, the you-are-not-the-only-writer rule, scratch/secrets hygiene, department agents, PM tasks, the Owner update, and what to do when a Hiveku tool fails or a capability is missing."
+description: "How to operate a Hiveku account safely from Codex — read this FIRST before any Hiveku work. Identity, the you-are-not-the-only-writer rule, scratch/secrets hygiene, department agents, PM tasks, the Owner update, connecting Google products on Hiveku's own Google app (never a developer token or an own Google app, Gmail aside), and what to do when a Hiveku tool fails or a capability is missing."
 ---
 Read and follow this before using any Hiveku (`hiveku`) MCP tool.
 
@@ -127,6 +127,42 @@ A campaign send reaches real inboxes and cannot be recalled, so it is a ladder, 
    and continue an in-flight send.
 The `hiveku` server is configured to prompt before every send-class tool (the list in the Claude Code
 plugin's `data/permission-critical-tools.json`), so expect an approval request on steps 2 and 3.
+
+## Connecting Google products
+Hiveku's policy: every Google product except Gmail (Google Ads, Analytics and the Tag Manager that
+rides on it, Search Console, Business Profile, Calendar) runs on Hiveku's own Google app and, for
+Google Ads, Hiveku's developer token. The only Google app an account may own is its internal Gmail app.
+- **Never collect Google credentials for those products.** Never ask for a developer token, a client
+  id, a client secret or a refresh token, never name an own `oauth_app_id`, and never send anyone into a
+  Google Cloud project of their own (an API to enable, a consent screen, a redirect URI). The server
+  refuses an own app with 400 `google_own_app_not_allowed` (`oauth_app_create` / `oauth_app_update` for
+  those products, an own `oauth_app_id` on a connect link or `integration_oauth_initiate`,
+  `ppc_connection_create` for Google Ads, `seo_connection_create` for Search Console and Business
+  Profile, a client id, secret or developer token written with `ppc_connection_update` /
+  `seo_connection_update`), and a Google Ads developer token with 400 `developer_token_not_allowed`.
+- **Connect with a link on Hiveku's app.** Call `integration_connectors_list` first (per connector:
+  `ready`, and the existing `connections[]` with their ids and `client_source`), then
+  `integration_connect_link_create({ connector, source: 'plugin' })`. Google Ads needs nothing up front:
+  the customer id is picked after consent. Put the link at the end of your message, and when they say
+  they are through, check it with `integration_connect_link_status({ link_id, wait_seconds: 8 })` and
+  finish any `needs_binding` with the discover tools.
+- **Move a connection that still runs on the account's own app.** A Google connection other than Gmail
+  whose `client_source` is `'byok'` (its own Google app, or a Google Ads row that keeps a developer
+  token of its own) moves with `integration_connect_link_create({ connector, target_connection_id,
+  oauth_app_id: 'platform', source: 'plugin' })`. It keeps its id, bindings and history, and nothing
+  changes until the consent completes. Never fix one by enabling an API or editing a consent screen in
+  the account's own Cloud project.
+- **Tell the owner before you send the link.** On a move: it moves onto Hiveku's own Google app, and a
+  Google Ads connection's own developer token is dropped (Hiveku's is used). For Google Ads, Google
+  first shows an 'unverified app' screen (Advanced, then continue); if Google says 'Access blocked'
+  instead, their Google Workspace admin blocks unverified apps, and nothing changes until the admin
+  allows Hiveku's app (on a move, the connection stays as it is).
+- **Not `ready` is Hiveku's to fix.** A Google connector other than Gmail that
+  `integration_connectors_list` shows as not `ready` means Hiveku's app is not configured on this
+  environment: report it with `hiveku_report_issue`, never register an own Google app for it. Likewise
+  `hiveku_native: false` on Google Business Profile (`social_provider_list`) means Hiveku's Google app
+  is missing, never a bring-your-own-app connect.
+- Own apps stay for Gmail, Outlook, Microsoft Ads, Meta, LinkedIn and TikTok.
 
 ## Finding the right tool (there are ~1,000)
 Don't guess tool names. Discover with `hiveku_docs_search` / `hiveku_docs_get`, and use
