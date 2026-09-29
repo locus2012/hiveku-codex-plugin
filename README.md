@@ -8,7 +8,9 @@ desktop. This plugin bundles:
 - **`playwright`** — for visual verification of previews.
 - **Skills** carrying Hiveku's operating doctrine and workflows:
   - `hiveku-orient` — read first: identity, the you-are-not-the-only-writer rule, scratch/secrets
-    hygiene, department agents, PM tasks + the Owner update.
+    hygiene, department agents, PM tasks + the Owner update, and connecting Google products: every one
+    but Gmail runs on Hiveku's own Google app, so the agent never asks for a developer token or an own
+    Google app.
   - `hiveku-connect` — get your account key and set `HIVEKU_TOKEN`.
   - `hiveku-ship` — save → verify → version → deploy a website project safely, and go back to an
     earlier version (`project_vcs_rollback`: a dry run first, append-only, so it can be undone).
