@@ -37,7 +37,8 @@ desktop. This plugin bundles:
     here; the Hiveku VS Code extension's **Set Up Codex Support** mirrors it, with its `references/`, into
     `.agents/skills/` in the account folders it scaffolds.
 - **A SessionStart hook** that warns if `HIVEKU_TOKEN` is unset and reinforces the disciplines that
-  prevent the most common incidents, including saving each change as a version.
+  prevent the most common incidents, including saving each change as a version and following Hiveku
+  Memory as the source of truth (a Doing and a Done line in the memory log for each piece of work).
 - **A versions reminder** (PreToolUse, PostToolUse and Stop hooks, see [Versions](#versions)): when a
   session changed a website project and did not save the change as a version, the agent is asked once,
   before it finishes, to save one.
