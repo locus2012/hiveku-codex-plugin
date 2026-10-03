@@ -122,6 +122,13 @@ in", HIVEKU_TOKEN is unset or wrong: run the `hiveku-connect` skill.
   can skim: benefit first, no alarm vocabulary, no self-blaming narration, accurate.
 - Video generation is paid + capped — `marketing_generate_video` with `dry_run: true` first.
 
+- **Re-check a tracking claim live before you act on it or repeat it.** A note in memory, a file or
+  an earlier session that says tracking is broken, a pixel or tag is missing, consent is blocking
+  conversions, or two systems' numbers disagree is a claim about a system that changes under it.
+  Check it with the live tools first (`ppc_conversion_tracking_status`, `seo_gtm_status`,
+  `marketing_form_conversion_audit`, `voice_call_tracking_diagnose`, `ppc_meta_pages_pixels`), then
+  tell the user what you checked and when.
+
 ## Whose memory: the owner rule and Shared with every agent
 The Memory page (https://app.hiveku.com/dashboard/memory) shows owners what each agent knows. Use its
 words with people: About your business; each agent's Profile, Rules, Skills, Notes, Shortcuts and
