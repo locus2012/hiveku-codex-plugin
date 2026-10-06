@@ -199,6 +199,9 @@
       "ppc_bing_rsa_text_update": {
         "approval_mode": "prompt"
       },
+      "ppc_meta_ad_text_update": {
+        "approval_mode": "prompt"
+      },
       "ppc_negatives_remove": {
         "approval_mode": "prompt"
       },
