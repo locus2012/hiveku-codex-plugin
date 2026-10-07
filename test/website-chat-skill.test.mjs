@@ -177,5 +177,5 @@ test('a Hiveku-named address is promised only where the tool exists, and a 403 i
   assert.match(know, /including a site that lives on a Hiveku-named address on current servers \(the ones that have `helpdesk_assistant_knowledge_status`; an older one skips those addresses\)/);
   assert.match(know, /without the tool never tell the owner a site on a Hiveku-named address is read/);
   assert.match(know, /A 403 with code `key_creator_lacks_access` is not a missing tool/);
-  assert.match(know, /an account owner or admin can give them access under Settings > Users/);
+  assert.match(know, /an account owner or admin can give them access under\s+Settings > Team Members > Manage Roles/);
 });
