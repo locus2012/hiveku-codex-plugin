@@ -274,6 +274,9 @@
       "accounting_invoice_record_payment": {
         "approval_mode": "prompt"
       },
+      "accounting_subscription_create": {
+        "approval_mode": "prompt"
+      },
       "crm_contact_email_send": {
         "approval_mode": "prompt"
       },
@@ -497,6 +500,9 @@
         "approval_mode": "prompt"
       },
       "seo_ga4_key_event_delete": {
+        "approval_mode": "prompt"
+      },
+      "seo_ga4_custom_definition_archive": {
         "approval_mode": "prompt"
       },
       "seo_ga4_event_create_rule_delete": {
