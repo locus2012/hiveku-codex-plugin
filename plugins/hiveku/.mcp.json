@@ -22,6 +22,9 @@
       "project_vcs_pr_merge": {
         "approval_mode": "prompt"
       },
+      "github_pr_merge": {
+        "approval_mode": "prompt"
+      },
       "project_vcs_env_bind": {
         "approval_mode": "prompt"
       },
