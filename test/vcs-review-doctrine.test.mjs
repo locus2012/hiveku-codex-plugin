@@ -103,6 +103,24 @@ test('Codex prompts on the conflict resolve and the pull request edit; the reads
   assert.match(text, /inside hiveku_batch/);
 });
 
+test('a review reads the pull request\'s own changes, and a merge reads mergeable first (builder #955, MCP #177)', () => {
+  const text = vcs();
+  const review = text.slice(text.indexOf('### Reviewing a pull request'), text.indexOf('### Merging, and the approval rule'));
+  assert.match(review, /Read every file in changes\.entries, the pull request's OWN changes since its merge base/);
+  assert.match(review, /not diff\.entries, which compares with the target as it is now/);
+  // NEGATIVE CONTROL: the old step read every changed file from the two-dot diff.
+  assert.doesNotMatch(review, /Read every changed file with project_vcs_diff_file/);
+  assert.match('2. Read every changed file with project_vcs_diff_file({ project_id', /Read every changed file with project_vcs_diff_file/);
+  const merge = text.slice(text.indexOf('### Merging, and the approval rule'), text.indexOf('### Merge conflicts'));
+  for (const field of ['mergeable', 'conflicts_with_target', 'conflicts_with_prs', 'overlaps_with_prs', 'this_first', 'other_first', 'mergeable_state', 'conflicts_with']) {
+    assert.ok(merge.includes(field), `the merge steps must read ${field}`);
+  }
+  assert.match(merge, /the second will need a resolve after the first merges/);
+  assert.match(merge, /unknown \(see reason\) is not a pass/);
+  // It is read before the person is asked, not after the merge is refused.
+  assert.ok(merge.indexOf('mergeable') < merge.indexOf("The merge's refusals change nothing"));
+});
+
 test('the section carries no emoji', () => {
   assert.doesNotMatch(section(read(SHIP), '## Branches, pull requests and conflicts'), /\p{Extended_Pictographic}/u);
 });
