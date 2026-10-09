@@ -22,6 +22,9 @@
       "project_vcs_pr_merge": {
         "approval_mode": "prompt"
       },
+      "github_pr_merge": {
+        "approval_mode": "prompt"
+      },
       "project_vcs_env_bind": {
         "approval_mode": "prompt"
       },
@@ -41,6 +44,12 @@
         "approval_mode": "prompt"
       },
       "project_vcs_rollback": {
+        "approval_mode": "prompt"
+      },
+      "project_vcs_resolve": {
+        "approval_mode": "prompt"
+      },
+      "project_vcs_pr_update": {
         "approval_mode": "prompt"
       },
       "hiveku_batch": {

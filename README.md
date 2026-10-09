@@ -19,7 +19,11 @@ desktop. This plugin bundles:
     changed it, from which app, when and why. Read-only.
   - `hiveku-connect` — get your account key and set `HIVEKU_TOKEN`.
   - `hiveku-ship` — save → verify → version → deploy a website project safely, and go back to an
-    earlier version (`project_vcs_rollback`: a dry run first, append-only, so it can be undone).
+    earlier version (`project_vcs_rollback`: a dry run first, append-only, so it can be undone). It
+    also covers branches and pull requests (reviews, in the dashboard): reviewing one with comments
+    or a request for changes (an agent never approves; a person does, in the dashboard), merging
+    under the site's "Require an approval" rule, settling merge conflicts file by file with the
+    person (`project_vcs_conflicts`, `project_vcs_resolve`), and restoring an archived branch.
   - `hiveku-diagnose-deploy` — a deploy reported ready but the live URL 403s/404s/blank.
   - `hiveku-firewall` — an automated client sees a 202, a 403 or a blank page from a hosted site: tell
     the firewall's 403 (`x-hiveku-firewall`) from the site's own, read what the edge firewall
@@ -137,7 +141,11 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   `"prompt"` per tool in `.mcp.json`, so a headless `codex exec` blocks on an approval request for those
   instead of running them. That includes saving a version (`project_vcs_commit`, whose files form
   writes the live project) and every `project_vcs_rollback` call, dry runs included: Codex cannot look
-  at a call's arguments before it asks. These memory writes prompt too: `memory_create`,
+  at a call's arguments before it asks. Settling merge conflicts (`project_vcs_resolve`, which writes
+  the chosen text onto a branch) and editing a pull request (`project_vcs_pr_update`, whose new target
+  dismisses the approvals people gave) prompt as well, and so does merging a pull request on a
+  connected GitHub repository (`github_pr_merge`, whose push can deploy the site); reading, reviewing
+  and commenting on a pull request do not, and no agent can approve one. These memory writes prompt too: `memory_create`,
   `memory_update`, `memory_delete`, `memory_restore_version`, `memory_bulk_create` and
   `account_memory_append`. A rule, skill, shortcut or specialist created without an agent is shared
   with every agent, so `memory_create` prompts on every call, a new agent's Notes included.
