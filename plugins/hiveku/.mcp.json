@@ -217,6 +217,15 @@
       "ppc_google_sitelink_update": {
         "approval_mode": "prompt"
       },
+      "ppc_bing_campaign_budget_move": {
+        "approval_mode": "prompt"
+      },
+      "ppc_bing_shared_budget_update": {
+        "approval_mode": "prompt"
+      },
+      "ppc_google_campaign_conversion_goals_set": {
+        "approval_mode": "prompt"
+      },
       "ppc_bing_experiment_create": {
         "approval_mode": "prompt"
       },
