@@ -38,7 +38,8 @@ desktop. This plugin bundles:
     `.agents/skills/` in the account folders it scaffolds.
 - **A SessionStart hook** that warns if `HIVEKU_TOKEN` is unset and reinforces the disciplines that
   prevent the most common incidents, including saving each change as a version and following Hiveku
-  Memory as the source of truth (a Doing and a Done line in the memory log for each piece of work).
+  Memory as the source of truth (Hiveku records each session's Doing and Done in the memory log
+  itself; the agent ends with a Done in its own words).
 - **A versions reminder** (PreToolUse, PostToolUse and Stop hooks, see [Versions](#versions)): when a
   session changed a website project and did not save the change as a version, the agent is asked once,
   before it finishes, to save one.
