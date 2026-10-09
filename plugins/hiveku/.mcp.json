@@ -52,6 +52,9 @@
       "project_vcs_pr_update": {
         "approval_mode": "prompt"
       },
+      "project_vcs_queue_add": {
+        "approval_mode": "prompt"
+      },
       "hiveku_batch": {
         "approval_mode": "prompt"
       },

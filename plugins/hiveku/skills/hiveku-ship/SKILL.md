@@ -202,6 +202,26 @@ The merge's refusals change nothing:
 A merge into Your site is a version, so `project_vcs_rollback` can undo it, and it is not live until
 `deploy_site`.
 
+### The merge line
+When several pull requests are open, prefer the merge line over merging by hand: it merges them into
+their target in order, after checks. **Joining the line is the approval to merge**: the line then merges
+the pull request in the background with nobody asking again (into `main` = Your site; publishing stays a
+separate `deploy_site`). So ask the person first, naming the target and what is ahead, then
+`project_vcs_queue_add({ project_id, number, priority?, depends_on? })` (it prompts).
+- Report `position` (1 merges next), `ahead`, and any `conflicts_with_ahead`: a pull request ahead it
+  collides with, so it will be sent back once that one merges; settle it with the conflict steps below
+  and add it again.
+- Before merging, the line checks that it still merges cleanly, that it adds no secret keys to code (move
+  a found key to the site's secrets), and, with the approval rule on, that a person approved its current
+  changes. It waits for an approval without holding up the others (`entry.waiting`).
+- Refusals change nothing: 409 `merge_conflicts` (resolve first), `already_queued`,
+  `pull_request_is_draft`, `queue_full`; `urgent` is an owner's or admin's (403 `owner_or_admin_only`).
+- Read the line with `project_vcs_queue({ project_id })` before starting work on a site several agents
+  share. Take a pull request out with `project_vcs_queue_remove` (it stays open) and change its order or
+  what it waits for with `project_vcs_queue_update`.
+- A direct merge answering 409 `pr_merge_busy` means another merge of the site is running: wait the
+  `Retry-After` seconds and call again.
+
 ### Merge conflicts
 A refused merge lists the conflicting files at `details.conflicts` (also `details.conflict_details`
 and `details.conflict_count`, and under `details.data.conflicts` in older answers): name every one to
