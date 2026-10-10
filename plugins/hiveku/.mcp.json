@@ -55,6 +55,18 @@
       "project_vcs_queue_add": {
         "approval_mode": "prompt"
       },
+      "project_secrets_set": {
+        "approval_mode": "prompt"
+      },
+      "project_secrets_delete": {
+        "approval_mode": "prompt"
+      },
+      "project_secrets_apply_to_preview": {
+        "approval_mode": "prompt"
+      },
+      "project_secrets_reveal": {
+        "approval_mode": "prompt"
+      },
       "hiveku_batch": {
         "approval_mode": "prompt"
       },
