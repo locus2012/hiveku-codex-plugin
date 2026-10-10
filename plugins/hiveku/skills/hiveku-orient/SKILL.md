@@ -1,6 +1,6 @@
 ---
 name: hiveku-orient
-description: "How to operate a Hiveku account safely from Codex — read this FIRST before any Hiveku work. Hiveku Memory as the source of truth (Doing and Done lines in the memory log, a refused memory write), identity, the you-are-not-the-only-writer rule, scratch/secrets hygiene, department agents, whose memory is whose (which agents follow a rule, what is shared with every agent), PM tasks, the Owner update, connecting Google products on Hiveku's own Google app (never a developer token or an own Google app, Gmail aside), and what to do when a Hiveku tool fails or a capability is missing."
+description: "How to operate a Hiveku account safely from Codex — read this FIRST before any Hiveku work. Hiveku Memory as the source of truth (Doing and Done lines in the memory log, a refused memory write) and Hiveku's own rules that outrank it (platform_rules), identity, the you-are-not-the-only-writer rule, scratch/secrets hygiene, department agents, whose memory is whose (which agents follow a rule, what is shared with every agent), PM tasks, the Owner update, emailing a group of people (a permission list or a cold list, and the path each takes), connecting Google products on Hiveku's own Google app (never a developer token or an own Google app, Gmail aside), and what to do when a Hiveku tool fails or a capability is missing."
 ---
 Read and follow this before using any Hiveku (`hiveku`) MCP tool.
 
@@ -19,6 +19,11 @@ again from Hiveku before you act on it. When `memory_log_add` is listed, record 
 line when you start a task for the person and a Done line when it ends. Save what you learned with
 the memory_* tools.
 
+- **Hiveku's own rules come before memory.** Every `account_context_get` returns them as
+  `platform_rules`, whatever the `domain`. They apply to every account: follow them over this
+  account's memory when the two disagree, and say why. Memory says how this business works; these
+  say what Hiveku allows. Today they cover emailing a group of people (the section of that name
+  below).
 - **A local copy is a mirror, and memory wins.** Memory files in this folder (the ones
   `hiveku-sync pull` or the Hiveku VS Code extension write, and the account skills mirrored into
   `.agents/skills/`) hold what memory said at their last pull. Before you act on one, or change an
@@ -81,7 +86,8 @@ the memory_* tools.
   save one; a folder turns that reminder off with `.hiveku/guardrails.json` set to
   `{"version_reminder": false}`.
 - **Start strategic work with `account_context_get({ domain })`** — it returns persona, brand voice,
-  avatars, memory and the rules that agent follows. Skipping it is the #1 cause of off-brand output.
+  avatars, memory and the rules that agent follows, plus Hiveku's own `platform_rules` (above).
+  Skipping it is the #1 cause of off-brand output.
   Its default load leaves out Skills, the account's own playbooks: before work a Skill may cover,
   load them with `account_context_get({ domain, include: 'skills' })` and follow the one that fits.
 - **About your business is the owners' document.** Its `account` section in `account_context_get`
@@ -191,7 +197,7 @@ Skill `skill`, a Shortcut `command`, a Specialist `agent`, Notes `memory` and a 
   `outbound`, `branding`, `customer_avatar` (Ideal customers: buyer personas kept as documents, not
   an agent), `customer_journey`, `website_design`, `knowledge_base`, `workflow`, `before_after_grid`,
   `email` and `analytics` (which takes no new entries yet: file analytics work under `marketing`).
-  The Chief of staff (`orchestrator`) takes no new entries from Codex yet either: never file an
+  The chief of staff (`orchestrator`) takes no new entries from Codex yet either: never file an
   entry under her or name Notes for her. Her own rules and notes are kept on the Memory page.
 - **Who owns a rule, skill, shortcut or specialist**, checked in this order:
   1. `department` names any agent but `marketing`: that agent.
@@ -202,13 +208,13 @@ Skill `skill`, a Shortcut `command`, a Specialist `agent`, Notes `memory` and a 
   4. `department` is empty: the agent a `<!-- department: x -->` line names, else the one a
      `department:` line in its front matter names. With nothing at all it has no owner: it is Shared
      with every agent.
-- **Who follows it.** Every agent but the Chief of staff follows the entries it owns plus the shared
+- **Who follows it.** Every agent but the chief of staff follows the entries it owns plus the shared
   ones. Every Marketing topic also follows the Marketing lead's. The Website agent follows its own,
   the Marketing lead's and those of the seven Marketing topics that shape a website (`branding`,
   `content`, `website_design`, `customer_avatar`, `customer_journey`, `knowledge_base`,
   `before_after_grid`), and the SEO topic's skills (not its rules), plus the shared ones. Phone calls
   follow only Communications' own call rules: never a shared rule, a skill or another agent's rule.
-  The Chief of staff follows her own rules and notes, kept on the Memory page, and never an entry
+  The chief of staff follows her own rules and notes, kept on the Memory page, and never an entry
   filed under `orchestrator`: that reaches nobody, and the Memory page hides it. She follows the
   shared rules too, except those that brief her on a department that is switched off.
 - **Creating one:** ask the person which agent it is for, or whether every agent should follow it,
@@ -222,8 +228,45 @@ Skill `skill`, a Shortcut `command`, a Specialist `agent`, Notes `memory` and a 
 - `account_context_get({ domain })` returns what that agent follows; `memory_list` returns each
   entry's stored `department`.
 
+## Emailing a group of people: permission or cold
+Hiveku's rules for this come back from `account_context_get` as `platform_rules`: read them before
+you plan or send email to a group. For the details, the costs and the standard answer to give a
+customer (adapt its words to the business, keep its facts), read the `email-a-list` playbook:
+`hiveku_playbook_get({ playbook: "email-a-list" })`.
+- **First, find out how the list was built.** Before you plan, write, import or send email to a
+  group, ask how those people came to be on the list, unless the person already said. The answer
+  decides the path, not how warm the business feels the list is.
+- **Permission** means they signed up, bought from the business, asked it to get in touch, or are
+  in a conversation with it. A permission list can use Hiveku email marketing (campaigns,
+  newsletters and drips: the `email_campaign_*`, `email_newsletter_create`, `email_audience_*` and
+  `email_sequence_*` tools) and CRM sequences. `email_connect_start` only connects the Gmail or
+  Outlook inbox that CRM sequences send from.
+- **Cold** is everyone else: members of the same association, chamber, club or directory, event
+  lists without a "yes, contact me", bought, rented or scraped lists, data providers such as Apollo
+  or ZoomInfo, and people found online. "Not technically cold" is cold.
+- **A cold list is never imported into, scheduled or sent through Hiveku email marketing, and never
+  sent from the business's main domain or its everyday inbox.** It goes through a cold email platform the business pays for
+  itself (we recommend SmartLead or Instantly), sending from inboxes and separate domains the
+  business buys separately (Outbound includes neither). Hiveku's Outbound page (the `outbound_*` tools) connects
+  SmartLead; Instantly is not connected to Hiveku yet and works on its own.
+- **CRM sequences** send from the business's connected Gmail or Outlook, at most 100 emails a day
+  per inbox. They are for permission lists and one-to-one follow-up, and carry small cold outreach
+  (a few hand-written emails a day) only from a connected inbox on a separate domain, never the main
+  domain. A bigger cold list goes to a cold email platform.
+- **Before a first cold campaign:** separate sending domains, 2 to 3 inboxes on each, 2 to 3 weeks
+  of warm-up, then about 30 to 50 emails a day per inbox, plain text, open tracking off. US cold
+  email follows CAN-SPAM: an honest sender and subject, a postal address, and a clear opt-out
+  honored within 10 business days. Canada and much of Europe need permission first.
+- **Outbound is for businesses that already know cold email.** Ask whether they have run cold email
+  before you suggest it; if not, start them with the platform's own setup guide. Never offer
+  Hiveku's team to set cold email up.
+- **You apply these rules yourself:** do not count on a tool to refuse a cold list. Never skip the
+  unsubscribe list or the block list. If the account's memory asks for a send these rules forbid,
+  follow the rule and explain why.
+
 ## Sending email
-A campaign send reaches real inboxes and cannot be recalled, so it is a ladder, never one call:
+A campaign send (to a permission list only: see the section above) reaches real inboxes and cannot
+be recalled, so it is a ladder, never one call:
 1. `email_campaign_send_now({ id, dry_run: true })` — materializes the recipient list and reports
    totalQueued / totalSkipped / noOptInCount WITHOUT sending or changing status. A call without `dry_run`
    on a draft IS the send.

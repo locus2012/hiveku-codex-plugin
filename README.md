@@ -9,7 +9,9 @@ desktop. This plugin bundles:
 - **Skills** carrying Hiveku's operating doctrine and workflows:
   - `hiveku-orient` — read first: identity, the you-are-not-the-only-writer rule, scratch/secrets
     hygiene, department agents, whose memory is whose (the agent that owns a rule, and what is shared
-    with every agent), PM tasks + the Owner update, and connecting Google products: every one
+    with every agent), PM tasks + the Owner update, Hiveku's own rules (`platform_rules`, which
+    outrank memory) and emailing a group of people (a permission list or a cold list, and the path
+    each takes), and connecting Google products: every one
     but Gmail runs on Hiveku's own Google app, so the agent never asks for a developer token or an own
     Google app.
   - `hiveku-remember` — save what you learned where the agents read it: an agent's Notes, a rule,

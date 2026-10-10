@@ -141,7 +141,7 @@ function assertRemember(raw) {
   assert.match(t, /Leave `department` out for Notes and Profiles, and with `project_id`: a website's own entries always belong to the Website agent\./);
   assert.match(t, /`memory_bulk_create` takes the same `department` on each entry\./);
   assert.match(t, /Each of these refusals means nothing was written: - `invalid_department`: the value is not an agent's key\. Ask the person again\./);
-  assert.match(t, /- `department_not_available`: Hiveku does not file entries under that agent yet \(today the Chief of staff\)\. Tell the person where it can be kept instead, as above, and do not pick another agent or every agent without asking\./);
+  assert.match(t, /- `department_not_available`: Hiveku does not file entries under that agent yet \(today the chief of staff\)\. Tell the person where it can be kept instead, as above, and do not pick another agent or every agent without asking\./);
   assert.match(t, /- `department_conflict`: the text's own department line names a different agent than `department` \(or any agent, with "shared"\)\. Make the first line name the agent the person chose, with no line for every agent, and send it again\./);
   assert.match(t, /- `department_not_used`: `department` went on Notes, a Profile or a website's own entry, whose name decides where it belongs\. Send it again without `department`\./);
   assert.match(t, /`_dropped_params` lists `department`/);
@@ -152,8 +152,8 @@ function assertRemember(raw) {
   assert.match(t, /Phone calls never follow shared rules\./);
   assert.match(t, /Hiveku does not file new entries under `analytics` yet: use `marketing`\./);
   // The Chief of staff: named, never offered, and where her memory is kept instead (F1).
-  assert.match(t, /The Chief of staff \(`orchestrator`\) takes no new entries from Codex yet either: her own rules and notes are kept on the Memory page, so for something meant for her, say that it can be added there, or that she can be told it in her own chat\. Never file it under another agent, or share it with every agent, in her place without asking\./);
-  assert.match(t, /`commerce`, and `orchestrator` too, since the Chief of staff keeps her own\) reach no agent/);
+  assert.match(t, /The chief of staff \(`orchestrator`\) takes no new entries from Codex yet either: her own rules and notes are kept on the Memory page, so for something meant for her, say that it can be added there, or that she can be told it in her own chat\. Never file it under another agent, or share it with every agent, in her place without asking\./);
+  assert.match(t, /`commerce`, and `orchestrator` too, since the chief of staff keeps her own\) reach no agent/);
   // The prompts, as they are (F4, F5).
   assert.match(t, /With this plugin's settings, Codex asks the person before `memory_create`, `memory_update`, `memory_delete`, `memory_restore_version`, `memory_bulk_create` and `account_memory_append`\./);
   assert.match(t, /A folder whose own `\.codex\/config\.toml` defines the `hiveku` server .* may not ask before `memory_create`: there the person's answer to the question in section 3 is the only check before a rule is created\./);
@@ -212,12 +212,12 @@ function assertOrient(raw) {
   assert.match(s, /3\. `department` is `marketing` with no topic line: the Marketing lead\./);
   assert.match(s, /4\. `department` is empty: the agent a `<!-- department: x -->` line names, else the one a `department:` line in its front matter names\. With nothing at all it has no owner: it is Shared with every agent\./);
   // Who follows what.
-  assert.match(s, /Every agent but the Chief of staff follows the entries it owns plus the shared ones\./);
+  assert.match(s, /Every agent but the chief of staff follows the entries it owns plus the shared ones\./);
   assert.match(s, /Every Marketing topic also follows the Marketing lead's\./);
   assert.match(s, /The Website agent follows its own, the Marketing lead's and those of the seven Marketing topics that shape a website \(`branding`, `content`, `website_design`, `customer_avatar`, `customer_journey`, `knowledge_base`, `before_after_grid`\), and the SEO topic's skills \(not its rules\), plus the shared ones\./);
   assert.match(s, /Phone calls follow only Communications' own call rules: never a shared rule, a skill or another agent's rule\./);
-  assert.match(s, /The Chief of staff follows her own rules and notes, kept on the Memory page, and never an entry filed under `orchestrator`: that reaches nobody, and the Memory page hides it\. She follows the shared rules too, except those that brief her on a department that is switched off\./);
-  assert.match(s, /The Chief of staff \(`orchestrator`\) takes no new entries from Codex yet either: never file an entry under her or name Notes for her\. Her own rules and notes are kept on the Memory page\./);
+  assert.match(s, /The chief of staff follows her own rules and notes, kept on the Memory page, and never an entry filed under `orchestrator`: that reaches nobody, and the Memory page hides it\. She follows the shared rules too, except those that brief her on a department that is switched off\./);
+  assert.match(s, /The chief of staff \(`orchestrator`\) takes no new entries from Codex yet either: never file an entry under her or name Notes for her\. Her own rules and notes are kept on the Memory page\./);
   // Creating and editing.
   assert.match(s, /ask the person which agent it is for, or whether every agent should follow it, and send the key as `department` \("shared" for every agent\)/);
   assert.match(s, /Save for every agent only when the person says so\./);
@@ -394,7 +394,7 @@ test('the checks fail on the old wording and on each broken rule (negative contr
     orient.replace(/keep its\s+`<!-- department: x -->` line as it is: removing it can make the entry shared, and changing it can\s+hand the entry to another agent\./, 'edit its text as you like.'),
     // F1: the Chief of staff offered again, or following what is filed under her.
     orient.replace('`coder` (Website),\n  and `marketing`, the Marketing lead,', '`coder` (Website),\n  `orchestrator` (Chief of staff), and `marketing`, the Marketing lead,'),
-    orient.replace(/Every agent but the Chief of staff follows the entries it owns plus the shared\s+ones\./, 'Every agent follows the entries it owns plus the shared ones.'),
+    orient.replace(/Every agent but the chief of staff follows the entries it owns plus the shared\s+ones\./,'Every agent follows the entries it owns plus the shared ones.'),
     orient.replace(/ and never an entry\s+filed under `orchestrator`: that reaches nobody, and the Memory page hides it\./, '.'),
     // F2: the SEO skills left out.
     orient.replace(/, and the SEO topic's skills \(not its rules\),/, ','),
