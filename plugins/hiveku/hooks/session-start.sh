@@ -19,6 +19,9 @@ echo "Hiveku: Hiveku Memory is the source of truth for this business: read it be
 # What Hiveku records in the memory log itself (MCP #174): a session's Doing at its first change and
 # its Done when it goes quiet or ends. The same words as the Claude Code plugin. Static text only.
 echo "Hiveku: Hiveku records this session's Doing at its first change and its Done when the session goes quiet or ends. When the work ends, send a Done with \`memory_log_add\` and a one-line summary of what you did, if you want the log to say more than the count of changes; leave \`thread\` out."
+# Hiveku's own rules (2026-10-09): they outrank memory where the two disagree, and today they cover
+# emailing a group of people. The same words as the Claude Code plugin's shim. Static text only.
+echo "Hiveku: Hiveku's own rules are \`platform_rules\` in account_context_get: they apply to every account and outrank this account's memory where the two disagree, so follow the rule and say why. Before you email a group of people, find out how the list was built: a cold list (people who never asked to hear from the business) goes through a cold email platform, never Hiveku email marketing."
 # Versions (2026-09-25): a save is live in the preview but is not a version. Static text only.
 echo "Hiveku: version your change with project_vcs_commit before you finish: once per change, after it is saved and verified, with NO files and a plain-language name for the site owner."
 # The feedback loop (2026-09-24): where Hiveku's own defects and gaps go. Static text only.

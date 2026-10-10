@@ -35,7 +35,7 @@ which also answers the phone), `production` (Production), `accounting` (Accounti
 (Paid ads), `outbound`, `branding`, `customer_avatar` (Ideal customers), `customer_journey`,
 `website_design`, `knowledge_base`, `workflow`, `before_after_grid` (Before and after) and `email`.
 Analytics is a Marketing topic too, but Hiveku does not file new entries under `analytics` yet: use
-`marketing`. The Chief of staff (`orchestrator`) takes no new entries from Codex yet either: her own
+`marketing`. The chief of staff (`orchestrator`) takes no new entries from Codex yet either: her own
 rules and notes are kept on the Memory page, so for something meant for her, say that it can be
 added there, or that she can be told it in her own chat. Never file it under another agent, or
 share it with every agent, in her place without asking. For work with no agent of its own, use `coder` for
@@ -89,7 +89,7 @@ An agent's Notes are ONE document, and `memory_update` REPLACES it whole.
 
    `content` is concise markdown: what you did, what you learned, why it matters, how to apply it
    next time. Notes named anything but the key of an agent that takes entries (`pm`, `crm`, `dev`,
-   `web`, `commerce`, and `orchestrator` too, since the Chief of staff keeps her own) reach no
+   `web`, `commerce`, and `orchestrator` too, since the chief of staff keeps her own) reach no
    agent: no agent reads them.
 
 ## 3. A rule, skill, shortcut or specialist: ask who follows it
@@ -128,7 +128,7 @@ default: an entry created without an agent is Shared with every agent.
    agent. `memory_bulk_create` takes the same `department` on each entry.
 4. **Read the answer.** Each of these refusals means nothing was written:
    - `invalid_department`: the value is not an agent's key. Ask the person again.
-   - `department_not_available`: Hiveku does not file entries under that agent yet (today the Chief
+   - `department_not_available`: Hiveku does not file entries under that agent yet (today the chief
      of staff). Tell the person where it can be kept instead, as above, and do not pick another
      agent or every agent without asking.
    - `department_conflict`: the text's own department line names a different agent than
