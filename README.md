@@ -156,7 +156,8 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   dashboard). Page A/B tests prompt too: `project_ab_test_create` (a test copy commits a new page
   to the site's code), `project_ab_test_update` (a new split on a running test moves live visitors)
   and `project_ab_test_action` (starting, pausing, resuming or ending a test changes which page live
-  visitors get). These memory writes prompt too: `memory_create`,
+  visitors get), and `project_ab_test_delete` (a draft, or an ended test with its results, is gone for
+  good). These memory writes prompt too: `memory_create`,
   `memory_update`, `memory_delete`, `memory_restore_version`, `memory_bulk_create` and
   `account_memory_append`. A rule, skill, shortcut or specialist created without an agent is shared
   with every agent, so `memory_create` prompts on every call, a new agent's Notes included.

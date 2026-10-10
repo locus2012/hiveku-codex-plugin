@@ -76,6 +76,9 @@
       "project_ab_test_action": {
         "approval_mode": "prompt"
       },
+      "project_ab_test_delete": {
+        "approval_mode": "prompt"
+      },
       "hiveku_batch": {
         "approval_mode": "prompt"
       },
