@@ -152,7 +152,9 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   and commenting on a pull request do not, and no agent can approve one. A site's secrets prompt too:
   `project_secrets_set` (a key without a tier reaches production), `project_secrets_delete`,
   `project_secrets_apply_to_preview` (copies the stored values into the preview, where AI-written code
-  runs) and `project_secrets_reveal` (plaintext values). Because the reveal prompts here, the plugin's
+  runs), `project_secrets_reveal` (plaintext values), `project_secrets_replace` (makes one tier's
+  variables exactly the set given, removing the rest) and `project_secrets_mark_sensitive` (hides
+  values for good). Because the reveal prompts here, the plugin's
   `.mcp.json` declares that with the header `X-Hiveku-Client: codex-plugin/<version>` (set by the plugin,
   never by the model), and Hiveku then lets a reveal through after your Codex prompt instead of also
   asking for a dashboard approval. A reveal inside `hiveku_batch` still gets the dashboard approval,

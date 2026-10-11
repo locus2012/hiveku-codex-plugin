@@ -70,6 +70,12 @@
       "project_secrets_reveal": {
         "approval_mode": "prompt"
       },
+      "project_secrets_replace": {
+        "approval_mode": "prompt"
+      },
+      "project_secrets_mark_sensitive": {
+        "approval_mode": "prompt"
+      },
       "project_ab_test_create": {
         "approval_mode": "prompt"
       },
