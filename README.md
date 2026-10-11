@@ -152,8 +152,15 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   and commenting on a pull request do not, and no agent can approve one. A site's secrets prompt too:
   `project_secrets_set` (a key without a tier reaches production), `project_secrets_delete`,
   `project_secrets_apply_to_preview` (copies the stored values into the preview, where AI-written code
-  runs) and `project_secrets_reveal` (plaintext values; a person also approves each reveal in the
-  dashboard). Page A/B tests prompt too: `project_ab_test_create` (a test copy commits a new page
+  runs), `project_secrets_reveal` (plaintext values), `project_secrets_replace` (makes one tier's
+  variables exactly the set given, removing the rest) and `project_secrets_mark_sensitive` (hides
+  values for good). Because the reveal prompts here, the plugin's
+  `.mcp.json` declares that with the header `X-Hiveku-Client: codex-plugin/<version>` (set by the plugin,
+  never by the model), and Hiveku then lets a reveal through after your Codex prompt instead of also
+  asking for a dashboard approval. A reveal inside `hiveku_batch` still gets the dashboard approval,
+  and so does any client that does not declare. Run Codex with approvals and the sandbox off
+  (`--dangerously-bypass-approvals-and-sandbox`) and nothing prompts, the reveal included: use that
+  mode only where an AI may read the site's values unasked. Page A/B tests prompt too: `project_ab_test_create` (a test copy commits a new page
   to the site's code), `project_ab_test_update` (a new split on a running test moves live visitors)
   and `project_ab_test_action` (starting, pausing, resuming or ending a test changes which page live
   visitors get), and `project_ab_test_delete` (a draft, or an ended test with its results, is gone for
