@@ -164,7 +164,12 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   to the site's code), `project_ab_test_update` (a new split on a running test moves live visitors)
   and `project_ab_test_action` (starting, pausing, resuming or ending a test changes which page live
   visitors get), and `project_ab_test_delete` (a draft, or an ended test with its results, is gone for
-  good). These memory writes prompt too: `memory_create`,
+  good). Mobile app settings prompt too: `mobile_app_sdk_upgrade` (moves the app to a newer Expo SDK,
+  rewriting its package files, app config and untouched template files in one go after saving a
+  checkpoint, then restarts its preview), `mobile_app_identity_set` (the iOS bundle ID, Android
+  package and link scheme, which become permanent once a build is uploaded to a store) and
+  `mobile_app_apple_account_set` (which Apple developer account the app's builds and App Store
+  submissions use). Reading those settings does not prompt. These memory writes prompt too: `memory_create`,
   `memory_update`, `memory_delete`, `memory_restore_version`, `memory_bulk_create` and
   `account_memory_append`. A rule, skill, shortcut or specialist created without an agent is shared
   with every agent, so `memory_create` prompts on every call, a new agent's Notes included.
