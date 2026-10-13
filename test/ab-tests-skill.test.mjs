@@ -4,6 +4,7 @@
  * the MCP tool descriptions, which say nothing about a test that is already running.
  *
  * Each block pins one rule:
+ *   - making the copy saves a version of the code, so it previews first and needs a yes;
  *   - version B is changed in the copy's own files (never the original's), deployed, then started;
  *   - while a test runs or is paused, neither page changes; a page that must change means ending
  *     the test (or ending it and starting a new one) and saying why;
@@ -11,8 +12,9 @@
  *   - paid ads: list the tests before a spend or final-URL change, final URLs stay on the
  *     original, a route sends one platform's clicks to its own page, page tests are not
  *     campaign experiments;
- *   - SEO: the copy is canonical and out of the sitemap on purpose, the redirect is a 302, and a
- *     running or recently ended test is ruled out first.
+ *   - SEO: the copy is canonical and out of the sitemap on purpose (the canonical travels in the
+ *     HTTP headers, and a route's page gets none), the redirect is a 302, and a running or
+ *     recently ended test is ruled out first.
  *
  * Run: node --test test/*.test.mjs
  */
@@ -53,6 +55,8 @@ test('version B is changed in the copy, deployed, then started', () => {
   assert.ok(s.includes("To change version B, edit the copy's own files, never the original's."));
   assert.ok(s.includes('deploy to production, and only then start the test.'));
   assert.ok(s.includes('the test cannot start until both pages answer on the live site'));
+  // make_copy saves a version of the code, so it previews first and waits for a yes.
+  assert.ok(s.includes("It saves a version of the site's code, so it shows a preview first and needs a yes (confirm: true)."));
 });
 
 test('neither page changes during a test; end it and say why', () => {
@@ -81,5 +85,8 @@ test('SEO: the copy is canonical and out of the sitemap on purpose, the redirect
   assert.ok(s.includes('A test copy (an address like /pricing-b) is canonical to the original while its test runs and is kept out of the sitemap on purpose.'));
   assert.ok(s.includes('Do not index it, link to it, add it to the sitemap or "fix" it as duplicate content.'));
   assert.ok(s.includes('The A/B redirect is a temporary 302'));
+  // The edge sends the canonical as an HTTP header, and never for a route's page.
+  assert.ok(s.includes("The canonical is sent in the page's HTTP headers, not in its HTML, so an audit that reads only the HTML reports it missing."));
+  assert.ok(s.includes("A route's page gets no canonical."));
   assert.ok(s.includes('rule out a running or recently ended test or route on the page.'));
 });

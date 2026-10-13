@@ -12,7 +12,8 @@ them (`can_start_tests`, `why_not`).
 
 ## Making and changing version B
 - `project_ab_test_create` with `make_copy: true` copies the page's code to the next free address
-  (/pricing to /pricing-b) as a draft. Nothing changes on the live site.
+  (/pricing to /pricing-b) as a draft. Nothing changes on the live site. It saves a version of
+  the site's code, so it shows a preview first and needs a yes (`confirm: true`).
 - To change version B, edit the copy's own files, never the original's. Save a version, deploy to
   production, and only then start the test.
 - Start checks: the test cannot start until both pages answer on the live site, and the start
@@ -46,6 +47,8 @@ them (`can_start_tests`, `why_not`).
 - A test copy (an address like /pricing-b) is canonical to the original while its test runs and
   is kept out of the sitemap on purpose. Do not index it, link to it, add it to the sitemap or
   "fix" it as duplicate content.
+- The canonical is sent in the page's HTTP headers, not in its HTML, so an audit that reads only
+  the HTML reports it missing. A route's page gets no canonical.
 - The A/B redirect is a temporary 302, by design.
 - Before blaming rankings or traffic, rule out a running or recently ended test or route on the
   page.
