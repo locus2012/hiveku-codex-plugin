@@ -39,6 +39,11 @@ desktop. This plugin bundles:
     website assistant is answering (`ai_handling`), replying to a chat as staff (a reply takes it from
     the assistant, so it waits for a yes), and what the assistant answers from, read with
     `helpdesk_assistant_knowledge_status` and explained to the owner in plain words.
+  - `hiveku-ab-tests` — page A/B tests and routes on a hosted site: change version B in the copy's
+    own files, deploy, then start; change neither page while a test runs or is paused; what "send
+    everyone to B" does (a temporary redirect); and the rules for paid ads (final URLs stay on the
+    original, list the tests before a spend change) and for SEO (the copy is canonical and out of
+    the sitemap on purpose).
   - Phone system, SMS and call tracking doctrine (`hiveku-phone-agency`) ships with the Claude plugin, not
     here; the Hiveku VS Code extension's **Set Up Codex Support** mirrors it, with its `references/`, into
     `.agents/skills/` in the account folders it scaffolds.
