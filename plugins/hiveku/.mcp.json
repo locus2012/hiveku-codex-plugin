@@ -124,6 +124,9 @@
       "project_indexing_set": {
         "approval_mode": "prompt"
       },
+      "ppc_recent_change_override": {
+        "approval_mode": "prompt"
+      },
       "account_memory_append": {
         "approval_mode": "prompt"
       },
