@@ -28,4 +28,8 @@ echo "Hiveku: version your change with project_vcs_commit before you finish: onc
 # A refused memory write (403 memory_write_refused) is named apart (2026-10-03):
 # "one retry, then report" turned that deliberate refusal into a bogus report.
 echo "Hiveku: if a Hiveku tool keeps failing after one sensible retry, or a capability you need is missing, report it with hiveku_report_issue or hiveku_request_feature, and mention it to the user only if it changes what they get. A memory write refused with memory_write_refused is not a failure: show the person its message and link, follow its hint, and never retry it unchanged or report it. The hiveku-orient skill has the rules."
+# The account's plan and its limits (agent plan and usage, builder #1332, MCP #225): the builder's
+# PLAN_LIMIT_LINE, word for word, right after the line with the memory_write_refused carve-out,
+# and where to read the plan. Static text only.
+echo "Hiveku: A tool answer with limit_kind (a plan's number reached, something the plan does not include, AI credits used up, billing that needs attention, an add-on or phones not set up, a chat's spending limit reached) is not a fault: nothing was done. Never retry it unchanged or report it; tell the person its message and do what its hint says. Only for plan_limit, not_on_plan and ai_credits, also say when it starts again and the next plan and its number, using account_usage_get or the answer for every number, and point an owner or admin to its billing_url. Before work the plan counts, call account_usage_get."
 exit 0
