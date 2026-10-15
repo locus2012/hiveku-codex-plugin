@@ -712,6 +712,9 @@
       "marketing_form_capture_purge": {
         "approval_mode": "prompt"
       },
+      "marketing_form_notifications_update": {
+        "approval_mode": "prompt"
+      },
       "social_publish_post": {
         "approval_mode": "prompt"
       },
