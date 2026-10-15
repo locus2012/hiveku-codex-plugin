@@ -144,8 +144,9 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   `ppc_linkedin_campaign_update` and `ppc_linkedin_campaign_group_update` (whole tool, so their pauses, reads
   and renames prompt too), the override that goes ahead over a teammate's recent ad change,
   `ppc_recent_change_override`, the calls that switch a workflow on or clear its automatic pause,
-  `workflow_enable` and `workflow_resume`, and the form capture write and erase,
-  `marketing_form_capture_settings_update` and `marketing_form_capture_purge`) is set to
+  `workflow_enable` and `workflow_resume`, the form capture write and erase,
+  `marketing_form_capture_settings_update` and `marketing_form_capture_purge`, and the change to who
+  gets a site's lead emails, `marketing_form_notifications_update`) is set to
   `"prompt"` per tool in `.mcp.json`, so a headless `codex exec` blocks on an approval request for those
   instead of running them. That includes saving a version (`project_vcs_commit`, whose files form
   writes the live project) and every `project_vcs_rollback` call, dry runs included: Codex cannot look
