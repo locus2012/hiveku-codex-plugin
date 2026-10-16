@@ -15,6 +15,11 @@
  *   - SEO: the copy is canonical and out of the sitemap on purpose (the canonical travels in the
  *     HTTP headers, and a route's page gets none), the redirect is a 302, and a running or
  *     recently ended test is ruled out first.
+ *   - phase 3: the newer goals (stayed, scrolled, bought something) and secondary goals that never
+ *     decide; results by traffic channel and ad platform, the purchases block and alsoCompared
+ *     (context, never the verdict); edit warnings and page_changed; notifications; promote and
+ *     remove_copy answer a preview first, and the copy's address becomes a permanent 301 only after
+ *     the next production deploy; a promote needs no ad change.
  *
  * Run: node --test test/*.test.mjs
  */
@@ -89,4 +94,44 @@ test('SEO: the copy is canonical and out of the sitemap on purpose, the redirect
   assert.ok(s.includes("The canonical is sent in the page's HTTP headers, not in its HTML, so an audit that reads only the HTML reports it missing."));
   assert.ok(s.includes("A route's page gets no canonical."));
   assert.ok(s.includes('rule out a running or recently ended test or route on the page.'));
+});
+
+test('goals: stayed, scrolled and bought something; secondary goals never decide', () => {
+  const s = section('## Goals');
+  assert.ok(s.includes('stayed at least 30 or 60 seconds on the tested page, scrolled at least 50% or 75% of it, and bought something.'));
+  assert.ok(s.includes('Only a storefront built or rebuilt on Hiveku since purchases became a goal does that, and only for visitors who allowed analytics.'));
+  assert.ok(s.includes('Up to five secondary goals can be added. They never decide the verdict.'));
+  assert.ok(s.includes('A new main goal on a running or paused test recalculates the whole result'));
+});
+
+test('during a test: a save answers abTestWarnings, a deploy is marked page_changed', () => {
+  const s = section('## During a test');
+  assert.ok(s.includes('a save that touches a tested page answers abTestWarnings'));
+  assert.ok(s.includes('marked page_changed'));
+});
+
+test('reading the result: channels and ad platforms, purchases, alsoCompared never decides, notifications', () => {
+  const s = section('## Reading the result');
+  assert.ok(s.includes('by traffic channel (channels) and by ad platform (adPlatforms)'));
+  assert.ok(s.includes('"Not from an ad". A row is not a verdict.'));
+  assert.ok(s.includes('purchases gives each version'));
+  assert.ok(s.includes('It is context and never decides the winner. Revenue is rough below 30 buyers.'));
+  assert.ok(s.includes('when it pauses a test, when a verdict is reached and when a health check warns. Each is told once.'));
+});
+
+test('after a test: promote and remove_copy preview first; the 301 comes after the next production deploy', () => {
+  const s = section('## After a test');
+  assert.ok(s.includes('action: "promote"'));
+  assert.ok(s.includes('action: "remove_copy"'));
+  assert.ok(s.includes('Without confirm: true each answers a preview. Show it, ask, and confirm only after a yes.'));
+  assert.ok(s.includes("Nothing changes on the live site until the next production deploy is live. Then Hiveku adds a permanent (301) redirect from the copy's address to the original"));
+  assert.ok(s.includes('the site goes live from GitHub, has more than 500 redirects'));
+});
+
+test('paid ads and SEO: results by ad platform, no ad change after a promote, the 301 stays', () => {
+  const ads = section('## Paid ads');
+  assert.ok(ads.includes('"Did version B win for Google Ads clicks?" Read the test\'s adPlatforms rows'));
+  assert.ok(ads.includes('No ad change is needed.'));
+  const seo = section('## SEO');
+  assert.ok(seo.includes("the copy's address becomes a permanent 301 to the original once the next production deploy is live. That 301 is meant to stay."));
 });
