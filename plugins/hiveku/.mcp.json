@@ -76,6 +76,24 @@
       "project_secrets_mark_sensitive": {
         "approval_mode": "prompt"
       },
+      "env_group_create": {
+        "approval_mode": "prompt"
+      },
+      "env_group_update": {
+        "approval_mode": "prompt"
+      },
+      "env_group_delete": {
+        "approval_mode": "prompt"
+      },
+      "env_group_set": {
+        "approval_mode": "prompt"
+      },
+      "env_group_link": {
+        "approval_mode": "prompt"
+      },
+      "env_group_unlink": {
+        "approval_mode": "prompt"
+      },
       "project_ab_test_create": {
         "approval_mode": "prompt"
       },

@@ -161,7 +161,11 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   `project_secrets_apply_to_preview` (copies the stored values into the preview, where AI-written code
   runs), `project_secrets_reveal` (plaintext values), `project_secrets_replace` (makes one tier's
   variables exactly the set given, removing the rest) and `project_secrets_mark_sensitive` (hides
-  values for good). Because the reveal prompts here, the plugin's
+  values for good). An account's environment groups (variables several sites share) prompt the same
+  way: `env_group_set` (every linked site's live functions get the change), `env_group_link` and
+  `env_group_unlink` (a site gains or loses the group's variables at once), `env_group_create`,
+  `env_group_update` and `env_group_delete` (the group's values are deleted with it); reading groups
+  does not. Because the reveal prompts here, the plugin's
   `.mcp.json` declares that with the header `X-Hiveku-Client: codex-plugin/<version>` (set by the plugin,
   never by the model), and Hiveku then lets a reveal through after your Codex prompt instead of also
   asking for a dashboard approval. A reveal inside `hiveku_batch` still gets the dashboard approval,
