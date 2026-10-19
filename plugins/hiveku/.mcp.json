@@ -3,7 +3,7 @@
     "url": "https://core.hiveku.com/mcp",
     "bearer_token_env_var": "HIVEKU_TOKEN",
     "http_headers": {
-      "X-Hiveku-Client": "codex-plugin/0.3.21"
+      "X-Hiveku-Client": "codex-plugin/0.3.22"
     },
     "default_tools_approval_mode": "approve",
     "tools": {
@@ -127,6 +127,9 @@
       "ppc_recent_change_override": {
         "approval_mode": "prompt"
       },
+      "account_timezone_set": {
+        "approval_mode": "prompt"
+      },
       "account_memory_append": {
         "approval_mode": "prompt"
       },
@@ -170,6 +173,9 @@
         "approval_mode": "prompt"
       },
       "helpdesk_ticket_send_reply": {
+        "approval_mode": "prompt"
+      },
+      "helpdesk_assistant_knowledge_sources_update": {
         "approval_mode": "prompt"
       },
       "marketing_report_send": {

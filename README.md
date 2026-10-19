@@ -38,7 +38,9 @@ desktop. This plugin bundles:
   - `hiveku-website-chat` — website chats in the helpdesk: which ones wait for a person and which the
     website assistant is answering (`ai_handling`), replying to a chat as staff (a reply takes it from
     the assistant, so it waits for a yes), and what the assistant answers from, read with
-    `helpdesk_assistant_knowledge_status` and explained to the owner in plain words.
+    `helpdesk_assistant_knowledge_status` and explained to the owner in plain words. An owner or
+    admin can also teach it from here: its settings, saved answers, a test question and the website
+    read, and where it looks answers up, which shows a plan and asks first.
   - `hiveku-ab-tests` — page A/B tests and routes on a hosted site: change version B in the copy's
     own files, deploy, then start; change neither page while a test runs or is paused; what "send
     everyone to B" does (a temporary redirect); and the rules for paid ads (final URLs stay on the
@@ -145,8 +147,10 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   and renames prompt too), the override that goes ahead over a teammate's recent ad change,
   `ppc_recent_change_override`, the calls that switch a workflow on or clear its automatic pause,
   `workflow_enable` and `workflow_resume`, the form capture write and erase,
-  `marketing_form_capture_settings_update` and `marketing_form_capture_purge`, and the change to who
-  gets a site's lead emails, `marketing_form_notifications_update`) is set to
+  `marketing_form_capture_settings_update` and `marketing_form_capture_purge`, the change to who
+  gets a site's lead emails, `marketing_form_notifications_update`, the account's timezone,
+  `account_timezone_set`, and where the website assistant looks answers up,
+  `helpdesk_assistant_knowledge_sources_update`) is set to
   `"prompt"` per tool in `.mcp.json`, so a headless `codex exec` blocks on an approval request for those
   instead of running them. That includes saving a version (`project_vcs_commit`, whose files form
   writes the live project) and every `project_vcs_rollback` call, dry runs included: Codex cannot look
