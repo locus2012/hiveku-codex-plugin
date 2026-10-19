@@ -145,6 +145,9 @@
       "ppc_recent_change_override": {
         "approval_mode": "prompt"
       },
+      "account_timezone_set": {
+        "approval_mode": "prompt"
+      },
       "account_memory_append": {
         "approval_mode": "prompt"
       },
@@ -188,6 +191,9 @@
         "approval_mode": "prompt"
       },
       "helpdesk_ticket_send_reply": {
+        "approval_mode": "prompt"
+      },
+      "helpdesk_assistant_knowledge_sources_update": {
         "approval_mode": "prompt"
       },
       "marketing_report_send": {
