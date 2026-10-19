@@ -146,7 +146,10 @@ test('changing the assistant from here: who may, the confirmation, and the hold'
   assert.match(change, /`instruction_override`: reword it as guidance for visitors/);
   assert.match(change, /first answers 409 `confirmation_required` and changes nothing/);
   assert.match(change, /only after a yes send the same change with `details\.confirm_token` \(15 minutes, that plan only, once\)/);
-  assert.match(change, /403 `agent_changes_not_enabled` to every call, turning off included/);
+  // A possible answer, never the tool's state: true whether Hiveku pauses these changes or not.
+  assert.match(change, /A 403 `agent_changes_not_enabled` means Hiveku has paused these changes for AI connections, turning off included, and nothing changed: say so plainly and send the owner to the "Where it finds answers" card, or to the AI chat on the Helpdesk page, which asks them on an approval card/);
+  assert.doesNotMatch(change, /is released|are released/);
+  assert.match(change, /Call it on its own: the MCP server refuses it inside `hiveku_batch`/);
   // "Codex asks you before every call" must stay true of plugins/hiveku/.mcp.json.
   assert.match(change, /Codex asks you before every call/);
   const mcp = JSON.parse(fs.readFileSync(path.join(root, 'plugins/hiveku/.mcp.json'), 'utf8'));

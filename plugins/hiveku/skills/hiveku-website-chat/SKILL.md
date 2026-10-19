@@ -181,10 +181,10 @@ before each change.
   be told about, with how many documents it holds. Show the user that summary, ask, and only after a
   yes send the same change with `details.confirm_token` (15 minutes, that plan only, once). A 409
   `plan_changed` means something moved since: it carries a fresh plan and token, so show the new
-  summary and ask again. Until every app that asks before such a change is released, it answers
-  403 `agent_changes_not_enabled` to every call, turning off included: send the owner to the
-  "Where it finds answers" card, or to the AI chat on the Helpdesk page, which asks them on an
-  approval card.
+  summary and ask again. Call it on its own: the MCP server refuses it inside `hiveku_batch`. A 403
+  `agent_changes_not_enabled` means Hiveku has paused these changes for AI connections, turning
+  off included, and nothing changed: say so plainly and send the owner to the "Where it finds
+  answers" card, or to the AI chat on the Helpdesk page, which asks them on an approval card.
 - **The website.** `helpdesk_assistant_website_read_start` reads the site again (AI credits; only
   while the website source is on; at most once every 10 minutes and 3 times a day), then check
   `helpdesk_assistant_website_read_status`. `helpdesk_assistant_website_pages_list` lists the pages
