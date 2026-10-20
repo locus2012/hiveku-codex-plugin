@@ -58,6 +58,9 @@
       "project_vcs_queue_add": {
         "approval_mode": "prompt"
       },
+      "project_vcs_checks_rerun": {
+        "approval_mode": "prompt"
+      },
       "project_secrets_set": {
         "approval_mode": "prompt"
       },
