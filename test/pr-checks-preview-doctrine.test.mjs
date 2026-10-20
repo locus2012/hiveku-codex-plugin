@@ -28,7 +28,9 @@ test('the merge line builds the merged result again, and a failure names the che
 
 test("an open pull request's preview is used; live data is explained, never worked around unasked", () => {
   assert.match(SHIP, /preview\.url is a preview of the branch Hiveku started for the pull request/);
-  assert.match(SHIP, /preview\.reason: "live_data" means none is started because the site's development settings reach live data/);
+  assert.match(SHIP, /preview\.reason: "live_data" means none is started because the site's development settings hold a database or keys a preview must not get/);
   assert.match(SHIP, /start one by hand only on the person's yes/);
-  assert.match(SHIP, /a separate Hiveku database for development, DATABASE_URL_DEV, and test keys fix it; never a database outside Hiveku/);
+  assert.match(SHIP, /a separate Hiveku database for development, DATABASE_URL_DEV, fixes database; never a database outside Hiveku/);
+  // Test-mode keys only for keys that have them.
+  assert.match(SHIP, /test-mode keys fix live_key; other_key keys only stop blocking once development holds none of them/);
 });
