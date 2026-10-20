@@ -30,4 +30,5 @@ test("an open pull request's preview is used; live data is explained, never work
   assert.match(SHIP, /preview\.url is a preview of the branch Hiveku started for the pull request/);
   assert.match(SHIP, /preview\.reason: "live_data" means none is started because the site's development settings reach live data/);
   assert.match(SHIP, /start one by hand only on the person's yes/);
+  assert.match(SHIP, /a separate Hiveku database for development, DATABASE_URL_DEV, and test keys fix it; never a database outside Hiveku/);
 });
