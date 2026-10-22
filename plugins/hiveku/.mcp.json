@@ -142,6 +142,9 @@
       "site_firewall_allow": {
         "approval_mode": "prompt"
       },
+      "site_firewall_trust_range": {
+        "approval_mode": "prompt"
+      },
       "site_firewall_remove": {
         "approval_mode": "prompt"
       },
