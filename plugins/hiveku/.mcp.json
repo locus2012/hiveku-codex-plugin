@@ -649,6 +649,12 @@
       "workflow_resume": {
         "approval_mode": "prompt"
       },
+      "workflow_env_set": {
+        "approval_mode": "prompt"
+      },
+      "workflow_env_delete": {
+        "approval_mode": "prompt"
+      },
       "workflow_trigger_update": {
         "approval_mode": "prompt"
       },
