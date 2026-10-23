@@ -147,7 +147,8 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   and renames prompt too), the override that goes ahead over a teammate's recent ad change,
   `ppc_recent_change_override`, the calls that switch a workflow on or clear its automatic pause,
   `workflow_enable` and `workflow_resume`, setting or removing a variable that switched-on workflows
-  read, `workflow_env_set` and `workflow_env_delete`, the form capture write and erase,
+  read, `workflow_env_set` and `workflow_env_delete`, switching email marketing on, which switched-on
+  workflows' email steps and held drips wait on, `marketing_activate`, the form capture write and erase,
   `marketing_form_capture_settings_update` and `marketing_form_capture_purge`, the change to who
   gets a site's lead emails, `marketing_form_notifications_update`, the account's timezone,
   `account_timezone_set`, and where the website assistant looks answers up,
