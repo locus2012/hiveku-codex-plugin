@@ -379,6 +379,9 @@
       "crm_contact_email_send": {
         "approval_mode": "prompt"
       },
+      "crm_contact_email_send_from_domain": {
+        "approval_mode": "prompt"
+      },
       "crm_enroll_sequence": {
         "approval_mode": "prompt"
       },
@@ -392,6 +395,9 @@
         "approval_mode": "prompt"
       },
       "marketing_activate": {
+        "approval_mode": "prompt"
+      },
+      "crm_contact_optin_set": {
         "approval_mode": "prompt"
       },
       "voice_sms_send": {
