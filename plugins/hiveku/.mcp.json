@@ -3,7 +3,7 @@
     "url": "https://core.hiveku.com/mcp",
     "bearer_token_env_var": "HIVEKU_TOKEN",
     "http_headers": {
-      "X-Hiveku-Client": "codex-plugin/0.3.29"
+      "X-Hiveku-Client": "codex-plugin/0.3.30"
     },
     "default_tools_approval_mode": "approve",
     "tools": {
@@ -379,6 +379,9 @@
       "crm_contact_email_send": {
         "approval_mode": "prompt"
       },
+      "crm_contact_email_send_from_domain": {
+        "approval_mode": "prompt"
+      },
       "crm_enroll_sequence": {
         "approval_mode": "prompt"
       },
@@ -392,6 +395,9 @@
         "approval_mode": "prompt"
       },
       "marketing_activate": {
+        "approval_mode": "prompt"
+      },
+      "crm_contact_optin_set": {
         "approval_mode": "prompt"
       },
       "voice_sms_send": {
@@ -638,6 +644,9 @@
         "approval_mode": "prompt"
       },
       "seo_automated_report_delete": {
+        "approval_mode": "prompt"
+      },
+      "seo_aeo_brand_profile_delete": {
         "approval_mode": "prompt"
       },
       "seo_page_schema_delete": {
