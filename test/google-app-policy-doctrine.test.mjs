@@ -378,3 +378,24 @@ test("every 'unverified app' screen is tied to Google Ads", () => {
   assert.ok(seen > 0, "no skill tells the owner about the Google Ads 'unverified app' screen");
   assert.deepEqual(loose, []);
 });
+
+test('the orient skill sends a Gmail or Outlook inbox to email_inbox_setup_guide, signed in from the person\'s own terminal', () => {
+  const text = read(ORIENT);
+  const start = text.indexOf('## Gmail or Outlook inbox');
+  assert.notEqual(start, -1, 'the orient skill has a "Gmail or Outlook inbox" section');
+  const next = text.indexOf('\n## ', start + 1);
+  const section = flat(text.slice(start, next === -1 ? undefined : next));
+  for (const phrase of [
+    'email_inbox_setup_guide',
+    "the account's own internal Gmail app",
+    'the two Google pages',
+    'in their own terminal window',
+    'outside the sandbox',
+    'never print or save it',
+    'A help desk inbox starts empty',
+  ]) {
+    assert.ok(section.includes(phrase), `the inbox section lost: ${phrase}`);
+  }
+  assert.deepEqual(offersIn(section), []);
+});
+
