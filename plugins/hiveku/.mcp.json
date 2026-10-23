@@ -391,6 +391,9 @@
       "email_sequence_activate": {
         "approval_mode": "prompt"
       },
+      "marketing_activate": {
+        "approval_mode": "prompt"
+      },
       "voice_sms_send": {
         "approval_mode": "prompt"
       },
