@@ -321,6 +321,28 @@ Google Ads, Hiveku's developer token. The only Google app an account may own is 
   is missing, never a bring-your-own-app connect.
 - Own apps stay for Gmail, Outlook, Microsoft Ads, Meta, LinkedIn and TikTok.
 
+## Gmail or Outlook inbox
+People say "connect our support Gmail", "the helpdesk isn't seeing replies", "No active Gmail
+connection".
+- **Start with the guide.** `email_inbox_setup_guide({ platform: 'gmail' | 'outlook', for: 'helpdesk' | 'crm', mailbox })`
+  says where the account stands and gives the one next step; do it, then call the guide again.
+- **Gmail runs on the account's own internal Gmail app.** You run most of the Gmail app's setup with
+  the person's `gcloud` (the project and the Gmail API), and the person fills in the two Google pages
+  the guide links for the Gmail app (the consent screen with Audience Internal, and the Web client).
+  A personal @gmail.com address cannot have an internal Gmail app: offer a Workspace mailbox or Outlook.
+- **Outlook is all `az`.** The Outlook app registration needs no browser page.
+- **Sign in from Codex.** The person runs `gcloud auth login` (Gmail) or
+  `az login --allow-no-subscriptions` (Outlook; many Microsoft 365 tenants have no Azure subscription) in their
+  own terminal window, because Codex's sandbox has no network and cannot write gcloud's settings.
+  Then ask for approval to run each gcloud or az command outside the sandbox, or hand the person the
+  command to run.
+- **Keep the Gmail client secret out of the chat.** For the Gmail or Outlook app, the person types the
+  secret into Settings > OAuth Apps; never print or save it. The Outlook secret command prints it, so the
+  person runs that one in their own terminal, not you.
+- **Then connect.** `integration_connect_link_create({ connector: 'gmail' | 'outlook', oauth_app_id, owner_user_email, consumers })`
+  as the guide names it. A help desk inbox starts empty: only mail that arrives after the connect
+  becomes tickets.
+
 ## Finding the right tool (there are ~1,000)
 Don't guess tool names. Discover with `hiveku_docs_search` / `hiveku_docs_get`, and use
 `hiveku_playbooks_list` / `hiveku_playbook_get` for step-by-step flows (deploying, files CRUD, rollback,
