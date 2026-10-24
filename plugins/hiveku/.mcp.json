@@ -13,6 +13,9 @@
       "deploy_run": {
         "approval_mode": "prompt"
       },
+      "deploy_serve_version": {
+        "approval_mode": "prompt"
+      },
       "project_files_bulk_save": {
         "approval_mode": "prompt"
       },
