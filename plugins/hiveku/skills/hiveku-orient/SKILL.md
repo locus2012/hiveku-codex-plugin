@@ -341,7 +341,10 @@ connection".
   person runs that one in their own terminal, not you.
 - **Then connect.** `integration_connect_link_create({ connector: 'gmail' | 'outlook', oauth_app_id, owner_user_email, consumers })`
   as the guide names it. A help desk inbox starts empty: only mail that arrives after the connect
-  becomes tickets.
+  becomes tickets. New mail arrives every 10 minutes, or in about a minute on Outlook (push turns on
+  when it connects). For about a minute on Gmail,
+  `email_inbox_setup_guide({ platform, section: 'instant_replies' })`: a Pub/Sub topic in the Gmail
+  app's own project, run with the person's gcloud.
 
 ## Finding the right tool (there are ~1,000)
 Don't guess tool names. Discover with `hiveku_docs_search` / `hiveku_docs_get`, and use
