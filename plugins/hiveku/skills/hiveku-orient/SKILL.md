@@ -336,12 +336,15 @@ connection".
   own terminal window, because Codex's sandbox has no network and cannot write gcloud's settings.
   Then ask for approval to run each gcloud or az command outside the sandbox, or hand the person the
   command to run.
-- **Keep the Gmail client secret out of the chat.** For the Gmail or Outlook app, the person types the
-  secret into Settings > OAuth Apps; never print or save it. The Outlook secret command prints it, so the
-  person runs that one in their own terminal, not you.
+- **Keep the client secret out of the chat.** For the Gmail app, call `oauth_app_client_file_link` and
+  run the one command it returns (ask for approval to run it outside the sandbox: it needs the network).
+  It sends Google's downloaded client file from the person's computer; never open, print or copy the
+  file. For the Outlook app, the person types the secret into Settings > OAuth Apps; never print or save
+  it. The Outlook secret command prints it, so the person runs that one in their own terminal, not you.
 - **Then connect.** `integration_connect_link_create({ connector: 'gmail' | 'outlook', oauth_app_id, owner_user_email, consumers })`
   as the guide names it. A help desk inbox starts empty: only mail that arrives after the connect
-  becomes tickets. New mail arrives every 10 minutes, or in about a minute on Outlook (push turns on
+  becomes tickets. An inbox already connected for the CRM joins the help desk with
+  `email_connection_update({ connection_id, consumers: ['crm', 'helpdesk'] })`, with no new sign-in. New mail arrives every 10 minutes, or in about a minute on Outlook (push turns on
   when it connects). For about a minute on Gmail,
   `email_inbox_setup_guide({ platform, section: 'instant_replies' })`: a Pub/Sub topic in the Gmail
   app's own project, run with the person's gcloud.
