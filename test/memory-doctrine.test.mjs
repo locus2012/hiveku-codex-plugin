@@ -393,7 +393,7 @@ test('the checks fail on the old wording and on each broken rule (negative contr
     orient.replace(/`workflow`, `before_after_grid`,\s+`email` and `analytics`/, '`workflow`, `before_after_grid` and `analytics`'),
     orient.replace(/keep its\s+`<!-- department: x -->` line as it is: removing it can make the entry shared, and changing it can\s+hand the entry to another agent\./, 'edit its text as you like.'),
     // F1: the Chief of staff offered again, or following what is filed under her.
-    orient.replace('`coder` (Website),\n  and `marketing`, the Marketing lead,', '`coder` (Website),\n  `orchestrator` (Chief of staff), and `marketing`, the Marketing lead,'),
+    orient.replace('`coder` (Website), and `marketing`, the Marketing lead,', '`coder` (Website), `orchestrator` (Chief of staff), and `marketing`, the Marketing lead,'),
     orient.replace(/Every agent but the chief of staff follows the entries it owns plus the shared\s+ones\./,'Every agent follows the entries it owns plus the shared ones.'),
     orient.replace(/ and never an entry\s+filed under `orchestrator`: that reaches nobody, and the Memory page hides it\./, '.'),
     // F2: the SEO skills left out.

@@ -192,11 +192,12 @@ Specialists; and Shared with every agent. In the tools a Rule is `type: "rule"` 
 Skill `skill`, a Shortcut `command`, a Specialist `agent`, Notes `memory` and a Profile `identity`.
 
 - **The agents and their keys:** `sales` (Sales), `helpdesk` (Support), `comms` (Communications, which
-  also answers the phone), `production` (Production), `accounting` (Accounting), `coder` (Website),
-  and `marketing`, the Marketing lead, with its topics: `content`, `seo`, `social`, `ppc` (Paid ads),
-  `outbound`, `branding`, `customer_avatar` (Ideal customers: buyer personas kept as documents, not
-  an agent), `customer_journey`, `website_design`, `knowledge_base`, `workflow`, `before_after_grid`,
-  `email` and `analytics` (which takes no new entries yet: file analytics work under `marketing`).
+  also answers the phone), `production` (Production), `accounting` (Accounting), `outbound`
+  (Outbound, cold email), `coder` (Website), and `marketing`, the Marketing lead, with its topics:
+  `content`, `seo`, `social`, `ppc` (Paid ads), `branding`, `customer_avatar` (Ideal customers:
+  buyer personas kept as documents, not an agent), `customer_journey`, `website_design`,
+  `knowledge_base`, `workflow`, `before_after_grid`, `email` and `analytics` (which takes no new
+  entries yet: file analytics work under `marketing`).
   The chief of staff (`orchestrator`) takes no new entries from Codex yet either: never file an
   entry under her or name Notes for her. Her own rules and notes are kept on the Memory page.
 - **Who owns a rule, skill, shortcut or specialist**, checked in this order:
