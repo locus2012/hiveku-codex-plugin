@@ -451,6 +451,12 @@
       "outbound_reply_draft_send": {
         "approval_mode": "prompt"
       },
+      "outbound_lead_list_run_start": {
+        "approval_mode": "prompt"
+      },
+      "outbound_lead_list_run_control": {
+        "approval_mode": "prompt"
+      },
       "voice_number_purchase": {
         "approval_mode": "prompt"
       },
