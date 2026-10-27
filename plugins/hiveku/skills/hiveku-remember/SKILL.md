@@ -30,10 +30,11 @@ words with people, not "department memory", "account memory" or a tool name:
 - **Profile** (`identity`): who the agent is. Change a profile only when the person asks.
 
 The agents and the key each takes: `sales` (Sales), `helpdesk` (Support), `comms` (Communications,
-which also answers the phone), `production` (Production), `accounting` (Accounting), `coder`
-(Website), and `marketing` (the Marketing lead) with its topics: `content`, `seo`, `social`, `ppc`
-(Paid ads), `outbound`, `branding`, `customer_avatar` (Ideal customers), `customer_journey`,
-`website_design`, `knowledge_base`, `workflow`, `before_after_grid` (Before and after) and `email`.
+which also answers the phone), `production` (Production), `accounting` (Accounting), `outbound`
+(Outbound, cold email), `coder` (Website), and `marketing` (the Marketing lead) with its topics:
+`content`, `seo`, `social`, `ppc` (Paid ads), `branding`, `customer_avatar` (Ideal customers),
+`customer_journey`, `website_design`, `knowledge_base`, `workflow`, `before_after_grid` (Before and
+after) and `email`.
 Analytics is a Marketing topic too, but Hiveku does not file new entries under `analytics` yet: use
 `marketing`. The chief of staff (`orchestrator`) takes no new entries from Codex yet either: her own
 rules and notes are kept on the Memory page, so for something meant for her, say that it can be
