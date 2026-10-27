@@ -163,6 +163,9 @@
       "project_page_cache_set": {
         "approval_mode": "prompt"
       },
+      "analytics_visitor_intelligence_start": {
+        "approval_mode": "prompt"
+      },
       "ppc_recent_change_override": {
         "approval_mode": "prompt"
       },
