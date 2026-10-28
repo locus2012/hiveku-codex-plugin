@@ -790,6 +790,9 @@
       "marketing_testimonial_media_replace": {
         "approval_mode": "prompt"
       },
+      "marketing_testimonial_rerecord_send": {
+        "approval_mode": "prompt"
+      },
       "marketing_form_upload_settings_update": {
         "approval_mode": "prompt"
       },
