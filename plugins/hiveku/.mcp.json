@@ -82,6 +82,12 @@
       "email_message_get": {
         "approval_mode": "prompt"
       },
+      "helpdesk_ticket_attachment_links": {
+        "approval_mode": "prompt"
+      },
+      "helpdesk_contact_data_export": {
+        "approval_mode": "prompt"
+      },
       "project_secrets_replace": {
         "approval_mode": "prompt"
       },
@@ -233,6 +239,12 @@
         "approval_mode": "prompt"
       },
       "helpdesk_assistant_knowledge_sources_update": {
+        "approval_mode": "prompt"
+      },
+      "helpdesk_contact_data_erase": {
+        "approval_mode": "prompt"
+      },
+      "helpdesk_chat_retention_set": {
         "approval_mode": "prompt"
       },
       "marketing_report_send": {
