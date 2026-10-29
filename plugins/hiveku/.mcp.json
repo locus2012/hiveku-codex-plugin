@@ -3,7 +3,7 @@
     "url": "https://core.hiveku.com/mcp",
     "bearer_token_env_var": "HIVEKU_TOKEN",
     "http_headers": {
-      "X-Hiveku-Client": "codex-plugin/0.3.43"
+      "X-Hiveku-Client": "codex-plugin/0.3.44"
     },
     "default_tools_approval_mode": "approve",
     "tools": {
@@ -248,6 +248,24 @@
         "approval_mode": "prompt"
       },
       "helpdesk_social_comments_settings_update": {
+        "approval_mode": "prompt"
+      },
+      "voice_site_create": {
+        "approval_mode": "prompt"
+      },
+      "voice_role_assign": {
+        "approval_mode": "prompt"
+      },
+      "voice_role_remove": {
+        "approval_mode": "prompt"
+      },
+      "voice_api_key_create": {
+        "approval_mode": "prompt"
+      },
+      "voice_api_key_revoke": {
+        "approval_mode": "prompt"
+      },
+      "voice_desk_phone_set": {
         "approval_mode": "prompt"
       },
       "marketing_report_send": {
