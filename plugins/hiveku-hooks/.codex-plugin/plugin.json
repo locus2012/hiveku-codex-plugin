@@ -1,7 +1,7 @@
 {
   "name": "hiveku-hooks",
   "version": "1.0.0",
-  "description": "Hiveku's hooks for Codex, installed beside the hiveku plugin: a check that your Hiveku account is connected when a session starts, and a reminder to save a website change as a version before the agent finishes. Codex asks you once to trust them.",
+  "description": "Hiveku's hooks for Codex, installed beside the hiveku plugin: a check that HIVEKU_TOKEN is set when a session starts, and a reminder to save a website change as a version before the agent finishes. Codex asks you once to trust them.",
   "author": {
     "name": "Hiveku",
     "url": "https://app.hiveku.com"

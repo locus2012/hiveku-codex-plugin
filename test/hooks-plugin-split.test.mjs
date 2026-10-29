@@ -15,18 +15,24 @@
  * Pinned:
  *  (a) plugins/hiveku-hooks holds only .codex-plugin/plugin.json, LICENSE,
  *      hooks/hooks.json and the scripts it runs or they source: nothing
- *      generated, nothing unused, no link (Codex cannot hash one); its
- *      manifest declares the hooks and nothing else;
+ *      generated, nothing unused, no link (Codex cannot hash one), and in a
+ *      git checkout git tracks every one of them (a copy without git reports
+ *      a skip); its manifest declares the hooks and nothing else, and its
+ *      copy says the SessionStart hook checks that HIVEKU_TOKEN is set, never
+ *      that it checks the connection;
  *  (b) plugins/hiveku has no hooks folder and no "hooks" field (Codex reads
- *      hooks/hooks.json by default when the field is absent);
+ *      hooks/hooks.json by default when the field is absent), under a version
+ *      above every hiveku that shipped the hooks (Codex replaces a plugin it
+ *      installed from a local marketplace only when the version changes);
  *  (c) the marketplace lists both plugins, each at its own folder, with
  *      policy values Codex accepts (codex-rs core-plugins/src/marketplace.rs);
  *  (d) installed the way Codex installs them, each at
  *      <CODEX_HOME>/plugins/cache/<marketplace>/<plugin>/<version>
  *      (core-plugins/src/store.rs), the batch refusal reads the hiveku
  *      plugin's real .mcp.json from beside the hooks plugin, and every
- *      registered command runs from a plugin root with a space in its path.
- *      The fixture cases (two versions, none, a checkout) are in
+ *      registered command, with the plugin path written into it as Codex
+ *      writes it, runs under zsh, bash and sh from a plugin root with a space
+ *      in its path. The fixture cases (two versions, none, a checkout) are in
  *      test/codex-hooks.test.sh;
  *  (e) the hooks plugin's folder hash, in Codex's own algorithm, is pinned to
  *      its version: a change to the folder makes every person trust the hooks
@@ -94,14 +100,22 @@ const NO_DASH_OR_EMOJI = (text, where) => {
 
 test('(a) plugins/hiveku-hooks holds only its manifest, LICENSE and the hooks, nothing generated', () => {
   assertHooksBundle(HOOKS_PLUGIN);
+});
+
+test('(a) git tracks every file in plugins/hiveku-hooks, and only those', (t) => {
   // What git ships is what is here: an untracked file would ship from a local
   // marketplace and not from GitHub, and the two would be trusted apart.
-  const git = spawnSync('git', ['ls-files', '--', 'plugins/hiveku-hooks'], { cwd: root, encoding: 'utf8' });
-  if (git.status === 0 && git.stdout.trim()) {
-    const tracked = git.stdout.trim().split('\n').map((f) => f.slice('plugins/hiveku-hooks/'.length)).sort();
-    const files = bundleEntries(HOOKS_PLUGIN).filter((e) => !e.endsWith('/')).sort();
-    assert.deepEqual(tracked, files, 'every file in plugins/hiveku-hooks is tracked, and only those');
+  const top = spawnSync('git', ['rev-parse', '--show-toplevel'], { cwd: root, encoding: 'utf8' });
+  if (top.status !== 0 || fs.realpathSync(top.stdout.trim()) !== fs.realpathSync(root)) {
+    t.skip('not a git checkout of this repo (a copy without .git), so there is nothing to compare');
+    return;
   }
+  const git = spawnSync('git', ['ls-files', '-z', '--', 'plugins/hiveku-hooks'], { cwd: root, encoding: 'utf8' });
+  assert.equal(git.status, 0, git.stderr);
+  const tracked = git.stdout.split('\0').filter(Boolean).map((f) => f.slice('plugins/hiveku-hooks/'.length)).sort();
+  const files = bundleEntries(HOOKS_PLUGIN).filter((e) => !e.endsWith('/')).sort();
+  assert.notEqual(tracked.length, 0, `git tracks none of the ${files.length} files in plugins/hiveku-hooks: git add them`);
+  assert.deepEqual(tracked, files, 'every file in plugins/hiveku-hooks is tracked, and only those');
 });
 
 test('(a) the hooks plugin manifest declares the hooks and nothing else', () => {
@@ -123,6 +137,27 @@ test('(a) the hooks plugin manifest declares the hooks and nothing else', () => 
     ['interface.longDescription', ui.longDescription],
   ]) {
     NO_DASH_OR_EMOJI(text, where);
+  }
+});
+
+test('(a) the copy names the check the SessionStart hook makes, and claims no connection check', () => {
+  // session-start.sh only checks that HIVEKU_TOKEN is set; it never contacts
+  // Hiveku. If it ever checks the connection, change this test with it.
+  const manifest = readJson(path.join(HOOKS_PLUGIN, '.codex-plugin', 'plugin.json'));
+  const { interface: ui } = manifest;
+  const hooksJson = readJson(path.join(HOOKS_PLUGIN, 'hooks', 'hooks.json'));
+  const statusMessages = Object.values(hooksJson.hooks).flatMap((groups) =>
+    groups.flatMap((g) => g.hooks.filter((h) => h.statusMessage).map((h) => h.statusMessage)),
+  );
+  assert.match(manifest.description, /HIVEKU_TOKEN is set/, 'description names the SessionStart check');
+  assert.match(ui.longDescription, /HIVEKU_TOKEN is set/, 'interface.longDescription names the SessionStart check');
+  for (const [where, text] of [
+    ['description', manifest.description],
+    ['interface.shortDescription', ui.shortDescription],
+    ['interface.longDescription', ui.longDescription],
+    ...statusMessages.map((message) => ['a hooks.json statusMessage', message]),
+  ]) {
+    assert.doesNotMatch(text, /connect/i, `${where} claims a connection check, and session-start.sh only checks that HIVEKU_TOKEN is set: ${text}`);
   }
 });
 
@@ -152,6 +187,52 @@ test('(b) plugins/hiveku has no hooks: no hooks folder and no "hooks" field', ()
   assert.equal(manifest.name, 'hiveku');
   assert.equal(manifest.mcpServers, './.mcp.json');
   assert.equal(manifest.skills, './skills/');
+});
+
+/**
+ * Every hiveku release up to and including this version shipped the hooks
+ * inside it. Codex replaces a plugin it installed from a local marketplace
+ * only when the version changes (codex-rs core-plugins/src/loader.rs,
+ * IfVersionChanged), so a hiveku without hooks under a version that had them
+ * leaves the old hooks folder in place, and a person who adds hiveku-hooks
+ * gets every hook twice.
+ */
+const LAST_HIVEKU_WITH_HOOKS = '0.3.42';
+
+/** True when version a is above version b, both "major.minor.patch". */
+function isAbove(a, b) {
+  const [x, y] = [a, b].map((v) => v.split('.').map(Number));
+  for (let i = 0; i < 3; i += 1) if (x[i] !== y[i]) return x[i] > y[i];
+  return false;
+}
+
+test('(b) plugins/hiveku has a version above every hiveku that shipped the hooks', (t) => {
+  const { version } = readJson(path.join(MAIN_PLUGIN, '.codex-plugin', 'plugin.json'));
+  const release =
+    'Release the hiveku plugin together with this change: a new version in plugins/hiveku/.codex-plugin/plugin.json ' +
+    'and the same version in the X-Hiveku-Client header in plugins/hiveku/.mcp.json.';
+  assert.ok(
+    isAbove(version, LAST_HIVEKU_WITH_HOOKS),
+    `plugins/hiveku is ${version}, and hiveku ${LAST_HIVEKU_WITH_HOOKS} shipped the hooks inside it. Codex replaces a plugin ` +
+      `installed from a local marketplace only when the version changes, so a person with ${LAST_HIVEKU_WITH_HOOKS} would keep ` +
+      'its hooks beside hiveku-hooks, and once both are trusted each hook runs twice. ' +
+      'Do not change LAST_HIVEKU_WITH_HOOKS to make this pass. ' + release,
+  );
+  // A release can land on main before this change does. While main's hiveku
+  // still has its hooks, this one must be above main's version too.
+  const show = (spec) => spawnSync('git', ['show', spec], { cwd: root, encoding: 'utf8' });
+  const mainHooks = show('origin/main:plugins/hiveku/hooks/hooks.json');
+  const mainManifest = show('origin/main:plugins/hiveku/.codex-plugin/plugin.json');
+  if (mainHooks.status !== 0 || mainManifest.status !== 0) {
+    t.diagnostic(`no origin/main here, or its hiveku has no hooks: ${version} was checked against ${LAST_HIVEKU_WITH_HOOKS} only`);
+    return;
+  }
+  const mainVersion = JSON.parse(mainManifest.stdout).version;
+  assert.ok(
+    isAbove(version, mainVersion),
+    `origin/main's hiveku ${mainVersion} still ships the hooks, and plugins/hiveku is ${version}. ${release}` +
+      (isAbove(mainVersion, LAST_HIVEKU_WITH_HOOKS) ? ` Then set LAST_HIVEKU_WITH_HOOKS to ${mainVersion}.` : ''),
+  );
 });
 
 test('(c) the marketplace lists both plugins, each at its own folder, with values Codex accepts', () => {
@@ -233,28 +314,64 @@ test('(d) installed as Codex installs them, the hooks read the hiveku plugin ins
   assert.equal(runPre(hooksRoot, batchPayload(unasked)), '');
 });
 
-test('(d) every registered command runs from a plugin root with a space in its path', () => {
+/**
+ * A hook's environment as Codex 0.165.0 builds it (hooks/src/engine/discovery.rs):
+ * PLUGIN_ROOT and CLAUDE_PLUGIN_ROOT are the plugin's root, PLUGIN_DATA and
+ * CLAUDE_PLUGIN_DATA its data folder, <CODEX_HOME>/plugins/data/<plugin>-<marketplace>
+ * (core-plugins/src/store.rs).
+ */
+function codexHookEnv(codexHome, pluginRoot, pluginName) {
+  const data = path.join(codexHome, 'plugins', 'data', `${pluginName}-hiveku`);
+  return { PLUGIN_ROOT: pluginRoot, CLAUDE_PLUGIN_ROOT: pluginRoot, PLUGIN_DATA: data, CLAUDE_PLUGIN_DATA: data };
+}
+
+/** discovery.rs also writes each of those values into the command text in place of ${NAME}. */
+const codexCommandText = (command, env) =>
+  Object.entries(env).reduce((text, [key, value]) => text.split(`\${${key}}`).join(value), command);
+
+/**
+ * The shells a hook command meets. Codex runs the command text with
+ * $SHELL -lc, or /bin/sh -lc when SHELL is unset (hooks/src/engine/command_runner.rs),
+ * and $SHELL is zsh on macOS: zsh is required there and run elsewhere when installed.
+ */
+function hookShells(t) {
+  if (spawnSync('zsh', ['-c', 'exit 0']).status === 0) return ['zsh', 'bash', 'sh'];
+  assert.notEqual(process.platform, 'darwin', 'zsh is missing, and it is the shell Codex runs hooks with on macOS');
+  t.diagnostic('zsh is not installed here: ran bash and sh only');
+  return ['bash', 'sh'];
+}
+
+function runAsCodex(shell, command, env) {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'hiveku-hooks-split-run-'));
+  return spawnSync(shell, ['-lc', codexCommandText(command, env)], {
+    input: '',
+    encoding: 'utf8',
+    timeout: LONG,
+    cwd: tmp,
+    env: { PATH: process.env.PATH, HOME: tmp, TMPDIR: `${tmp}/`, ...env },
+  });
+}
+
+test('(d) every registered command runs under zsh, bash and sh from a plugin root with a space in its path', (t) => {
   const home = fs.mkdtempSync(path.join(os.tmpdir(), 'hiveku-hooks-split-cmd-'));
-  const hooksRoot = installLikeCodex(path.join(home, 'Application Support', 'codex'), HOOKS_PLUGIN);
+  const codexHome = path.join(home, 'Application Support', 'codex');
+  const hooksRoot = installLikeCodex(codexHome, HOOKS_PLUGIN);
+  const env = codexHookEnv(codexHome, hooksRoot, 'hiveku-hooks');
   const hooksJson = readJson(path.join(hooksRoot, 'hooks', 'hooks.json'));
   const commands = Object.values(hooksJson.hooks).flatMap((groups) => groups.flatMap((g) => g.hooks.map((h) => h.command)));
   assert.equal(commands.length, 4);
-  // Codex runs a command with $SHELL -lc (hooks/src/engine/command_runner.rs);
-  // bash and sh split an unquoted ${PLUGIN_ROOT}, zsh does not.
-  for (const shell of ['bash', 'sh']) {
+  // The shell parses the path as part of the command text, so an unquoted
+  // ${PLUGIN_ROOT} splits at the space under every shell, zsh too.
+  for (const shell of hookShells(t)) {
     for (const command of commands) {
-      const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'hiveku-hooks-split-run-'));
-      const run = spawnSync(shell, ['-c', command], {
-        input: '',
-        encoding: 'utf8',
-        timeout: LONG,
-        cwd: tmp,
-        env: { PATH: process.env.PATH, HOME: tmp, TMPDIR: `${tmp}/`, PLUGIN_ROOT: hooksRoot },
-      });
-      assert.equal(run.status, 0, `${shell} -c ${command}: ${run.stderr}`);
+      const run = runAsCodex(shell, command, env);
+      assert.equal(run.status, 0, `${shell} -lc ${codexCommandText(command, env)}: ${run.stderr}`);
       if (command.includes('session-start.sh')) assert.match(run.stdout, /^Hiveku: HIVEKU_TOKEN is not set/);
       else assert.equal(run.stdout, '', command);
     }
+    // Negative control: the old unquoted SessionStart command fails here.
+    const unquoted = runAsCodex(shell, 'bash ${PLUGIN_ROOT}/hooks/session-start.sh', env);
+    assert.notEqual(unquoted.status, 0, `${shell}: the unquoted command should fail from a path with a space`);
   }
 });
 
@@ -305,7 +422,7 @@ function pluginContentHash(pluginRoot) {
  * new hash here, or keep the change out of the hooks plugin.
  */
 const PINNED_BUNDLE = {
-  '1.0.0': 'sha256:3ebb78577dce27d6da866e3945077f2687696247ee089031177f1a57d3d7cd13',
+  '1.0.0': 'sha256:90c3def9d332bf5bfc9f89d4b98ab3423705b06149b7e7f30aa6ca2349ed17d6',
 };
 
 test('(e) the hooks plugin folder hash is pinned to its version', () => {

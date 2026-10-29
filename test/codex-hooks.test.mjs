@@ -170,7 +170,9 @@ test('Stop and SessionStart are registered, every command quoted', () => {
         {
           type: 'command',
           command: 'bash "${PLUGIN_ROOT}/hooks/session-start.sh"',
-          statusMessage: 'Hiveku: checking account connection',
+          // session-start.sh checks only that HIVEKU_TOKEN is set; it never
+          // contacts Hiveku, so the message claims no connection check.
+          statusMessage: 'Hiveku: checking for your account key',
         },
       ],
     },
