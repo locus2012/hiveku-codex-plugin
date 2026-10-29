@@ -18,8 +18,8 @@
  *      generated, nothing unused, no link (Codex cannot hash one), and in a
  *      git checkout git tracks every one of them (a copy without git reports
  *      a skip); its manifest declares the hooks and nothing else, and its
- *      copy says the SessionStart hook checks that HIVEKU_TOKEN is set, never
- *      that it checks the connection;
+ *      copy says the SessionStart hook checks that HIVEKU_TOKEN is set (or a
+ *      folder's own key), never that it checks the connection;
  *  (b) plugins/hiveku has no hooks folder and no "hooks" field (Codex reads
  *      hooks/hooks.json by default when the field is absent), under a version
  *      above every hiveku that shipped the hooks (Codex replaces a plugin it
@@ -141,8 +141,9 @@ test('(a) the hooks plugin manifest declares the hooks and nothing else', () => 
 });
 
 test('(a) the copy names the check the SessionStart hook makes, and claims no connection check', () => {
-  // session-start.sh only checks that HIVEKU_TOKEN is set; it never contacts
-  // Hiveku. If it ever checks the connection, change this test with it.
+  // session-start.sh only checks that the hiveku server has a key (HIVEKU_TOKEN
+  // is set, or a Codex config.toml carries one); it never contacts Hiveku. If it
+  // ever checks the connection, change this test with it.
   const manifest = readJson(path.join(HOOKS_PLUGIN, '.codex-plugin', 'plugin.json'));
   const { interface: ui } = manifest;
   const hooksJson = readJson(path.join(HOOKS_PLUGIN, 'hooks', 'hooks.json'));
@@ -423,6 +424,8 @@ function pluginContentHash(pluginRoot) {
  */
 const PINNED_BUNDLE = {
   '1.0.0': 'sha256:90c3def9d332bf5bfc9f89d4b98ab3423705b06149b7e7f30aa6ca2349ed17d6',
+  // HK-897: session-start.sh also knows a folder's own key. Codex 0.165.0 hooks/list reported the same value (2026-10-29).
+  '1.0.1': 'sha256:dbcdba33865db071709e1720b779f9c134f95a69bb2712fe0bcad1d5718bd3b1',
 };
 
 test('(e) the hooks plugin folder hash is pinned to its version', () => {
