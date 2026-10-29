@@ -253,6 +253,10 @@ test('(g) a key pasted where a variable name belongs is never printed, only the 
     ['envheader', entry(`env_http_headers = { "Authorization" = "${KEY_SHAPED}" }`), 'env_http_headers'],
     ['olp', entry(`bearer_token_env_var = "${KEY_SHAPED.replace('hvk_', 'olp_')}"`), 'bearer_token_env_var'],
     ['gwk', entry(`bearer_token_env_var = "${KEY_SHAPED.replace('hvk_', 'gwk_')}"`), 'bearer_token_env_var'],
+    // A Hiveku key's prefix alone (a cut-off paste), each one.
+    ['hvk-short', entry('bearer_token_env_var = "hvk_partial"'), 'bearer_token_env_var'],
+    ['olp-short', entry('bearer_token_env_var = "olp_partial"'), 'bearer_token_env_var'],
+    ['gwk-short', entry('env_http_headers = { "Authorization" = "GWK_partial" }'), 'env_http_headers'],
     // No prefix: a run of 32 or more hex digits, or a name over 40 characters.
     ['hex', entry(`bearer_token_env_var = "KEY_${'c0ffee'.repeat(6)}"`), 'bearer_token_env_var'],
     ['long', entry(`bearer_token_env_var = "${'C0FFEE_'.repeat(6)}X"`), 'bearer_token_env_var'],
@@ -306,6 +310,8 @@ test('(h) single quotes read like double quotes; a form the hook cannot read is 
     ['inline', `[mcp_servers]\nhiveku = { url = "https://core.hiveku.com/mcp", http_headers = { Authorization = "Bearer ${SECRET}" } }\n`, 'a hiveku entry written inline under [mcp_servers]'],
     ['dotted', `mcp_servers.hiveku.url = "https://core.hiveku.com/mcp"\nmcp_servers.hiveku.http_headers = { Authorization = "Bearer ${SECRET}" }\n`, 'mcp_servers.hiveku keys outside a table'],
     ['env-table', '[mcp_servers.hiveku]\nurl = "https://core.hiveku.com/mcp"\n\n[mcp_servers.hiveku.env_http_headers]\nAuthorization = "MY_TOKEN"\n', 'an [mcp_servers.hiveku.env_http_headers] table'],
+    // "_" is bash's own $_ (the last argument of the last command), never a variable to look up.
+    ['underscore', '[mcp_servers.hiveku]\nbearer_token_env_var = "_"\n', 'a bearer_token_env_var that is not a plain variable name'],
   ];
   for (const [name, config, form] of unread) {
     const out = runHook({ home, cwd: at(name, config) });
@@ -314,6 +320,7 @@ test('(h) single quotes read like double quotes; a form the hook cannot read is 
     assert.doesNotMatch(out, /without an account key|is not set/, name);
     assert.ok(out.includes(RULES), `${name}: the working rules follow`);
   }
-  // Another server written inline is not the hiveku server.
+  // Another server written inline is not the hiveku server, and neither is a top-level key named hiveku.
   assert.match(runHook({ home, cwd: at('other-inline', '[mcp_servers]\nhivekuX = { url = "https://example.invalid/mcp" }\n') }), NOT_SET);
+  assert.match(runHook({ home, cwd: at('top-key', 'hiveku = "a setting of some other tool"\n') }), NOT_SET);
 });
