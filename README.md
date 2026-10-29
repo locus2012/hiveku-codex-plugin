@@ -50,7 +50,8 @@ and `hiveku-hooks` (Hiveku's hooks). Together they bundle:
   - Phone system, SMS and call tracking doctrine (`hiveku-phone-agency`) ships with the Claude plugin, not
     here; the Hiveku VS Code extension's **Set Up Codex Support** mirrors it, with its `references/`, into
     `.agents/skills/` in the account folders it scaffolds.
-- **A SessionStart hook** (in `hiveku-hooks`) that warns if `HIVEKU_TOKEN` is unset and reinforces
+- **A SessionStart hook** (in `hiveku-hooks`) that warns when the `hiveku` server has no account key
+  (`HIVEKU_TOKEN` unset and no key in the folder's own Codex config, see [A folder's own key](#a-folders-own-key)) and reinforces
   the disciplines that prevent the most common incidents, including saving each change as a version and
   following Hiveku Memory as the source of truth (Hiveku records each session's Doing and Done in the
   memory log itself; the agent ends with a Done in its own words).
@@ -103,6 +104,41 @@ with its own token. For a full per-account bootstrap (per-folder config + an acc
 ```bash
 npx @hiveku-apps/sync init <account-slug> --codex
 ```
+
+### A folder's own key
+
+Hiveku Desktop, hiveku-sync and the VS Code extension write a `[mcp_servers.hiveku]` entry with the
+account's own `Authorization` header into a folder's `.codex/config.toml`. In a Codex session started in
+that folder, once Codex trusts the folder, that entry replaces this plugin's `hiveku` server whole: Codex
+ranks a configured server above a plugin's server of the same name and does not merge the two. So
+`HIVEKU_TOKEN` is neither used nor needed there, and the folder's entry also decides every tool's prompt
+(see [Notes](#notes)). Codex reads `.codex/config.toml` from the project root (the nearest folder up with a
+`.git`) down to the session's folder, or the session's folder alone when there is no `.git`. Two cases
+still meet this plugin's server, and with it `HIVEKU_TOKEN`:
+
+- A read with no session never reads a folder's config: `codex app-server`'s `mcpServerStatus/list`
+  without a `threadId` is built from your Codex home's config only. It shows this plugin's server, which
+  reports `Environment variable HIVEKU_TOKEN for MCP server 'hiveku' is not set` when the variable is
+  unset, even in a folder whose sessions work. Pass the session's `threadId` to see the server the
+  session uses.
+- Codex merges its config files key by key before it picks the server. A `[mcp_servers.hiveku]` entry in
+  `~/.codex/config.toml` (or `$CODEX_HOME/config.toml`) that sets `bearer_token_env_var` therefore reaches
+  a folder's entry too, and the server will not start while that variable is unset. Setting the variable
+  does not fix it: Codex then sends that variable's key in place of the folder's own key, so the session
+  works on the variable's account. This plugin already provides the server: remove that entry.
+
+The `hiveku-hooks` SessionStart hook reads the same files, key names only and never a key, and says
+which key the session has: `HIVEKU_TOKEN`, the folder's own key, or what is missing. A key pasted where a
+variable's name belongs (`bearer_token_env_var`, or an `Authorization` entry in `env_http_headers`) is
+reported by the setting it sits in and never repeated. A form the hook does not read (an inline or
+dotted `hiveku` entry, say) is reported as unread rather than as a missing key, and the working rules
+still follow.
+
+Only one plugin should define the `hiveku` server. When two installed plugins both define it (an old test
+copy beside this one, say), Codex keeps the server of the plugin whose name comes first in sort order and
+skips the other: a plugin named `hiveku-test` comes before `hiveku`, so wherever a folder has no key of its
+own, your sessions use that plugin's server and none of this plugin's tool prompts. Remove the other
+plugin with `codex plugin remove <plugin>@<marketplace>`.
 
 ## Versions
 
