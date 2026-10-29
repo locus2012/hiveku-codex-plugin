@@ -424,8 +424,9 @@ function pluginContentHash(pluginRoot) {
  */
 const PINNED_BUNDLE = {
   '1.0.0': 'sha256:90c3def9d332bf5bfc9f89d4b98ab3423705b06149b7e7f30aa6ca2349ed17d6',
-  // HK-897: session-start.sh also knows a folder's own key. Codex 0.165.0 hooks/list reported the same value (2026-10-29).
-  '1.0.1': 'sha256:dbcdba33865db071709e1720b779f9c134f95a69bb2712fe0bcad1d5718bd3b1',
+  // HK-897: session-start.sh also knows a folder's own key, and that a bearer_token_env_var merged in from
+  // the Codex home replaces it. Codex 0.165.0 hooks/list reported the same value (2026-10-29).
+  '1.0.1': 'sha256:eed2b73157e7ca0042f7723a31d7b98bb6aec4fd7a6e9e05948d080deb9eb2b8',
 };
 
 test('(e) the hooks plugin folder hash is pinned to its version', () => {

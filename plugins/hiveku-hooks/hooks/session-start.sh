@@ -120,12 +120,17 @@ hiveku_entry() {
 #   none               no config entry and no HIVEKU_TOKEN
 #   own home|folder    the entry's own Authorization header (in the Codex home's config, or a folder's)
 #   var NAME           the entry's bearer_token_env_var or env_http_headers variable, set
-#   missing NAME       that variable is not set (missing-merged: the Codex home's
-#                      bearer_token_env_var merged into a folder's entry that has its own key)
+#   missing NAME       that variable is not set
+#   var-merged NAME, missing-merged NAME
+#                      the same for the Codex home's bearer_token_env_var merged into a
+#                      folder's entry that has its own key: once NAME is set, Codex sends
+#                      NAME's key in place of the folder's own (rmcp-client
+#                      http_client_adapter.rs sets the bearer over a configured
+#                      Authorization header; confirmed with Codex 0.165.0)
 #   nokey              an entry with no key at all
 #   off                the entry is switched off (enabled = false)
 key_source() {
-  local cwd=$1 home_cfg='' file fact seen=0 bearer='' bearer_home=0 header='' envheader='' enabled='' value
+  local cwd=$1 home_cfg='' file fact seen=0 bearer='' bearer_home=0 header='' envheader='' enabled='' value merged
   if [ -n "${CODEX_HOME:-}" ]; then
     home_cfg="${CODEX_HOME%/}/config.toml"
   elif [ -n "${HOME:-}" ]; then
@@ -161,13 +166,9 @@ key_source() {
   # to start the server when the variable is unset (rmcp_client.rs).
   if [[ $bearer =~ $VAR_RE ]]; then
     value=${!bearer:-}
-    if [ -n "$value" ]; then
-      echo "var $bearer"
-    elif [ "$bearer_home" = 1 ] && [ "$header" = folder ]; then
-      echo "missing-merged $bearer"
-    else
-      echo "missing $bearer"
-    fi
+    merged=''
+    [ "$bearer_home" = 1 ] && [ "$header" = folder ] && merged='-merged'
+    if [ -n "$value" ]; then echo "var$merged $bearer"; else echo "missing$merged $bearer"; fi
     return 0
   fi
   [ -n "$header" ] && { echo "own $header"; return 0; }
@@ -185,8 +186,9 @@ case $source in
   'own home') via="the account key in your Codex config.toml, used instead of HIVEKU_TOKEN" ;;
   'own folder') via="this folder's own account key in its .codex/config.toml, which Codex uses instead of HIVEKU_TOKEN once it trusts the folder" ;;
   'var '*) via="${source#var } set, as the Codex config here asks" ;;
+  'var-merged '*) via="${source#var-merged } set, which Codex sends in place of this folder's own key because the [mcp_servers.hiveku] entry in your Codex home's config.toml names it, so check that get_account_info names this folder's account" ;;
   'missing-merged '*)
-    echo "Hiveku: ${source#missing-merged } is not set, and the [mcp_servers.hiveku] entry in your Codex home's config.toml names it (bearer_token_env_var). Codex merges that entry into this folder's own, so the hiveku MCP server will not start even though this folder has its own key. Take bearer_token_env_var out of the Codex home's entry (the hiveku plugin already provides the server), or set ${source#missing-merged }."
+    echo "Hiveku: ${source#missing-merged } is not set, and the [mcp_servers.hiveku] entry in your Codex home's config.toml names it (bearer_token_env_var). Codex merges that entry into this folder's own, so the hiveku MCP server will not start even though this folder has its own key. Take bearer_token_env_var, or the whole entry, out of your Codex home's config.toml: the hiveku plugin already provides the server. Setting ${source#missing-merged } instead would start the server with that key in place of this folder's own."
     exit 0 ;;
   'missing '*)
     echo "Hiveku: ${source#missing } is not set, and the Codex config here names it for the hiveku MCP server, so the server will not authenticate (tools will 401 or not load). Set ${source#missing } to your account key from app.hiveku.com, or run the hiveku-connect skill."

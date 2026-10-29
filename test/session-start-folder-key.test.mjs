@@ -13,7 +13,9 @@
  *   - with no folder entry, the plugin's server runs on HIVEKU_TOKEN;
  *   - the config layers themselves merge key by key, so a bearer_token_env_var in
  *     the Codex home's own [mcp_servers.hiveku] reaches a folder's entry and stops
- *     it when the variable is unset;
+ *     it when the variable is unset, and when it is set Codex sends the variable's
+ *     key in place of the folder's own (the bearer goes over the configured
+ *     Authorization header: every request a 0.165.0 session sent carried it);
  *   - a read with no session (app-server mcpServerStatus/list without a threadId)
  *     never reads a folder's config, so it reports the plugin's server.
  *
@@ -26,8 +28,10 @@
  *   (c) the folder key wins over a token, as in Codex;
  *   (d) Codex's layers: the project root (a .git) down to the session's folder,
  *       and the session's folder alone without one;
- *   (e) the merge trap, a sync folder's own variable, an entry switched off, an
- *       entry with no key, and another server's key;
+ *   (e) the merge trap (unset: the server will not start, and setting the variable
+ *       is never offered as the fix; set: the session hears that the variable's key
+ *       replaces the folder's), a sync folder's own variable, an entry switched off,
+ *       an entry with no key, and another server's key;
  *   (f) the key itself is never printed.
  *
  * Run: node --test test/*.test.mjs
@@ -166,7 +170,20 @@ test('(e) the merge trap, a variable of its own, an entry switched off, no key, 
   const merged = runHook({ home, cwd: dept });
   assert.match(merged, /^Hiveku: HIVEKU_TOKEN is not set, and the \[mcp_servers\.hiveku\] entry in your Codex home's config\.toml names it \(bearer_token_env_var\)\. Codex merges that entry into this folder's own/);
   assert.doesNotMatch(merged, /source of truth/);
-  assert.match(firstLine(runHook({ home, cwd: dept, env: { HIVEKU_TOKEN: SECRET } })), /^Hiveku connected \(HIVEKU_TOKEN set, as the Codex config here asks\)/);
+  // Setting the variable is never offered as the fix: Codex would send its key in place of the
+  // folder's own (Codex 0.165.0 sent the variable's key on every request, the folder's never).
+  assert.match(merged, /Take bearer_token_env_var, or the whole entry, out of your Codex home's config\.toml: the hiveku plugin already provides the server\. Setting HIVEKU_TOKEN instead would start the server with that key in place of this folder's own\.$/m);
+  assert.doesNotMatch(merged, /, or set HIVEKU_TOKEN/);
+  // Set, it starts with the variable's key, not the folder's: the session is told so.
+  const sent = firstLine(runHook({ home, cwd: dept, env: { HIVEKU_TOKEN: SECRET } }));
+  assert.match(sent, /^Hiveku connected \(HIVEKU_TOKEN set, which Codex sends in place of this folder's own key because the \[mcp_servers\.hiveku\] entry in your Codex home's config\.toml names it, so check that get_account_info names this folder's account\)\. Before any write/);
+  // The Codex home's entry with a key of its own beside the variable is not a merge into a folder's key.
+  write(path.join(home, '.codex', 'config.toml'),
+    `[mcp_servers.hiveku]\nurl = "https://core.hiveku.com/mcp"\nbearer_token_env_var = "HIVEKU_TOKEN"\nhttp_headers = { "Authorization" = "Bearer ${SECRET}" }\n`);
+  const plain = path.join(dir, 'plain-folder');
+  fs.mkdirSync(plain);
+  assert.match(firstLine(runHook({ home, cwd: plain, env: { HIVEKU_TOKEN: SECRET } })), /^Hiveku connected \(HIVEKU_TOKEN set, as the Codex config here asks\)/);
+  assert.match(runHook({ home, cwd: plain }), /^Hiveku: HIVEKU_TOKEN is not set, and the Codex config here names it for the hiveku MCP server/);
   fs.rmSync(path.join(home, '.codex'), { recursive: true });
 
   // hiveku-sync's fallback block names OLYMPUS_API_KEY.

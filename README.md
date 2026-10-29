@@ -123,11 +123,18 @@ still meet this plugin's server, and with it `HIVEKU_TOKEN`:
   session uses.
 - Codex merges its config files key by key before it picks the server. A `[mcp_servers.hiveku]` entry in
   `~/.codex/config.toml` (or `$CODEX_HOME/config.toml`) that sets `bearer_token_env_var` therefore reaches
-  a folder's entry too, and the server will not start while that variable is unset. This plugin already
-  provides the server: remove that entry, or keep the variable set.
+  a folder's entry too, and the server will not start while that variable is unset. Setting the variable
+  does not fix it: Codex then sends that variable's key in place of the folder's own key, so the session
+  works on the variable's account. This plugin already provides the server: remove that entry.
 
 The `hiveku-hooks` SessionStart hook reads the same files, key names only and never a key, and says
 which key the session has: `HIVEKU_TOKEN`, the folder's own key, or what is missing.
+
+Only one plugin should define the `hiveku` server. When two installed plugins both define it (an old test
+copy beside this one, say), Codex keeps the server of the plugin whose name comes first in sort order and
+skips the other: a plugin named `hiveku-test` comes before `hiveku`, so wherever a folder has no key of its
+own, your sessions use that plugin's server and none of this plugin's tool prompts. Remove the other
+plugin with `codex plugin remove <plugin>@<marketplace>`.
 
 ## Versions
 
