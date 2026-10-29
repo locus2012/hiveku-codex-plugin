@@ -14,11 +14,11 @@
  * call, a new agent's Notes included; the memory reads stay unprompted.
  *
  * The PreToolUse hook refuses a hiveku_batch that carries any tool .mcp.json
- * prompts (hooks/pre-tool-use.sh), so with this entry a memory_create inside a
- * batch is refused and the agent calls it on its own, where the person is
- * asked. That half runs the real hook against the real .mcp.json, and against
- * a copy without the entry, where the same batch goes through (the negative
- * control).
+ * prompts (pre-tool-use.sh, in the hiveku-hooks plugin beside this one), so
+ * with this entry a memory_create inside a batch is refused and the agent
+ * calls it on its own, where the person is asked. That half runs the real hook
+ * against the real .mcp.json, and against a copy without the entry, where the
+ * same batch goes through (the negative control).
  *
  * The Claude Code plugin's test/permission-critical.test.mjs compares this
  * map with its ask list when both checkouts sit side by side. memory_create is
@@ -45,6 +45,7 @@ import { fileURLToPath } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PLUGIN = path.join(root, 'plugins', 'hiveku');
 const MCP_JSON = path.join(PLUGIN, '.mcp.json');
+const HOOKS = path.join(root, 'plugins', 'hiveku-hooks', 'hooks');
 const LONG = 600_000; // the machine can be heavily loaded
 
 /** The memory writes the skills and the README name: each one asks the person first. */
@@ -132,10 +133,13 @@ const MEMORY_BATCH = [
   },
 ];
 
-/** Runs pre-tool-use.sh from `pluginDir`/hooks, which reads `pluginDir`/.mcp.json. */
-function runPre(pluginDir, input) {
+/**
+ * Runs pre-tool-use.sh from `checkout`/plugins/hiveku-hooks/hooks, which reads
+ * the ask list from `checkout`/plugins/hiveku/.mcp.json.
+ */
+function runPre(checkout, input) {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'hiveku-codex-memory-pre-'));
-  const run = spawnSync('bash', [path.join(pluginDir, 'hooks', 'pre-tool-use.sh')], {
+  const run = spawnSync('bash', [path.join(checkout, 'plugins', 'hiveku-hooks', 'hooks', 'pre-tool-use.sh')], {
     input: JSON.stringify(input),
     encoding: 'utf8',
     timeout: LONG,
@@ -145,21 +149,22 @@ function runPre(pluginDir, input) {
   return run.stdout;
 }
 
-/** A copy of the plugin's hooks beside a .mcp.json changed by `edit`. */
+/** A checkout-shaped copy: the hooks plugin beside a hiveku plugin whose .mcp.json `edit` changed. */
 function pluginCopy(edit) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'hiveku-codex-memory-plugin-'));
-  fs.mkdirSync(path.join(dir, 'hooks'));
+  fs.mkdirSync(path.join(dir, 'plugins', 'hiveku-hooks', 'hooks'), { recursive: true });
+  fs.mkdirSync(path.join(dir, 'plugins', 'hiveku'), { recursive: true });
   for (const f of ['pre-tool-use.sh', 'json-walk.sh']) {
-    fs.copyFileSync(path.join(PLUGIN, 'hooks', f), path.join(dir, 'hooks', f));
+    fs.copyFileSync(path.join(HOOKS, f), path.join(dir, 'plugins', 'hiveku-hooks', 'hooks', f));
   }
   const cfg = readConfig();
   edit(cfg);
-  fs.writeFileSync(path.join(dir, '.mcp.json'), JSON.stringify(cfg, null, 2));
+  fs.writeFileSync(path.join(dir, 'plugins', 'hiveku', '.mcp.json'), JSON.stringify(cfg, null, 2));
   return dir;
 }
 
 test('a hiveku_batch carrying memory_create is refused, so the create is asked about on its own', () => {
-  const out = JSON.parse(runPre(PLUGIN, batchPayload(MEMORY_BATCH)));
+  const out = JSON.parse(runPre(root, batchPayload(MEMORY_BATCH)));
   const { hookEventName, permissionDecision, permissionDecisionReason } = out.hookSpecificOutput;
   assert.equal(hookEventName, 'PreToolUse');
   assert.equal(permissionDecision, 'deny');
@@ -169,7 +174,7 @@ test('a hiveku_batch carrying memory_create is refused, so the create is asked a
       'Call it on its own, not inside hiveku_batch, so the person is asked about that call; batch only the other calls',
   );
   // A batch of memory reads alone still goes through.
-  assert.equal(runPre(PLUGIN, batchPayload([MEMORY_BATCH[0], { tool: 'memory_log_summary', args: {} }])), '');
+  assert.equal(runPre(root, batchPayload([MEMORY_BATCH[0], { tool: 'memory_log_summary', args: {} }])), '');
 });
 
 test('without the memory_create entry the same batch goes through unasked (negative control)', () => {

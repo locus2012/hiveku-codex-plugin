@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Hiveku plugin for Codex: PostToolUse hook, the versions ledger (part 1 of 3;
+# Hiveku hooks plugin for Codex: PostToolUse hook, the versions ledger (part 1 of 3;
 # hooks/pre-tool-use.sh and hooks/stop.sh are the others).
 #
 # Records, per Codex session, which Hiveku website projects this session

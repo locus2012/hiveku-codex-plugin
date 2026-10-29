@@ -36,7 +36,7 @@ const PINS = {
 };
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const HOOK = path.join(root, 'plugins', 'hiveku', 'hooks', 'session-start.sh');
+const HOOK = path.join(root, 'plugins', 'hiveku-hooks', 'hooks', 'session-start.sh');
 const ORIENT = path.join(root, 'plugins', 'hiveku', 'skills', 'hiveku-orient', 'SKILL.md');
 const sha256 = (text) => crypto.createHash('sha256').update(text, 'utf8').digest('hex');
 /** Prose as one line: whitespace collapsed. */

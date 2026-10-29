@@ -1,7 +1,8 @@
 # Hiveku plugin for Codex
 
 Operate a [Hiveku](https://app.hiveku.com) account from the Codex CLI, IDE extension, or ChatGPT
-desktop. This plugin bundles:
+desktop. This repo is a Codex marketplace with two plugins: `hiveku` (the MCP server and the skills)
+and `hiveku-hooks` (Hiveku's hooks). Together they bundle:
 
 - **The `hiveku` MCP server** — ~1,000 tools for content, CRM, website projects, deploys, analytics,
   email, social, and voice — authenticated per-account via the `HIVEKU_TOKEN` env var.
@@ -49,20 +50,21 @@ desktop. This plugin bundles:
   - Phone system, SMS and call tracking doctrine (`hiveku-phone-agency`) ships with the Claude plugin, not
     here; the Hiveku VS Code extension's **Set Up Codex Support** mirrors it, with its `references/`, into
     `.agents/skills/` in the account folders it scaffolds.
-- **A SessionStart hook** that warns if `HIVEKU_TOKEN` is unset and reinforces the disciplines that
-  prevent the most common incidents, including saving each change as a version and following Hiveku
-  Memory as the source of truth (Hiveku records each session's Doing and Done in the memory log
-  itself; the agent ends with a Done in its own words).
-- **A versions reminder** (PreToolUse, PostToolUse and Stop hooks, see [Versions](#versions)): when a
-  session changed a website project and did not save the change as a version, the agent is asked once,
-  before it finishes, to save one.
+- **A SessionStart hook** (in `hiveku-hooks`) that warns if `HIVEKU_TOKEN` is unset and reinforces
+  the disciplines that prevent the most common incidents, including saving each change as a version and
+  following Hiveku Memory as the source of truth (Hiveku records each session's Doing and Done in the
+  memory log itself; the agent ends with a Done in its own words).
+- **A versions reminder** (PreToolUse, PostToolUse and Stop hooks in `hiveku-hooks`, see
+  [Versions](#versions)): when a session changed a website project and did not save the change as a
+  version, the agent is asked once, before it finishes, to save one.
 
 ## Install
 
 ```bash
-# Add this repo as a marketplace, then install the plugin:
+# Add this repo as a marketplace, then install the plugin and its hooks:
 codex plugin marketplace add locus2012/hiveku-codex-plugin
 codex plugin add hiveku@hiveku
+codex plugin add hiveku-hooks@hiveku
 
 # Set your account key (get it from app.hiveku.com → Settings → LLM Connectors / MCP keys):
 export HIVEKU_TOKEN="hvk_..."
@@ -70,6 +72,24 @@ export HIVEKU_TOKEN="hvk_..."
 # Verify the MCP server authenticates:
 codex mcp list   # the `hiveku` row should show Auth: Bearer token
 ```
+
+Codex asks you once to approve Hiveku's hooks. Hooks you have not approved do not run. Type `/hooks` in
+Codex's terminal app (run `codex`) and press `t` to trust the hooks that need review, or press Enter on
+an event to read its hooks first and `t` to trust each one. Codex also offers this when it starts: under
+"Hooks need review", choose Review hooks, or Trust all and continue.
+
+Adding a tool to the hiveku plugin's ask list no longer asks you to approve the hooks again. The hooks
+are their own plugin, `hiveku-hooks`, and Codex asks again only when the hooks themselves change.
+
+**Already have `hiveku@hiveku`?** Run the third command once, then type `/hooks` in Codex's terminal app
+and trust the Hiveku hooks:
+
+```bash
+codex plugin add hiveku-hooks@hiveku
+```
+
+If Codex says it cannot find `hiveku-hooks` in the `hiveku` marketplace, run
+`codex plugin marketplace upgrade hiveku` first, then the command again.
 
 Then, in a Codex session, the `hiveku-*` skills are available and the `hiveku` tools are live. Start by
 reading the `hiveku-orient` skill and calling `get_account_info` to confirm which account you're on.
@@ -92,8 +112,8 @@ change: save and verify, then `project_vcs_commit({ project_id, message })` with
 plain-language name, before `deploy_site`. Going back is `project_vcs_rollback`: a dry run by default,
 applied only on an explicit yes, and it never changes a live site (deploying is a separate step).
 
-The plugin backs this up with three hooks (bash with grep, sed and tr only; no node, no credentials, no
-network):
+The `hiveku-hooks` plugin backs this up with three hooks (bash with grep, sed and tr only; no node, no
+credentials, no network):
 
 - `hooks/post-tool-use.sh` notes which projects the session changed and which it saved as a version, in
   `$TMPDIR/hiveku-vcs/<session id>.jsonl`.
@@ -110,9 +130,12 @@ To turn the reminder off for a folder, put `{"version_reminder": false}` in `.hi
 there (or in a parent folder, below your home folder). The nearest `.hiveku/guardrails.json` decides: a
 file without `version_reminder` keeps the reminder on.
 
-The hooks need Codex 0.131 or later, and Codex runs a plugin's hooks only after you trust them: when it
-starts it lists new or changed hooks under "Hooks need review" (Review hooks, or Trust all and
-continue). Until then they do not run, and the skills still carry the same rule.
+The hooks need Codex 0.131 or later, and Codex runs a plugin's hooks only after you trust them (see
+[Install](#install)). Until then they do not run, and the skills still carry the same rule. Codex
+checks the trust against every file in the plugin's folder, so the hooks live in `hiveku-hooks`, which
+changes only when a hook changes: a release that adds a tool to the ask list in the `hiveku` plugin's
+`.mcp.json` leaves your approval in place. The `pre-tool-use.sh` hook reads that ask list from the
+`hiveku` plugin installed beside it.
 
 ## Fetching a Hiveku-hosted site from your terminal
 
@@ -199,10 +222,10 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   `hiveku_batch` prompts too: a batch runs its calls on the Hiveku server, and Codex asks by the
   name of the tool it calls, so without that entry a prompted tool placed inside a batch would run
   with no prompt. A batch of reads waits for a yes as well; single reads do not.
-  The plugin's PreToolUse hook also refuses a batch that carries a version save or a rollback, so the
+  The `hiveku-hooks` PreToolUse hook also refuses a batch that carries a version save or a rollback, so the
   agent calls it on its own and you are asked about that call. If you prefer to review every call,
   change the server default to `"prompt"`. The safe-work rules
-  ship as **instructions** (the `hiveku-orient` skill + the SessionStart hook); Codex's sandbox still
+  ship as **instructions** (the `hiveku-orient` skill + the `hiveku-hooks` SessionStart hook); Codex's sandbox still
   governs local shell/file access.
 
 ## License

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Hiveku plugin for Codex: Stop hook, the versions reminder (part 3 of 3;
+# Hiveku hooks plugin for Codex: Stop hook, the versions reminder (part 3 of 3;
 # hooks/post-tool-use.sh and hooks/pre-tool-use.sh keep the ledger this reads).
 #
 # When this session changed a Hiveku website project and did not save the

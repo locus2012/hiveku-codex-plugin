@@ -227,7 +227,7 @@ test('the checks fail on a wrong fact or a dropped rule (negative control)', () 
 });
 
 test('every session hears the platform rules: the SessionStart hook says them after the memory lines', () => {
-  const hook = path.join(root, 'plugins', 'hiveku', 'hooks', 'session-start.sh');
+  const hook = path.join(root, 'plugins', 'hiveku-hooks', 'hooks', 'session-start.sh');
   const run = spawnSync('bash', [hook], { env: { ...process.env, HIVEKU_TOKEN: 'test-token' }, encoding: 'utf8' });
   assert.equal(run.status, 0);
   const lines = run.stdout.split('\n');

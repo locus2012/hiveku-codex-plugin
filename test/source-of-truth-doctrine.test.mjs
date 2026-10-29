@@ -36,7 +36,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const ORIENT = path.join(root, 'plugins', 'hiveku', 'skills', 'hiveku-orient', 'SKILL.md');
-const HOOK = path.join(root, 'plugins', 'hiveku', 'hooks', 'session-start.sh');
+const HOOK = path.join(root, 'plugins', 'hiveku-hooks', 'hooks', 'session-start.sh');
 const MCP = path.join(root, 'plugins', 'hiveku', '.mcp.json');
 const flat = (s) => s.replace(/\s+/g, ' ').trim();
 /** A match on a long text that names the pattern, not the whole text, when it fails. */

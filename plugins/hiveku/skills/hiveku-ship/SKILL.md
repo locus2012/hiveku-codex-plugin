@@ -128,8 +128,8 @@ would change, then call `project_checkpoint_restore` only on their explicit yes,
 `restore_database: true` only when they asked for their data back (without it the database is left as
 it is). Codex asks before every `project_vcs_rollback` call, dry runs included. Never put
 `project_vcs_rollback`, `project_vcs_commit`, `deploy_site` or any other tool Codex asks about inside
-`hiveku_batch`: call each on its own, so the person is asked about that call (the plugin's hook refuses
-such a batch).
+`hiveku_batch`: call each on its own, so the person is asked about that call (the hiveku-hooks plugin's
+hook refuses such a batch).
 
 ## Branches, pull requests and conflicts
 Work off to the side on a branch (`project_vcs_branch_create`, then `branch` on every file tool and

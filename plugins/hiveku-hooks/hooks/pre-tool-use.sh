@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# Hiveku plugin for Codex: PreToolUse hook (part 2 of 3 of the versions
-# reminder, with hooks/post-tool-use.sh and hooks/stop.sh). Two jobs:
+# Hiveku hooks plugin for Codex (hiveku-hooks): PreToolUse hook (part 2 of 3
+# of the versions reminder, with hooks/post-tool-use.sh and hooks/stop.sh).
+# Two jobs:
 #
 #   1. project_vcs_commit, and project_vcs_rollback with dry_run literally
 #      false: append an "attempted" line with the call's id to the session
@@ -8,12 +9,19 @@
 #      a version call answered 409 nothing_to_commit (already a version) or
 #      409 rollback_incomplete (files written, no version) leaves no other
 #      trace; stop.sh reads how an attempted call ended from the transcript.
-#   2. hiveku_batch: refuse ("deny") a batch that carries a tool this plugin's
-#      .mcp.json sets to "prompt" (project_vcs_rollback, deploy_site, ...).
-#      Codex asks the person per tool NAME, so inside a batch such a call
+#   2. hiveku_batch: refuse ("deny") a batch that carries a tool the hiveku
+#      plugin's .mcp.json sets to "prompt" (project_vcs_rollback, deploy_site,
+#      ...). Codex asks the person per tool NAME, so inside a batch such a call
 #      would ride on the batch's single approval. The reason tells the agent
 #      to call it on its own. (hiveku_batch is itself set to "prompt", so the
 #      batch is still asked about where hooks are not trusted.)
+#
+# The hooks are their own plugin because Codex trusts a plugin's hooks against
+# a hash of the whole plugin folder (codex-rs hooks/src/engine/
+# plugin_fingerprint.rs): every release of the hiveku plugin that adds a tool
+# to .mcp.json's ask list used to stop every hook until the person trusted
+# them again. So .mcp.json is not in this plugin's folder: this hook reads it
+# from the hiveku plugin beside this one (mcp_files below).
 #
 # What Codex 0.131 sends (hooks/src/schema.rs PreToolUseCommandInput): one
 # compact JSON object, keys in this order: session_id, turn_id,
@@ -65,13 +73,38 @@ json_string() {
   printf '%s' "$1" | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g'
 }
 
-# The tools this plugin's .mcp.json sets to "prompt", space-separated and
-# padded (" a b "). The file sits next to hooks/ in the installed plugin.
+# The hiveku plugin's .mcp.json files, one path per line, wherever they sit
+# beside this plugin (a path that does not exist is skipped by the reader):
+#   - installed: Codex keeps each plugin at
+#     <CODEX_HOME>/plugins/cache/<marketplace>/<plugin>/<version>
+#     (codex-rs core-plugins/src/store.rs, plugin_root), so from this plugin's
+#     hooks folder, .../hiveku/hiveku-hooks/<version>/hooks, the hiveku plugin
+#     is ../../../hiveku/<version>/. Codex removes the older version once a
+#     newer one is in place, so there is usually one; every one present is
+#     read.
+#   - a checkout of this repo: plugins/hiveku-hooks/hooks beside
+#     plugins/hiveku, so ../../hiveku/.mcp.json.
+mcp_files() {
+  local dir
+  printf '%s\n' "$HOOK_DIR/../../hiveku/.mcp.json"
+  set +f # the version folders are the one glob in these hooks
+  for dir in "$HOOK_DIR"/../../../hiveku/*/; do
+    printf '%s\n' "${dir%/}/.mcp.json"
+  done
+  set -f
+}
+
+# The tools the hiveku plugin's .mcp.json sets to "prompt", space-separated
+# and padded (" a b "). Several versions found: every tool any of them sets to
+# "prompt" (asking more is the safe side). None found: ALWAYS_PROMPT alone.
 prompt_tools() {
-  local list
-  list=$(tr -d ' \t\r\n' < "$HOOK_DIR/../.mcp.json" 2>/dev/null \
-    | grep -o -E '"[a-z0-9_]+":\{[^{}]*"approval_mode":"prompt"[^{}]*\}' \
-    | sed 's/^"\([a-z0-9_]*\)".*/\1/' | tr '\n' ' ')
+  local list='' file
+  while IFS= read -r file; do
+    [ -f "$file" ] && [ -r "$file" ] || continue
+    list="$list $(tr -d ' \t\r\n' < "$file" 2>/dev/null \
+      | grep -o -E '"[a-z0-9_]+":\{[^{}]*"approval_mode":"prompt"[^{}]*\}' \
+      | sed 's/^"\([a-z0-9_]*\)".*/\1/' | tr '\n' ' ')"
+  done <<< "$(mcp_files)"
   printf ' %s%s' "$list" "$ALWAYS_PROMPT"
 }
 

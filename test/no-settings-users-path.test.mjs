@@ -4,7 +4,7 @@
  * Hiveku has no such page. A role's permissions are edited under Settings >
  * Team Members > Manage Roles, and admins are made on Team Members; the
  * builder's own messages say so since builder #785. This reads every file the
- * plugin ships (its skills and hook scripts; whitespace collapsed, so a
+ * two plugins ship (hiveku's skills and hiveku-hooks' scripts; whitespace collapsed, so a
  * wrapped line still counts), so the old path cannot come back. Google Search Console's own Settings > Users
  * is a real page and is left alone; another product's real page of that name
  * would need its own exception here.
@@ -40,7 +40,12 @@ function oldPathMentions(text) {
 }
 
 test('no shipped file names "Settings > Users"', () => {
-  const hits = shippedFiles().flatMap((rel) =>
+  const shipped = shippedFiles();
+  // Both plugins are read: the hooks plugin's scripts print to the person too.
+  for (const rel of ['plugins/hiveku/skills/hiveku-orient/SKILL.md', 'plugins/hiveku-hooks/hooks/session-start.sh']) {
+    assert.ok(shipped.includes(rel), `the scan misses ${rel}`);
+  }
+  const hits = shipped.flatMap((rel) =>
     oldPathMentions(fs.readFileSync(path.join(ROOT, rel), 'utf8')).map((sentence) => `${rel}: ${sentence.slice(0, 160)}`),
   );
   assert.deepEqual(hits, []);
