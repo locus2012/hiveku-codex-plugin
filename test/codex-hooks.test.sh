@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# Shell tests for the Codex versions hooks (plugins/hiveku/hooks/pre-tool-use.sh,
-# post-tool-use.sh and stop.sh), run against fixture payloads and transcripts
-# shaped like Codex 0.131's (test/fixtures/codex-hooks, see the note in each
-# hook for the shape).
+# Shell tests for the Codex versions hooks (plugins/hiveku-hooks/hooks/
+# pre-tool-use.sh, post-tool-use.sh and stop.sh, in the hiveku-hooks plugin),
+# run against fixture payloads and transcripts shaped like Codex 0.131's
+# (test/fixtures/codex-hooks, see the note in each hook for the shape).
 #
 # Codex 0.131 runs PostToolUse only for a call that succeeded, so there are no
 # failure payloads for post-tool-use.sh (one defensive case aside): a failed
@@ -17,7 +17,7 @@
 # Scratch goes under the system temp dir and is left for the OS to clear.
 
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
-HOOKS="$ROOT/plugins/hiveku/hooks"
+HOOKS="$ROOT/plugins/hiveku-hooks/hooks"
 FIX="$ROOT/test/fixtures/codex-hooks"
 BASH_BIN=${BASH:-bash} # the hooks run under the same bash as this suite
 SESSION=019a0000-0000-7000-8000-00000000c0de
@@ -204,20 +204,65 @@ pre_case pre-batch-rollback.json \
 pre_case pre-batch-prompt-tools.json \
   "$(deny_json 'deploy_site, project_files_bulk_save' 'each of them' 'each call')" ""
 
-# Without .mcp.json the version tools and deploy_site are still refused.
+# Without the hiveku plugin's .mcp.json the version tools and deploy_site are still refused.
 fresh
-mkdir -p "$CASE/plugin/hooks"
-cp "$HOOKS/pre-tool-use.sh" "$HOOKS/json-walk.sh" "$CASE/plugin/hooks/"
-out=$(payload pre-batch-prompt-tools.json | run_hook "$CASE/plugin/hooks/pre-tool-use.sh")
+mkdir -p "$CASE/plugins/hiveku-hooks/hooks"
+cp "$HOOKS/pre-tool-use.sh" "$HOOKS/json-walk.sh" "$CASE/plugins/hiveku-hooks/hooks/"
+out=$(payload pre-batch-prompt-tools.json | run_hook "$CASE/plugins/hiveku-hooks/hooks/pre-tool-use.sh")
 check "pre: without .mcp.json deploy_site is still refused" "$(deny_json deploy_site it 'that call')" "$out"
 # Without json-walk.sh a batch is let through (failure-open) and attempts are still recorded.
-cp "$ROOT/plugins/hiveku/.mcp.json" "$CASE/plugin/"
-mv "$CASE/plugin/hooks/json-walk.sh" "$CASE/plugin/json-walk.sh.away"
-out=$(payload pre-batch-rollback.json | run_hook "$CASE/plugin/hooks/pre-tool-use.sh"); status=$?
+mkdir -p "$CASE/plugins/hiveku"
+cp "$ROOT/plugins/hiveku/.mcp.json" "$CASE/plugins/hiveku/"
+mv "$CASE/plugins/hiveku-hooks/hooks/json-walk.sh" "$CASE/plugins/hiveku-hooks/json-walk.sh.away"
+out=$(payload pre-batch-rollback.json | run_hook "$CASE/plugins/hiveku-hooks/hooks/pre-tool-use.sh"); status=$?
 check "pre: without json-walk.sh a batch exits 0" 0 "$status"
 check "pre: without json-walk.sh a batch is not refused" "" "$out"
-payload pre-commit-main.json | run_hook "$CASE/plugin/hooks/pre-tool-use.sh"
+payload pre-commit-main.json | run_hook "$CASE/plugins/hiveku-hooks/hooks/pre-tool-use.sh"
 check "pre: without json-walk.sh an attempt is still recorded" "attempted $P1 main call_commit_1" "$(events)"
+
+# Where the ask list comes from. The hooks are their own plugin (hiveku-hooks),
+# so the tools Codex asks about are in the hiveku plugin's .mcp.json, beside
+# this plugin: Codex installs each plugin at
+# <CODEX_HOME>/plugins/cache/<marketplace>/<plugin>/<version>, and a checkout
+# of this repo has plugins/hiveku-hooks beside plugins/hiveku.
+# pre-batch-versions.json carries memory_update (asked about by
+# mcp-older.json), memory_create (mcp-newer.json), project_vcs_status (approve
+# in both), workflow_list (in neither) and project_vcs_commit (the floor).
+hooks_at() { # dir: a copy of the hooks, as Codex installs them
+  mkdir -p "$1"
+  cp "$HOOKS/pre-tool-use.sh" "$HOOKS/json-walk.sh" "$1/"
+}
+fresh
+CACHE="$CASE/Application Support/codex/plugins/cache/hiveku" # a space in the path, as in a desktop app's home
+hooks_at "$CACHE/hiveku-hooks/1.0.0/hooks"
+mkdir -p "$CACHE/hiveku/0.3.42"
+cp "$FIX/mcp-newer.json" "$CACHE/hiveku/0.3.42/.mcp.json"
+out=$(payload pre-batch-versions.json | run_hook "$CACHE/hiveku-hooks/1.0.0/hooks/pre-tool-use.sh")
+check "pre: installed, the ask list is the installed hiveku plugin's" \
+  "$(deny_json 'memory_create, project_vcs_commit' 'each of them' 'each call')" "$out"
+mkdir -p "$CACHE/hiveku/0.3.41"
+cp "$FIX/mcp-older.json" "$CACHE/hiveku/0.3.41/.mcp.json"
+out=$(payload pre-batch-versions.json | run_hook "$CACHE/hiveku-hooks/1.0.0/hooks/pre-tool-use.sh")
+check "pre: installed with two versions of the hiveku plugin, every tool either one asks about" \
+  "$(deny_json 'memory_update, memory_create, project_vcs_commit' 'each of them' 'each call')" "$out"
+
+fresh
+CACHE="$CASE/codex/plugins/cache/hiveku"
+hooks_at "$CACHE/hiveku-hooks/1.0.0/hooks"
+# A .mcp.json inside the hooks plugin is not the ask list (Codex would load it
+# as the hooks plugin's own MCP servers, so the plugin never ships one).
+cp "$FIX/mcp-newer.json" "$CACHE/hiveku-hooks/1.0.0/.mcp.json"
+out=$(payload pre-batch-versions.json | run_hook "$CACHE/hiveku-hooks/1.0.0/hooks/pre-tool-use.sh")
+check "pre: installed without the hiveku plugin, only the floor is refused" \
+  "$(deny_json project_vcs_commit it 'that call')" "$out"
+
+fresh
+mkdir -p "$CASE/checkout/plugins/hiveku"
+hooks_at "$CASE/checkout/plugins/hiveku-hooks/hooks"
+cp "$FIX/mcp-older.json" "$CASE/checkout/plugins/hiveku/.mcp.json"
+out=$(payload pre-batch-versions.json | run_hook "$CASE/checkout/plugins/hiveku-hooks/hooks/pre-tool-use.sh")
+check "pre: in a checkout, the ask list is plugins/hiveku/.mcp.json" \
+  "$(deny_json 'memory_update, project_vcs_commit' 'each of them' 'each call')" "$out"
 
 fresh
 out=$(printf '{"session_id":' | run_hook "$HOOKS/pre-tool-use.sh"); status=$?

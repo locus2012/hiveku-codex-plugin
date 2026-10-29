@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Hiveku plugin — SessionStart hook. Speaks up only with what's load-bearing:
+# Hiveku hooks plugin for Codex: SessionStart hook. Speaks up only with what's load-bearing:
 # a missing token (the hiveku MCP would silently fail to authenticate), the
 # disciplines that prevent the most common incidents, and the rule that Hiveku
 # Memory is the source of truth (skills load only when the model opens them;

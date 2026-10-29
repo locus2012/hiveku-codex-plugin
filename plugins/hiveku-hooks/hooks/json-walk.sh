@@ -1,4 +1,4 @@
-# Hiveku plugin for Codex: a small JSON walker shared by the hooks (sourced,
+# Hiveku hooks plugin for Codex: a small JSON walker shared by the hooks (sourced,
 # never run on its own). bash with grep, sed and tr only; bash 3.2 safe.
 #
 # The other hook code reads flat `"key":"value"` tokens, which is enough when

@@ -5,8 +5,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash ${PLUGIN_ROOT}/hooks/session-start.sh",
-            "statusMessage": "Hiveku: checking account connection"
+            "command": "bash \"${PLUGIN_ROOT}/hooks/session-start.sh\"",
+            "statusMessage": "Hiveku: checking for your account key"
           }
         ]
       }

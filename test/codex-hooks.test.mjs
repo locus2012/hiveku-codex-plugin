@@ -6,15 +6,19 @@
  * tool Codex asks about, hooks/stop.sh asks once for a version before the
  * agent finishes.
  *
+ * The hooks are their own plugin, plugins/hiveku-hooks (hiveku-hooks@hiveku),
+ * so a release of the hiveku plugin never changes the folder Codex trusts the
+ * hooks by (test/hooks-plugin-split.test.mjs pins that split).
+ *
  * The behaviour itself is pinned by the shell suite test/codex-hooks.test.sh
  * (bash with grep, sed and tr; runs where node is absent); this file runs it, and pins
  * what the shell suite cannot see: the hooks.json registration Codex 0.131
  * reads (a regex matcher on "mcp__<server>__<tool>", hooks/src/events/common.rs
  * matches_matcher, the same for PreToolUse and PostToolUse), that the matcher
  * and the script agree on the tool list, that the batch refusal covers exactly
- * the tools .mcp.json sets to prompt, that the answers are valid JSON, and
- * that the scripts stay bash-only and offline with no environment-variable
- * switch.
+ * the tools the hiveku plugin's .mcp.json sets to prompt, that the answers are
+ * valid JSON, and that the scripts stay bash-only and offline with no
+ * environment-variable switch.
  *
  * Run: node --test test/*.test.mjs
  */
@@ -27,13 +31,13 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const HOOKS = path.join(root, 'plugins', 'hiveku', 'hooks');
+const HOOKS = path.join(root, 'plugins', 'hiveku-hooks', 'hooks');
 const read = (rel) => fs.readFileSync(path.join(root, rel), 'utf8');
-const hooksJson = JSON.parse(read('plugins/hiveku/hooks/hooks.json'));
-const postScript = read('plugins/hiveku/hooks/post-tool-use.sh');
-const preScript = read('plugins/hiveku/hooks/pre-tool-use.sh');
-const stopScript = read('plugins/hiveku/hooks/stop.sh');
-const walkScript = read('plugins/hiveku/hooks/json-walk.sh');
+const hooksJson = JSON.parse(read('plugins/hiveku-hooks/hooks/hooks.json'));
+const postScript = read('plugins/hiveku-hooks/hooks/post-tool-use.sh');
+const preScript = read('plugins/hiveku-hooks/hooks/pre-tool-use.sh');
+const stopScript = read('plugins/hiveku-hooks/hooks/stop.sh');
+const walkScript = read('plugins/hiveku-hooks/hooks/json-walk.sh');
 const LONG = 600_000; // the machine can be heavily loaded
 
 /**
@@ -65,7 +69,7 @@ function matcherRegex(json, event = 'PostToolUse') {
   return new RegExp(groups[0].matcher);
 }
 
-/** The tools .mcp.json sets to "prompt". */
+/** The tools the hiveku plugin's .mcp.json sets to "prompt". */
 function promptTools() {
   const mcp = JSON.parse(read('plugins/hiveku/.mcp.json')).hiveku;
   return Object.entries(mcp.tools).filter(([, v]) => v.approval_mode === 'prompt').map(([k]) => k);
@@ -152,18 +156,23 @@ test('a batch is refused for exactly the tools .mcp.json sets to prompt', () => 
   }
 });
 
-test('Stop is registered, and the SessionStart entry is unchanged (its trust hash stays valid)', () => {
+test('Stop and SessionStart are registered, every command quoted', () => {
   assert.deepEqual(Object.keys(hooksJson.hooks), ['SessionStart', 'PreToolUse', 'PostToolUse', 'Stop']);
   assert.deepEqual(hooksJson.hooks.Stop, [
     { hooks: [{ type: 'command', command: 'bash "${PLUGIN_ROOT}/hooks/stop.sh"', timeout: 20 }] },
   ]);
+  // Quoted like the others since the hooks became their own plugin (trusted
+  // afresh anyway): a plugin root with a space in it, such as a Codex home
+  // under Application Support, ran nothing unquoted.
   assert.deepEqual(hooksJson.hooks.SessionStart, [
     {
       hooks: [
         {
           type: 'command',
-          command: 'bash ${PLUGIN_ROOT}/hooks/session-start.sh',
-          statusMessage: 'Hiveku: checking account connection',
+          command: 'bash "${PLUGIN_ROOT}/hooks/session-start.sh"',
+          // session-start.sh checks only that HIVEKU_TOKEN is set; it never
+          // contacts Hiveku, so the message claims no connection check.
+          statusMessage: 'Hiveku: checking for your account key',
         },
       ],
     },

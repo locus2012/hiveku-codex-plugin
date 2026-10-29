@@ -131,7 +131,7 @@ test('hiveku-orient carries the versions rule and the website id space', () => {
 });
 
 test('the session start names the version step', () => {
-  const hook = read('plugins/hiveku/hooks/session-start.sh');
+  const hook = read('plugins/hiveku-hooks/hooks/session-start.sh');
   assert.match(hook, /version your change with project_vcs_commit before you finish/);
   // Only when connected: the line sits after the token check's early exit.
   assert.ok(hook.indexOf('version your change') > hook.indexOf('exit 0'), 'said only when HIVEKU_TOKEN is set');
@@ -156,11 +156,11 @@ test('no shipped copy says a version is optional, and none carries an emoji', ()
     'README.md',
     SHIP,
     ORIENT,
-    'plugins/hiveku/hooks/session-start.sh',
-    'plugins/hiveku/hooks/pre-tool-use.sh',
-    'plugins/hiveku/hooks/post-tool-use.sh',
-    'plugins/hiveku/hooks/stop.sh',
-    'plugins/hiveku/hooks/json-walk.sh',
+    'plugins/hiveku-hooks/hooks/session-start.sh',
+    'plugins/hiveku-hooks/hooks/pre-tool-use.sh',
+    'plugins/hiveku-hooks/hooks/post-tool-use.sh',
+    'plugins/hiveku-hooks/hooks/stop.sh',
+    'plugins/hiveku-hooks/hooks/json-walk.sh',
   ];
   for (const rel of shipped) {
     const text = read(rel);
