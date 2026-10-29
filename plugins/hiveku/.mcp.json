@@ -3,7 +3,7 @@
     "url": "https://core.hiveku.com/mcp",
     "bearer_token_env_var": "HIVEKU_TOKEN",
     "http_headers": {
-      "X-Hiveku-Client": "codex-plugin/0.3.44"
+      "X-Hiveku-Client": "codex-plugin/0.3.45"
     },
     "default_tools_approval_mode": "approve",
     "tools": {
@@ -551,6 +551,9 @@
         "approval_mode": "prompt"
       },
       "voice_port_order_action": {
+        "approval_mode": "prompt"
+      },
+      "voice_port_order_document_upload": {
         "approval_mode": "prompt"
       },
       "voice_settings_update": {
