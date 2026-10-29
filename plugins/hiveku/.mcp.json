@@ -247,6 +247,9 @@
       "helpdesk_chat_retention_set": {
         "approval_mode": "prompt"
       },
+      "helpdesk_social_comments_settings_update": {
+        "approval_mode": "prompt"
+      },
       "marketing_report_send": {
         "approval_mode": "prompt"
       },
