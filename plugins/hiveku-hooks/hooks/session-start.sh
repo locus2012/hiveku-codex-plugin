@@ -19,14 +19,32 @@
 # down to the session's folder, or that folder's alone when there is no .git.
 # This hook reads the same files to say which key the session has. It reads
 # key NAMES only: every quoted value is blanked before a line is looked at,
-# except an environment variable's name, so no key is ever read out. It cannot
-# see whether Codex trusts the folder (an untrusted folder's config is not
-# loaded), and it never contacts Hiveku.
+# except an environment variable's name, so no key is ever read out. A "name"
+# that is really a key pasted where the name belongs (looks_like_key) is never
+# printed either: the hook says what is wrong without repeating it. A key form
+# it does not read (a name that is not a plain one, an inline or dotted entry,
+# an env_http_headers table) is said to be unread, never "no key", and the
+# working rules follow. It cannot see whether Codex trusts the folder (an
+# untrusted folder's config is not loaded), and it never contacts Hiveku.
 #
 # bash with grep, sed and tr only (node may be absent on a brew install); bash 3.2 safe.
 set -u
 
 VAR_RE='^[A-Za-z_][A-Za-z0-9_]{0,127}$'
+
+# True for a value in a variable-name slot that looks like a key, not a name:
+# a Hiveku key's prefix (hvk_, olp_, gwk_), a run of 32 or more hex digits, or
+# more than 40 characters. Such a value is never printed (it would land in the
+# session's context and its transcript).
+looks_like_key() {
+  local name=$1
+  [ "${#name}" -gt 40 ] && return 0
+  case $name in
+    [Hh][Vv][Kk]_*|[Oo][Ll][Pp]_*|[Gg][Ww][Kk]_*) return 0 ;;
+  esac
+  printf '%s' "$name" | grep -q -E '[0-9A-Fa-f]{32}' && return 0
+  return 1
+}
 
 # The session's folder: "cwd" from the SessionStart payload Codex writes to stdin
 # (hooks/src/schema.rs, SessionStartCommandInput), else the folder Codex runs the
@@ -66,13 +84,19 @@ project_layers() {
 
 # One config.toml with every quoted value blanked to _, except the variable
 # NAME of bearer_token_env_var and of an Authorization entry in an inline
-# env_http_headers, which are kept as KEY=NAME. Comments are dropped.
+# env_http_headers, which are kept as KEY=NAME (in double or single quotes).
+# Such a value that is not a plain name (a hyphen, a space, "Bearer ..." pasted
+# in) is kept as KEY=? and never read. Comments are dropped.
 key_names_only() {
+  local q="[\"']" auth='[Aa][Uu][Tt][Hh][Oo][Rr][Ii][Zz][Aa][Tt][Ii][Oo][Nn]' name='([A-Za-z_][A-Za-z0-9_]*)'
   sed -E \
     -e 's/^[[:space:]]+//' \
     -e '/^#/d' \
-    -e 's/^bearer_token_env_var[[:space:]]*=[[:space:]]*"([A-Za-z_][A-Za-z0-9_]*)"[[:space:]]*(#.*)?$/bearer_token_env_var=\1/' \
-    -e 's/^env_http_headers[[:space:]]*=.*"?[Aa][Uu][Tt][Hh][Oo][Rr][Ii][Zz][Aa][Tt][Ii][Oo][Nn]"?[[:space:]]*=[[:space:]]*"([A-Za-z_][A-Za-z0-9_]*)".*$/env_http_headers=\1/' \
+    -e "s/^bearer_token_env_var[[:space:]]*=[[:space:]]*\"$name\"[[:space:]]*(#.*)?\$/bearer_token_env_var=\\1/" \
+    -e "s/^bearer_token_env_var[[:space:]]*=[[:space:]]*'$name'[[:space:]]*(#.*)?\$/bearer_token_env_var=\\1/" \
+    -e "s/^bearer_token_env_var[[:space:]]*=[[:space:]]*$q.*\$/bearer_token_env_var=?/" \
+    -e "s/^env_http_headers[[:space:]]*=.*$auth$q?[[:space:]]*=[[:space:]]*$q$name$q.*\$/env_http_headers=\\1/" \
+    -e "s/^env_http_headers[[:space:]]*=.*$auth$q?[[:space:]]*=.*\$/env_http_headers=?/" \
     -e 's/=[[:space:]]*"([^"\\]|\\.)*"/=_/g' \
     -e "s/=[[:space:]]*'[^']*'/=_/g" \
     -e 's/[[:space:]]*#.*$//' \
@@ -80,10 +104,15 @@ key_names_only() {
 }
 
 # What one config.toml says about the hiveku server, one fact per line:
-# "entry" (it defines [mcp_servers.hiveku]), "bearer NAME", "header" (an
-# Authorization header of its own), "envheader NAME", "enabled true|false".
+# "entry" (it defines the hiveku server), "bearer NAME" or "bearer ?" (a value
+# that is not a plain name), "header" (an Authorization header of its own),
+# "envheader NAME" or "envheader ?", "enabled true|false", and "unread FORM"
+# for a form this hook does not read: "inline" (hiveku = {...} under
+# [mcp_servers]), "dotted" (mcp_servers.hiveku.* keys before any table) or
+# "envtable" ([mcp_servers.hiveku.env_http_headers]). No value is ever kept
+# from those: only that they are there.
 hiveku_entry() {
-  local file=$1 line table='' head
+  local file=$1 line table=top head key
   [ -f "$file" ] && [ -r "$file" ] || return 0
   while IFS= read -r line || [ -n "$line" ]; do
     case $line in
@@ -92,11 +121,26 @@ hiveku_entry() {
         case $head in
           '[mcp_servers.hiveku]') table=main; echo entry ;;
           '[mcp_servers.hiveku.http_headers]') table=headers; echo entry ;;
+          '[mcp_servers.hiveku.env_http_headers]') table=''; echo entry; echo 'unread envtable' ;;
+          '[mcp_servers]') table=servers ;;
           *) table='' ;;
         esac
         continue ;;
     esac
     case $table in
+      top|servers)
+        key=$(printf '%s' "$line" | tr -d " \t\"'")
+        if [ "$table" = top ]; then
+          case $key in
+            mcp_servers.*) key=${key#mcp_servers.} ;;
+            *) continue ;;
+          esac
+        fi
+        case $key in
+          hiveku=*|hiveku.*)
+            echo entry
+            if [ "$table" = top ]; then echo 'unread dotted'; else echo 'unread inline'; fi ;;
+        esac ;;
       main)
         case $line in
           bearer_token_env_var=*)
@@ -110,7 +154,7 @@ hiveku_entry() {
             printf '%s\n' "$line" | grep -q -E '^enabled[[:space:]]*=[[:space:]]*true' && echo 'enabled true' ;;
         esac ;;
       headers)
-        printf '%s\n' "$line" | grep -q -i -E '^"?authorization"?[[:space:]]*=' && echo header ;;
+        printf '%s\n' "$line" | grep -q -i -E "^[\"']?authorization[\"']?[[:space:]]*=" && echo header ;;
     esac
   done < <(key_names_only "$file")
 }
@@ -127,10 +171,14 @@ hiveku_entry() {
 #                      NAME's key in place of the folder's own (rmcp-client
 #                      http_client_adapter.rs sets the bearer over a configured
 #                      Authorization header; confirmed with Codex 0.165.0)
+#   keyname SLOT       what looks like a key sits where a variable's NAME belongs
+#                      (SLOT bearer_token_env_var or env_http_headers): never printed
+#   unread FORM        a key in a form this hook does not read (FORM bearer, envheader,
+#                      inline, dotted or envtable): never "no key"
 #   nokey              an entry with no key at all
 #   off                the entry is switched off (enabled = false)
 key_source() {
-  local cwd=$1 home_cfg='' file fact seen=0 bearer='' bearer_home=0 header='' envheader='' enabled='' value merged
+  local cwd=$1 home_cfg='' file fact seen=0 bearer='' bearer_home=0 header='' envheader='' enabled='' unread='' value merged
   if [ -n "${CODEX_HOME:-}" ]; then
     home_cfg="${CODEX_HOME%/}/config.toml"
   elif [ -n "${HOME:-}" ]; then
@@ -148,6 +196,7 @@ key_source() {
           if [ "$file" = "$home_cfg" ]; then header=${header:-home}; else header=folder; fi ;;
         'envheader '*) envheader=${fact#envheader } ;;
         'enabled '*) enabled=${fact#enabled } ;;
+        'unread '*) unread=${fact#unread } ;;
       esac
     done < <(hiveku_entry "$file")
   done < <(
@@ -163,24 +212,37 @@ key_source() {
   fi
   [ "$enabled" = false ] && { echo off; return 0; }
   # bearer_token_env_var wins: Codex resolves it before any header and refuses
-  # to start the server when the variable is unset (rmcp_client.rs).
-  if [[ $bearer =~ $VAR_RE ]]; then
-    value=${!bearer:-}
-    merged=''
-    [ "$bearer_home" = 1 ] && [ "$header" = folder ] && merged='-merged'
-    if [ -n "$value" ]; then echo "var$merged $bearer"; else echo "missing$merged $bearer"; fi
+  # to start the server when the variable is unset (rmcp_client.rs). A value
+  # that looks like a key is checked before anything could print it.
+  if [ -n "$bearer" ]; then
+    looks_like_key "$bearer" && { echo 'keyname bearer_token_env_var'; return 0; }
+    if [ "$bearer" != _ ] && [[ $bearer =~ $VAR_RE ]]; then
+      value=${!bearer:-}
+      merged=''
+      [ "$bearer_home" = 1 ] && [ "$header" = folder ] && merged='-merged'
+      if [ -n "$value" ]; then echo "var$merged $bearer"; else echo "missing$merged $bearer"; fi
+      return 0
+    fi
+    echo 'unread bearer'
     return 0
   fi
   [ -n "$header" ] && { echo "own $header"; return 0; }
-  if [[ $envheader =~ $VAR_RE ]]; then
-    value=${!envheader:-}
-    if [ -n "$value" ]; then echo "var $envheader"; else echo "missing $envheader"; fi
+  if [ -n "$envheader" ]; then
+    looks_like_key "$envheader" && { echo 'keyname env_http_headers'; return 0; }
+    if [ "$envheader" != _ ] && [[ $envheader =~ $VAR_RE ]]; then
+      value=${!envheader:-}
+      if [ -n "$value" ]; then echo "var $envheader"; else echo "missing $envheader"; fi
+      return 0
+    fi
+    echo 'unread envheader'
     return 0
   fi
+  [ -n "$unread" ] && { echo "unread $unread"; return 0; }
   echo nokey
 }
 
 source=$(key_source "$(session_dir)")
+lead=''
 case $source in
   token) via='HIVEKU_TOKEN set' ;;
   'own home') via="the account key in your Codex config.toml, used instead of HIVEKU_TOKEN" ;;
@@ -199,12 +261,26 @@ case $source in
   off)
     echo "Hiveku: the hiveku MCP server is switched off here (enabled = false in a Codex config.toml), so no Hiveku tools load in this session."
     exit 0 ;;
+  'keyname '*)
+    # Never the value itself: only the setting it sits in.
+    echo "Hiveku: a Codex config.toml here puts what looks like an account key where the name of an environment variable belongs (${source#keyname } in the hiveku MCP server's entry), so the server will not authenticate (tools will 401 or not load). Put the key in an environment variable and name that variable there, or send the key as an Authorization header in http_headers, or run the hiveku-connect skill."
+    exit 0 ;;
+  'unread '*)
+    case ${source#unread } in
+      bearer) form='a bearer_token_env_var that is not a plain variable name' ;;
+      envheader) form='an env_http_headers Authorization entry that is not a plain variable name' ;;
+      inline) form='a hiveku entry written inline under [mcp_servers]' ;;
+      dotted) form='mcp_servers.hiveku keys outside a table' ;;
+      *) form='an [mcp_servers.hiveku.env_http_headers] table' ;;
+    esac
+    lead="Hiveku: a Codex config.toml here gives the hiveku MCP server its key in a form this check does not read ($form), so it cannot say which key the session uses. If the Hiveku tools do not load or answer 401, check that entry, or run the hiveku-connect skill." ;;
   *)
     echo "Hiveku: HIVEKU_TOKEN is not set, so the hiveku MCP server will not authenticate (tools will 401). Run the hiveku-connect skill, or set HIVEKU_TOKEN to your account key from app.hiveku.com."
     exit 0 ;;
 esac
 
-echo "Hiveku connected ($via). Before any write: verify identity with get_account_info, and remember you are NOT the only writer — check project_version_log before you start and project_files_status before you push. See the hiveku-orient skill."
+[ -n "$lead" ] || lead="Hiveku connected ($via)."
+echo "$lead Before any write: verify identity with get_account_info, and remember you are NOT the only writer — check project_version_log before you start and project_files_status before you push. See the hiveku-orient skill."
 # The source-of-truth rule (2026-10-03), in the MCP server's own words (MCP #100, with the two
 # sentences MCP #174 adds on About your business and a local copy). Static text only.
 echo "Hiveku: Hiveku Memory is the source of truth for this business: read it before you act, and follow it over your own assumptions, local files or earlier conversation. When something disagrees with memory, trust memory and say so. About your business is read with \`account_memory_get\`; memory_list and memory_get leave it out. A local copy (ACCOUNT_MEMORY.md and the like) may be out of date: read it again from Hiveku before you act on it. When \`memory_log_add\` is listed, record your work: a Doing line when you start a task for the person and a Done line when it ends. Save what you learned with the memory_* tools."

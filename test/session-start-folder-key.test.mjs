@@ -32,7 +32,15 @@
  *       is never offered as the fix; set: the session hears that the variable's key
  *       replaces the folder's), a sync folder's own variable, an entry switched off,
  *       an entry with no key, and another server's key;
- *   (f) the key itself is never printed.
+ *   (f) the key itself is never printed;
+ *   (g) a key pasted where a variable's NAME belongs (bearer_token_env_var, or an
+ *       Authorization entry in env_http_headers) is never printed either: a Hiveku
+ *       key's prefix, a long run of hex digits or a name over 40 characters is
+ *       reported by its setting alone (review of 1.0.1: the first cut echoed it twice);
+ *   (h) single-quoted names are read like double-quoted ones, and a key in a form the
+ *       hook does not read (a name that is not a plain one, an inline or dotted
+ *       entry, an env_http_headers table) is reported as unread, never as "no key",
+ *       with the working rules after it.
  *
  * Run: node --test test/*.test.mjs
  */
@@ -48,6 +56,8 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const HOOK = path.join(root, 'plugins', 'hiveku-hooks', 'hooks', 'session-start.sh');
 // A stand-in for an account key, assembled so no scanner reads it as a real one.
 const SECRET = ['hvk', 'fixture', 'only'].join('_');
+// A stand-in shaped like a real one (a prefix and 64 hex digits), assembled at run time.
+const KEY_SHAPED = ['hvk', 'c0ffee'.repeat(10) + 'abcd'].join('_');
 const NOT_SET = /^Hiveku: HIVEKU_TOKEN is not set, so the hiveku MCP server will not authenticate/;
 const RULES = 'Hiveku: Hiveku Memory is the source of truth for this business';
 
@@ -88,6 +98,7 @@ function runHook({ home, cwd, env = {}, from = cwd, payload = true }) {
   assert.equal(run.status, 0, run.stderr);
   assert.equal(run.stderr, '', 'nothing on stderr');
   assert.ok(!run.stdout.includes(SECRET), 'the key is never printed');
+  assert.ok(!run.stdout.includes('c0ffee'), 'no part of a key-shaped value is ever printed');
   return run.stdout;
 }
 
@@ -229,4 +240,80 @@ test('(f) the hook never prints, or keeps, a value it read from a config file', 
   write(path.join(all, '.codex', 'config.toml'),
     `${DESKTOP_BLOCK}\n[mcp_servers.hiveku.http_headers]\nAuthorization = '${SECRET}'\n`);
   runHook({ home, cwd: all });
+});
+
+const KEY_IN_NAME = /^Hiveku: a Codex config\.toml here puts what looks like an account key where the name of an environment variable belongs \((bearer_token_env_var|env_http_headers) in the hiveku MCP server's entry\), so the server will not authenticate \(tools will 401 or not load\)\. Put the key in an environment variable and name that variable there, or send the key as an Authorization header in http_headers, or run the hiveku-connect skill\.$/;
+
+test('(g) a key pasted where a variable name belongs is never printed, only the setting it sits in', () => {
+  const { dir, home } = sandbox();
+  const entry = (line) => `[mcp_servers.hiveku]\nurl = "https://core.hiveku.com/mcp"\n${line}\n`;
+  const cases = [
+    ['bearer', entry(`bearer_token_env_var = "${KEY_SHAPED}"`), 'bearer_token_env_var'],
+    ['bearer-single', entry(`bearer_token_env_var = '${KEY_SHAPED}'`), 'bearer_token_env_var'],
+    ['envheader', entry(`env_http_headers = { "Authorization" = "${KEY_SHAPED}" }`), 'env_http_headers'],
+    ['olp', entry(`bearer_token_env_var = "${KEY_SHAPED.replace('hvk_', 'olp_')}"`), 'bearer_token_env_var'],
+    ['gwk', entry(`bearer_token_env_var = "${KEY_SHAPED.replace('hvk_', 'gwk_')}"`), 'bearer_token_env_var'],
+    // No prefix: a run of 32 or more hex digits, or a name over 40 characters.
+    ['hex', entry(`bearer_token_env_var = "KEY_${'c0ffee'.repeat(6)}"`), 'bearer_token_env_var'],
+    ['long', entry(`bearer_token_env_var = "${'C0FFEE_'.repeat(6)}X"`), 'bearer_token_env_var'],
+  ];
+  for (const [name, config, slot] of cases) {
+    const folder = path.join(dir, name);
+    write(path.join(folder, '.codex', 'config.toml'), config);
+    // runHook asserts no part of the value reaches stdout; set or not, the answer is the same.
+    for (const env of [{}, { HIVEKU_TOKEN: SECRET }]) {
+      const out = runHook({ home, cwd: folder, env });
+      assert.match(out.trim(), KEY_IN_NAME, name);
+      assert.equal(out.trim().match(KEY_IN_NAME)[1], slot, name);
+      assert.equal(out.trim().split('\n').length, 1, `${name}: one line, no rules`);
+    }
+  }
+  // Merged in from the Codex home's own entry, it is never printed there either.
+  const dept = path.join(dir, 'dept');
+  write(path.join(dept, '.codex', 'config.toml'), DESKTOP_BLOCK);
+  write(path.join(home, '.codex', 'config.toml'), entry(`bearer_token_env_var = "${KEY_SHAPED}"`));
+  assert.match(runHook({ home, cwd: dept }).trim(), KEY_IN_NAME);
+  // A plain, short name is still named, as before.
+  write(path.join(home, '.codex', 'config.toml'), '');
+  const plain = path.join(dir, 'plain-name');
+  write(path.join(plain, '.codex', 'config.toml'), entry('bearer_token_env_var = "HIVEKU_TOKEN_NORTHWIND_COFFEE"'));
+  assert.match(runHook({ home, cwd: plain }), /^Hiveku: HIVEKU_TOKEN_NORTHWIND_COFFEE is not set, and the Codex config here names it/);
+});
+
+const UNREAD = /^Hiveku: a Codex config\.toml here gives the hiveku MCP server its key in a form this check does not read \(([^)]*)\), so it cannot say which key the session uses\. If the Hiveku tools do not load or answer 401, check that entry, or run the hiveku-connect skill\. Before any write: verify identity with get_account_info/;
+
+test('(h) single quotes read like double quotes; a form the hook cannot read is unread, never "no key", and the rules follow', () => {
+  const { dir, home } = sandbox();
+  const at = (name, config) => {
+    const folder = path.join(dir, name);
+    write(path.join(folder, '.codex', 'config.toml'), config);
+    return folder;
+  };
+  // Single quotes, the way TOML allows them.
+  const single = at('single', "[mcp_servers.hiveku]\nurl = 'https://core.hiveku.com/mcp'\nbearer_token_env_var = 'MY_TOKEN'\n");
+  assert.match(firstLine(runHook({ home, cwd: single, env: { MY_TOKEN: SECRET } })), /^Hiveku connected \(MY_TOKEN set, as the Codex config here asks\)/);
+  assert.match(runHook({ home, cwd: single }), /^Hiveku: MY_TOKEN is not set, and the Codex config here names it/);
+  const singleEnv = at('single-env', "[mcp_servers.hiveku]\nenv_http_headers = { 'Authorization' = 'MY_TOKEN' }\n");
+  assert.match(firstLine(runHook({ home, cwd: singleEnv, env: { MY_TOKEN: SECRET } })), /^Hiveku connected \(MY_TOKEN set, as the Codex config here asks\)/);
+  const singleHeader = at('single-header', `[mcp_servers.hiveku]\nurl = "https://core.hiveku.com/mcp"\n\n[mcp_servers.hiveku.http_headers]\n'Authorization' = 'Bearer ${SECRET}'\n`);
+  assert.match(firstLine(runHook({ home, cwd: singleHeader })), /^Hiveku connected \(this folder's own account key/);
+
+  // Forms it does not read: said so, with the rules, never "without an account key" or "not set".
+  const unread = [
+    ['hyphen', '[mcp_servers.hiveku]\nbearer_token_env_var = "MY-TOKEN"\n', 'a bearer_token_env_var that is not a plain variable name'],
+    ['pasted-bearer', `[mcp_servers.hiveku]\nbearer_token_env_var = "Bearer ${SECRET}"\n`, 'a bearer_token_env_var that is not a plain variable name'],
+    ['env-hyphen', '[mcp_servers.hiveku]\nenv_http_headers = { "Authorization" = "MY-TOKEN" }\n', 'an env_http_headers Authorization entry that is not a plain variable name'],
+    ['inline', `[mcp_servers]\nhiveku = { url = "https://core.hiveku.com/mcp", http_headers = { Authorization = "Bearer ${SECRET}" } }\n`, 'a hiveku entry written inline under [mcp_servers]'],
+    ['dotted', `mcp_servers.hiveku.url = "https://core.hiveku.com/mcp"\nmcp_servers.hiveku.http_headers = { Authorization = "Bearer ${SECRET}" }\n`, 'mcp_servers.hiveku keys outside a table'],
+    ['env-table', '[mcp_servers.hiveku]\nurl = "https://core.hiveku.com/mcp"\n\n[mcp_servers.hiveku.env_http_headers]\nAuthorization = "MY_TOKEN"\n', 'an [mcp_servers.hiveku.env_http_headers] table'],
+  ];
+  for (const [name, config, form] of unread) {
+    const out = runHook({ home, cwd: at(name, config) });
+    assert.match(out, UNREAD, name);
+    assert.equal(out.match(UNREAD)[1], form, name);
+    assert.doesNotMatch(out, /without an account key|is not set/, name);
+    assert.ok(out.includes(RULES), `${name}: the working rules follow`);
+  }
+  // Another server written inline is not the hiveku server.
+  assert.match(runHook({ home, cwd: at('other-inline', '[mcp_servers]\nhivekuX = { url = "https://example.invalid/mcp" }\n') }), NOT_SET);
 });

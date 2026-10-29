@@ -128,7 +128,11 @@ still meet this plugin's server, and with it `HIVEKU_TOKEN`:
   works on the variable's account. This plugin already provides the server: remove that entry.
 
 The `hiveku-hooks` SessionStart hook reads the same files, key names only and never a key, and says
-which key the session has: `HIVEKU_TOKEN`, the folder's own key, or what is missing.
+which key the session has: `HIVEKU_TOKEN`, the folder's own key, or what is missing. A key pasted where a
+variable's name belongs (`bearer_token_env_var`, or an `Authorization` entry in `env_http_headers`) is
+reported by the setting it sits in and never repeated. A form the hook does not read (an inline or
+dotted `hiveku` entry, say) is reported as unread rather than as a missing key, and the working rules
+still follow.
 
 Only one plugin should define the `hiveku` server. When two installed plugins both define it (an old test
 copy beside this one, say), Codex keeps the server of the plugin whose name comes first in sort order and
