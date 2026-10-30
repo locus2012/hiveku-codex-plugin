@@ -3,11 +3,14 @@
     "url": "https://core.hiveku.com/mcp",
     "bearer_token_env_var": "HIVEKU_TOKEN",
     "http_headers": {
-      "X-Hiveku-Client": "codex-plugin/0.3.49"
+      "X-Hiveku-Client": "codex-plugin/0.3.50"
     },
     "default_tools_approval_mode": "approve",
     "tools": {
       "deploy_site": {
+        "approval_mode": "prompt"
+      },
+      "cms_schedule_set": {
         "approval_mode": "prompt"
       },
       "deploy_run": {
@@ -152,6 +155,9 @@
         "approval_mode": "prompt"
       },
       "site_delete": {
+        "approval_mode": "prompt"
+      },
+      "site_transfer": {
         "approval_mode": "prompt"
       },
       "site_firewall_allow": {
@@ -865,7 +871,13 @@
       "marketing_form_capture_purge": {
         "approval_mode": "prompt"
       },
+      "marketing_form_inbox_delete": {
+        "approval_mode": "prompt"
+      },
       "marketing_form_notifications_update": {
+        "approval_mode": "prompt"
+      },
+      "marketing_form_notifications_test": {
         "approval_mode": "prompt"
       },
       "social_publish_post": {
