@@ -3,7 +3,7 @@
     "url": "https://core.hiveku.com/mcp",
     "bearer_token_env_var": "HIVEKU_TOKEN",
     "http_headers": {
-      "X-Hiveku-Client": "codex-plugin/0.3.47"
+      "X-Hiveku-Client": "codex-plugin/0.3.48"
     },
     "default_tools_approval_mode": "approve",
     "tools": {
@@ -239,6 +239,18 @@
         "approval_mode": "prompt"
       },
       "crm_contract_template_update": {
+        "approval_mode": "prompt"
+      },
+      "crm_envelope_create_from_template": {
+        "approval_mode": "prompt"
+      },
+      "crm_envelope_signer_reassign": {
+        "approval_mode": "prompt"
+      },
+      "crm_envelope_create": {
+        "approval_mode": "prompt"
+      },
+      "crm_envelope_update": {
         "approval_mode": "prompt"
       },
       "crm_estimate_send": {
