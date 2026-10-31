@@ -490,6 +490,51 @@
       "ppc_connection_delete": {
         "approval_mode": "prompt"
       },
+      "seo_task_deploy": {
+        "approval_mode": "prompt"
+      },
+      "seo_gbp_post_create": {
+        "approval_mode": "prompt"
+      },
+      "seo_gbp_post_update": {
+        "approval_mode": "prompt"
+      },
+      "seo_gbp_post_delete": {
+        "approval_mode": "prompt"
+      },
+      "seo_rankings_refresh": {
+        "approval_mode": "prompt"
+      },
+      "seo_rankings_bulk_add": {
+        "approval_mode": "prompt"
+      },
+      "seo_rankings_ai_backfill": {
+        "approval_mode": "prompt"
+      },
+      "seo_rankings_keyword_delete": {
+        "approval_mode": "prompt"
+      },
+      "seo_audit_delete": {
+        "approval_mode": "prompt"
+      },
+      "seo_website_report_create": {
+        "approval_mode": "prompt"
+      },
+      "seo_website_report_delete": {
+        "approval_mode": "prompt"
+      },
+      "seo_website_report_sections_set": {
+        "approval_mode": "prompt"
+      },
+      "seo_sheet_rows_delete": {
+        "approval_mode": "prompt"
+      },
+      "seo_sheet_tab_delete": {
+        "approval_mode": "prompt"
+      },
+      "seo_deliverable_save_from_workspace": {
+        "approval_mode": "prompt"
+      },
       "seo_ga4_key_event_update": {
         "approval_mode": "prompt"
       },
