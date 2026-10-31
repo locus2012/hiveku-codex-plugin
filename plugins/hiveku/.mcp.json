@@ -3,7 +3,7 @@
     "url": "https://core.hiveku.com/mcp",
     "bearer_token_env_var": "HIVEKU_TOKEN",
     "http_headers": {
-      "X-Hiveku-Client": "codex-plugin/0.3.52"
+      "X-Hiveku-Client": "codex-plugin/0.3.53"
     },
     "default_tools_approval_mode": "approve",
     "tools": {
@@ -623,6 +623,12 @@
         "approval_mode": "prompt"
       },
       "voice_port_order_loa_send": {
+        "approval_mode": "prompt"
+      },
+      "confirm_on_phone_start": {
+        "approval_mode": "prompt"
+      },
+      "confirm_on_phone_cancel": {
         "approval_mode": "prompt"
       },
       "voice_settings_update": {
