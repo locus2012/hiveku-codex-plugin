@@ -248,7 +248,15 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   submissions use). Reading those settings does not prompt. These memory writes prompt too: `memory_create`,
   `memory_update`, `memory_delete`, `memory_restore_version`, `memory_bulk_create` and
   `account_memory_append`. A rule, skill, shortcut or specialist created without an agent is shared
-  with every agent, so `memory_create` prompts on every call, a new agent's Notes included.
+  with every agent, so `memory_create` prompts on every call, a new agent's Notes included. The Memory
+  page's writes prompt too: About your business and its suggestions (`account_memory_save`,
+  `account_memory_restore`, `account_memory_suggest`, `account_memory_suggestion_keep`,
+  `account_memory_suggestions_remove`, `account_memory_suggestions_restore`), an agent's rules, skills
+  and notes (`agent_memory_save`, `agent_memory_remove`, `agent_memory_create`, `agent_memory_restore`),
+  the chief of staff's (`chief_of_staff_memory_save`, `chief_of_staff_memory_remove`), a website's
+  memory files (`website_memory_file_save`, `website_memory_file_restore`), an agent's profile and
+  switch (`agent_profile_save`, `agent_switch_set`), how the phone agents say names
+  (`voice_pronunciations_save`) and a Marketplace install (`marketplace_template_install`).
   `onboarding_write_department_memory`, the onboarding interview's own write to an agent's Notes,
   does not prompt, and the skills do not use it to save notes. A folder set up with
   `npx @hiveku-apps/sync init <account-slug> --codex` writes its own `[mcp_servers.hiveku]`, and
