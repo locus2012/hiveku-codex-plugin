@@ -263,6 +263,10 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   Codex then takes every tool's prompt from that entry, not from this plugin: until hiveku-sync
   copies this list again, `memory_create` runs there without a prompt, and the `hiveku-remember`
   skill's question about who follows a new rule is the check.
+  A person's own Mission Control actions prompt too: `mc_task_claim` (claims a card for you, or with
+  `force` takes it over from the teammate who holds it), `mc_task_release` (lets your own claim go) and
+  `mc_task_answer` (records your decision on a card and marks it done, and an agent waiting on the card
+  acts on it). Reading a card does not prompt.
   `hiveku_batch` prompts too: a batch runs its calls on the Hiveku server, and Codex asks by the
   name of the tool it calls, so without that entry a prompted tool placed inside a batch would run
   with no prompt. A batch of reads waits for a yes as well; single reads do not.
