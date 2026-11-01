@@ -267,18 +267,20 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   `force` takes it over from the teammate who holds it), `mc_task_release` (lets your own claim go) and
   `mc_task_answer` (records your decision on a card and marks it done, and an agent waiting on the card
   acts on it). Reading a card does not prompt.
-  Hiveku Meet's webinar sends, cancels and deletes, the recording deletes, and a Discussions channel's
-  sharing and delete prompt too: `marketing_webinar_invite` (emails a scheduled webinar's whole audience
-  its invites, once; invites that went out cannot be taken back), `marketing_webinar_cancel` (cancels a
-  webinar for good, closing its room if it is live, and emails every registrant and an audience already
-  invited), `marketing_webinar_delete` (deletes a webinar with its registrations, and its landing page
-  stops working), `meet_recording_delete` and `discussion_recording_delete` (delete a meeting's or a
-  call's recording with its transcripts and AI meeting notes; Hiveku takes them from the Hiveku app's own
-  key alone, so from Codex they are refused anyway), `discussion_channel_share` (shares a channel into
-  another workspace at once, with nothing to accept), `discussion_channel_unshare` (that workspace's
-  people lose the channel at once) and `discussion_delete` (deletes a channel for everyone, with its
-  whole history). Listing, creating and editing webinars, and reading recordings and a channel's
-  sharing, do not prompt.
+  Hiveku Meet's webinar sends, edits, cancels and deletes, the recording deletes, and a Discussions
+  channel's sharing and delete prompt too: `marketing_webinar_invite` (emails a scheduled webinar's
+  whole audience its invites, once; invites that went out cannot be taken back),
+  `marketing_webinar_cancel` (cancels a webinar for good, closing its room if it is live, and emails
+  every registrant and an audience already invited), `marketing_webinar_delete` (deletes a webinar with
+  its registrations, and its landing page stops working), `marketing_webinar_update` (changes a webinar
+  made in Marketing; moving its time emails every registrant, and the whole audience once its invites
+  went out; Codex prompts per tool, so every edit prompts), `meet_recording_delete` and
+  `discussion_recording_delete` (delete a meeting's or a call's recording with its transcripts and AI
+  meeting notes; Hiveku takes them from the Hiveku app's own key alone, so from Codex they are refused
+  anyway), `discussion_channel_share` (shares a channel into another workspace at once, with nothing to
+  accept), `discussion_channel_unshare` (that workspace's people lose the channel at once) and
+  `discussion_delete` (deletes a channel for everyone, with its whole history). Listing and creating
+  webinars, and reading recordings and a channel's sharing, do not prompt.
   `hiveku_batch` prompts too: a batch runs its calls on the Hiveku server, and Codex asks by the
   name of the tool it calls, so without that entry a prompted tool placed inside a batch would run
   with no prompt. A batch of reads waits for a yes as well; single reads do not.
