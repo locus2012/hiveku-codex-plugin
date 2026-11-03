@@ -304,6 +304,9 @@
       "email_suppression_import": {
         "approval_mode": "prompt"
       },
+      "email_webhook_delete": {
+        "approval_mode": "prompt"
+      },
       "crm_envelope_send": {
         "approval_mode": "prompt"
       },
