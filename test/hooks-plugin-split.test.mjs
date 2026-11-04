@@ -429,6 +429,8 @@ const PINNED_BUNDLE = {
   // form it does not read is unread (review of 1.0.1, still unshipped, so one approval covers both).
   // Codex 0.165.0 hooks/list reported the same value (2026-10-29).
   '1.0.1': 'sha256:77953fe8a65852f21479f1de49f91d2dd7498862d32440c3847f00650d207c8a',
+  // Immutable-release guard rollout; hook behavior is unchanged. The manifest bump changes the fingerprint.
+  '1.0.2': 'sha256:8d4e7e817277e0e7413dbe1181ca05eb2d0059cfc60a53ba6b8d78538b47dc67',
 };
 
 test('(e) the hooks plugin folder hash is pinned to its version', () => {
