@@ -601,6 +601,12 @@
       "pm_tasks_delete": {
         "approval_mode": "prompt"
       },
+      "crm_contact_booking_link_send": {
+        "approval_mode": "prompt"
+      },
+      "calendar_booking_create": {
+        "approval_mode": "prompt"
+      },
       "marketing_offline_conversions_go_live": {
         "approval_mode": "prompt"
       },

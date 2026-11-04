@@ -281,6 +281,12 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   accept), `discussion_channel_unshare` (that workspace's people lose the channel at once) and
   `discussion_delete` (deletes a channel for everyone, with its whole history). Listing and creating
   webinars, and reading recordings and a channel's sharing, do not prompt.
+  Hiveku Meet's calendar sends prompt too: `crm_contact_booking_link_send` (emails or texts a contact a
+  booking link from a connected inbox or the account's number, signed with your name; a sent email or text
+  cannot be taken back) and `calendar_booking_create` (books a contact into a meeting, so Hiveku emails
+  them the confirmation and the host's calendar sends its invite; Hiveku takes it from the Hiveku app's own
+  key alone, so from Codex it is refused anyway). Reading bookings, meeting types and lead replies does
+  not prompt.
   `hiveku_batch` prompts too: a batch runs its calls on the Hiveku server, and Codex asks by the
   name of the tool it calls, so without that entry a prompted tool placed inside a batch would run
   with no prompt. A batch of reads waits for a yes as well; single reads do not.
