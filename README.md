@@ -296,6 +296,11 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   `customer_journey_iteration_publish` (a published version cannot be undone) and
   `customer_journey_simulation_publish` (a projection on the journey's public page). Running the simulator,
   the canvas positions, stage links, font uploads and ICP pictures do not prompt.
+  Marketing > Referrals prompts for its sends and live changes: `marketing_referral_invite` (texts or
+  emails each chosen customer their own referral link), `marketing_referral_status_set` (a pause stops every
+  link the campaign handed out until it is active again), `marketing_referral_archive` (its links stop for
+  good; there is no undo) and `marketing_referral_update` (the friend's reward changes at once on the page
+  every friend opens). Creating a campaign, links only, a lead's status and the reads do not prompt.
   `hiveku_batch` prompts too: a batch runs its calls on the Hiveku server, and Codex asks by the
   name of the tool it calls, so without that entry a prompted tool placed inside a batch would run
   with no prompt. A batch of reads waits for a yes as well; single reads do not.
