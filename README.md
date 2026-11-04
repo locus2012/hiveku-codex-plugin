@@ -243,9 +243,11 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   good). Mobile app settings prompt too: `mobile_app_sdk_upgrade` (moves the app to a newer Expo SDK,
   rewriting its package files, app config and untouched template files in one go after saving a
   checkpoint, then restarts its preview), `mobile_app_identity_set` (the iOS bundle ID, Android
-  package and link scheme, which become permanent once a build is uploaded to a store) and
+  package and link scheme, which become permanent once a build is uploaded to a store),
   `mobile_app_apple_account_set` (which Apple developer account the app's builds and App Store
-  submissions use). Reading those settings does not prompt. These memory writes prompt too: `memory_create`,
+  submissions use) and `mobile_app_expo_project_choose` (which Expo project the app's builds and
+  over-the-air updates go to; a store identity that does not match makes the next build a new store
+  app). Reading those settings does not prompt. These memory writes prompt too: `memory_create`,
   `memory_update`, `memory_delete`, `memory_restore_version`, `memory_bulk_create` and
   `account_memory_append`. A rule, skill, shortcut or specialist created without an agent is shared
   with every agent, so `memory_create` prompts on every call, a new agent's Notes included. The Memory
@@ -287,6 +289,13 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   them the confirmation and the host's calendar sends its invite; Hiveku takes it from the Hiveku app's own
   key alone, so from Codex it is refused anyway). Reading bookings, meeting types and lead replies does
   not prompt.
+  Brand guides and customer journeys prompt where they spend, publish or decide for everyone:
+  `brand_guide_voiceovers_set` (the voice every new video speaks in, for the whole account),
+  `customer_journey_create_from_template` and `customer_journey_repopulate` (each starts a billed AI run),
+  `customer_journey_videos_generate` (billed clips from the month's allowance),
+  `customer_journey_iteration_publish` (a published version cannot be undone) and
+  `customer_journey_simulation_publish` (a projection on the journey's public page). Running the simulator,
+  the canvas positions, stage links, font uploads and ICP pictures do not prompt.
   Marketing > Referrals prompts for its sends and live changes: `marketing_referral_invite` (texts or
   emails each chosen customer their own referral link), `marketing_referral_status_set` (a pause stops every
   link the campaign handed out until it is active again), `marketing_referral_archive` (its links stop for
