@@ -1,6 +1,6 @@
 {
   "name": "hiveku-hooks",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Hiveku's hooks for Codex, installed beside the hiveku plugin: a check, when a session starts, that the hiveku server has an account key (HIVEKU_TOKEN is set, or the folder's own Codex config carries one), and a reminder to save a website change as a version before the agent finishes. Codex asks you once to trust them.",
   "author": {
     "name": "Hiveku",
