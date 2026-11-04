@@ -287,6 +287,13 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   them the confirmation and the host's calendar sends its invite; Hiveku takes it from the Hiveku app's own
   key alone, so from Codex it is refused anyway). Reading bookings, meeting types and lead replies does
   not prompt.
+  Brand guides and customer journeys prompt where they spend, publish or decide for everyone:
+  `brand_guide_voiceovers_set` (the voice every new video speaks in, for the whole account),
+  `customer_journey_create_from_template` and `customer_journey_repopulate` (each starts a billed AI run),
+  `customer_journey_videos_generate` (billed clips from the month's allowance),
+  `customer_journey_iteration_publish` (a published version cannot be undone) and
+  `customer_journey_simulation_publish` (a projection on the journey's public page). Running the simulator,
+  the canvas positions, stage links, font uploads and ICP pictures do not prompt.
   `hiveku_batch` prompts too: a batch runs its calls on the Hiveku server, and Codex asks by the
   name of the tool it calls, so without that entry a prompted tool placed inside a batch would run
   with no prompt. A batch of reads waits for a yes as well; single reads do not.
