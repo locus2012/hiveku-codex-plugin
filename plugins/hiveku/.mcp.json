@@ -199,6 +199,15 @@
       "ppc_recent_change_override": {
         "approval_mode": "prompt"
       },
+      "account_settings_update": {
+        "approval_mode": "prompt"
+      },
+      "account_settings_logo_set": {
+        "approval_mode": "prompt"
+      },
+      "account_settings_logo_remove": {
+        "approval_mode": "prompt"
+      },
       "account_timezone_set": {
         "approval_mode": "prompt"
       },
