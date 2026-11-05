@@ -898,6 +898,9 @@
       "confirm_on_phone_cancel": {
         "approval_mode": "prompt"
       },
+      "crm_contacts_restore": {
+        "approval_mode": "prompt"
+      },
       "voice_settings_update": {
         "approval_mode": "prompt"
       },
