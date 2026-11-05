@@ -3,7 +3,7 @@
     "url": "https://core.hiveku.com/mcp",
     "bearer_token_env_var": "HIVEKU_TOKEN",
     "http_headers": {
-      "X-Hiveku-Client": "codex-plugin/0.3.72"
+      "X-Hiveku-Client": "codex-plugin/0.3.73"
     },
     "default_tools_approval_mode": "approve",
     "tools": {
@@ -1365,11 +1365,200 @@
       },
       "cms_remove_field": {
         "approval_mode": "prompt"
+      },
+      "dashboards_page_create": {
+        "approval_mode": "prompt"
+      },
+      "dashboards_page_home_set": {
+        "approval_mode": "prompt"
+      },
+      "dashboards_page_shared_home_save": {
+        "approval_mode": "prompt"
+      },
+      "dashboards_page_update": {
+        "approval_mode": "prompt"
+      },
+      "dashboards_page_delete": {
+        "approval_mode": "prompt"
+      },
+      "dashboards_page_publish": {
+        "approval_mode": "prompt"
+      },
+      "dashboards_page_restore": {
+        "approval_mode": "prompt"
+      },
+      "dashboards_page_sharing_set": {
+        "approval_mode": "prompt"
+      },
+      "dashboards_page_editor_add": {
+        "approval_mode": "prompt"
+      },
+      "dashboards_page_editor_remove": {
+        "approval_mode": "prompt"
+      },
+      "dashboards_page_version_restore": {
+        "approval_mode": "prompt"
+      },
+      "dashboards_page_copy": {
+        "approval_mode": "prompt"
+      },
+      "dashboards_page_action_run": {
+        "approval_mode": "prompt"
+      },
+      "dashboards_page_workflow_button_run": {
+        "approval_mode": "prompt"
+      },
+      "dashboards_page_widget_describe": {
+        "approval_mode": "prompt"
+      },
+      "dashboards_page_rows_send": {
+        "approval_mode": "prompt"
+      },
+      "dashboards_page_tally_add": {
+        "approval_mode": "prompt"
+      },
+      "workspaces_page_prefs_save": {
+        "approval_mode": "prompt"
+      },
+      "workspaces_page_view_create": {
+        "approval_mode": "prompt"
+      },
+      "workspaces_page_view_from_template": {
+        "approval_mode": "prompt"
+      },
+      "workspaces_page_view_update": {
+        "approval_mode": "prompt"
+      },
+      "workspaces_page_view_delete": {
+        "approval_mode": "prompt"
+      },
+      "workspaces_page_view_grants_set": {
+        "approval_mode": "prompt"
+      },
+      "workspaces_page_pm_project_update": {
+        "approval_mode": "prompt"
+      },
+      "workspaces_page_pm_task_create": {
+        "approval_mode": "prompt"
+      },
+      "workspaces_page_pm_task_update": {
+        "approval_mode": "prompt"
+      },
+      "workspaces_page_mc_lane_create": {
+        "approval_mode": "prompt"
+      },
+      "workspaces_page_mc_lane_update": {
+        "approval_mode": "prompt"
+      },
+      "workspaces_page_mc_lane_delete": {
+        "approval_mode": "prompt"
+      },
+      "workspaces_page_mc_task_update": {
+        "approval_mode": "prompt"
+      },
+      "workspaces_page_mc_task_answer": {
+        "approval_mode": "prompt"
+      },
+      "workspaces_page_mc_task_claim": {
+        "approval_mode": "prompt"
+      },
+      "workspaces_page_mc_task_release": {
+        "approval_mode": "prompt"
+      },
+      "workspaces_page_mc_task_comment": {
+        "approval_mode": "prompt"
+      },
+      "workspaces_page_mc_task_transition": {
+        "approval_mode": "prompt"
+      },
+      "workspaces_page_custom_field_create": {
+        "approval_mode": "prompt"
+      },
+      "workspaces_page_custom_field_value_set": {
+        "approval_mode": "prompt"
+      },
+      "workspaces_page_custom_field_update": {
+        "approval_mode": "prompt"
+      },
+      "workspaces_page_custom_field_delete": {
+        "approval_mode": "prompt"
+      },
+      "workspaces_page_custom_field_grants_set": {
+        "approval_mode": "prompt"
+      },
+      "workspaces_page_dashboard_create": {
+        "approval_mode": "prompt"
+      },
+      "workspaces_page_dashboard_home_set": {
+        "approval_mode": "prompt"
+      },
+      "workspaces_page_dashboard_update": {
+        "approval_mode": "prompt"
+      },
+      "workspaces_page_dashboard_delete": {
+        "approval_mode": "prompt"
+      },
+      "workspaces_page_dashboard_restore": {
+        "approval_mode": "prompt"
+      },
+      "workspaces_page_dashboard_version_restore": {
+        "approval_mode": "prompt"
+      },
+      "workspaces_page_partner_account_create": {
+        "approval_mode": "prompt"
+      },
+      "workspaces_page_partner_branding_save": {
+        "approval_mode": "prompt"
+      },
+      "workspaces_page_partner_payout_details_save": {
+        "approval_mode": "prompt"
+      },
+      "dashboards_page_data_table_create": {
+        "approval_mode": "prompt"
+      },
+      "dashboards_page_data_table_update": {
+        "approval_mode": "prompt"
+      },
+      "dashboards_page_data_table_delete": {
+        "approval_mode": "prompt"
+      },
+      "dashboards_page_data_table_restore": {
+        "approval_mode": "prompt"
+      },
+      "dashboards_page_data_row_update": {
+        "approval_mode": "prompt"
+      },
+      "dashboards_page_data_rows_delete": {
+        "approval_mode": "prompt"
+      },
+      "dashboards_page_data_rows_restore": {
+        "approval_mode": "prompt"
+      },
+      "dashboards_page_data_column_change": {
+        "approval_mode": "prompt"
+      },
+      "dashboards_page_data_column_undo": {
+        "approval_mode": "prompt"
+      },
+      "dashboards_page_data_tally_add_remove": {
+        "approval_mode": "prompt"
+      },
+      "dashboards_page_data_tally_settings_save": {
+        "approval_mode": "prompt"
+      },
+      "dashboards_page_data_tally_start_from_zero": {
+        "approval_mode": "prompt"
+      },
+      "dashboards_page_data_workflow_writer_stop": {
+        "approval_mode": "prompt"
       }
     }
   },
   "playwright": {
     "command": "npx",
-    "args": ["-y", "@playwright/mcp@latest"]
+    "args": [
+      "-y",
+      "@playwright/mcp@latest"
+    ]
   }
 }
