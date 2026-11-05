@@ -301,6 +301,11 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   link the campaign handed out until it is active again), `marketing_referral_archive` (its links stop for
   good; there is no undo) and `marketing_referral_update` (the friend's reward changes at once on the page
   every friend opens). Creating a campaign, links only, a lead's status and the reads do not prompt.
+  The Publish and hosting writes prompt too: `project_publish_state_set` (takes an environment offline,
+  unpublishes it or brings it back), `project_hosting_lane_set` and `project_hosting_lane_move` (choose
+  or move its hosting) and `deploy_restore_files` (puts files and images back as they were at a publish;
+  code waits for the next publish, but an image stored at its live address changes on the live site
+  without one). Reading the publish state and the hosting does not prompt.
   `hiveku_batch` prompts too: a batch runs its calls on the Hiveku server, and Codex asks by the
   name of the tool it calls, so without that entry a prompted tool placed inside a batch would run
   with no prompt. A batch of reads waits for a yes as well; single reads do not.
