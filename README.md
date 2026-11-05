@@ -307,6 +307,11 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   or move its hosting) and `deploy_restore_files` (puts files and images back as they were at a publish;
   code waits for the next publish, but an image stored at its live address changes on the live site
   without one). Reading the publish state and the hosting does not prompt.
+  The Domains, settings and store writes prompt too: `project_domain_auto_configure` (adds live DNS
+  records for a domain Hiveku runs), `project_domain_transfer` (moves a site's domains to another site),
+  `project_secrets_rename` (code reading the old name stops getting it), `site_convert_to_hosted` (a
+  tracked site becomes a hosted one, and it can never go back) and `shopify_project_settings_set`
+  (chooses which store a website uses, which can change what it sells at once).
   `hiveku_batch` prompts too: a batch runs its calls on the Hiveku server, and Codex asks by the
   name of the tool it calls, so without that entry a prompted tool placed inside a batch would run
   with no prompt. A batch of reads waits for a yes as well; single reads do not.
