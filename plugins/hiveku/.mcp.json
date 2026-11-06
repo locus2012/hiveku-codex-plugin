@@ -3,7 +3,7 @@
     "url": "https://core.hiveku.com/mcp",
     "bearer_token_env_var": "HIVEKU_TOKEN",
     "http_headers": {
-      "X-Hiveku-Client": "codex-plugin/0.3.78"
+      "X-Hiveku-Client": "codex-plugin/0.3.79"
     },
     "default_tools_approval_mode": "approve",
     "tools": {
@@ -128,6 +128,9 @@
         "approval_mode": "prompt"
       },
       "project_backup_download_link": {
+        "approval_mode": "prompt"
+      },
+      "voice_sip_credentials_get": {
         "approval_mode": "prompt"
       },
       "project_secrets_replace": {
