@@ -223,6 +223,12 @@
       "project_page_cache_set": {
         "approval_mode": "prompt"
       },
+      "project_cache_clear": {
+        "approval_mode": "prompt"
+      },
+      "project_cdn_invalidate": {
+        "approval_mode": "prompt"
+      },
       "analytics_visitor_intelligence_start": {
         "approval_mode": "prompt"
       },
