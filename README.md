@@ -312,7 +312,7 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   records for a domain Hiveku runs), `project_domain_transfer` (moves a site's domains to another site),
   `project_secrets_rename` (code reading the old name stops getting it), `site_convert_to_hosted` (a
   tracked site becomes a hosted one, and it can never go back) and `shopify_project_settings_set`
-  (chooses which store a website uses, which can change what it sells at once).
+  (saves which store Hiveku's own tools use for a website; the live site does not change).
   `hiveku_batch` prompts too: a batch runs its calls on the Hiveku server, and Codex asks by the
   name of the tool it calls, so without that entry a prompted tool placed inside a batch would run
   with no prompt. A batch of reads waits for a yes as well; single reads do not.
