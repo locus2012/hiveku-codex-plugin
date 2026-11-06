@@ -248,7 +248,8 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   submissions use) and `mobile_app_expo_project_choose` (which Expo project the app's builds and
   over-the-air updates go to; a store identity that does not match makes the next build a new store
   app). Reading those settings does not prompt. Bringing deleted contacts back prompts too
-  (`crm_contacts_restore`): a contact may have been deleted on purpose. These memory writes prompt too: `memory_create`,
+  (`crm_contacts_restore`): a contact may have been deleted on purpose. Adding leads to a cold email campaign prompts
+  too (`outbound_leads_bulk_create`, `outbound_create_lead`). These memory writes prompt too: `memory_create`,
   `memory_update`, `memory_delete`, `memory_restore_version`, `memory_bulk_create` and
   `account_memory_append`. A rule, skill, shortcut or specialist created without an agent is shared
   with every agent, so `memory_create` prompts on every call, a new agent's Notes included. The Memory
