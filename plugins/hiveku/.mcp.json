@@ -3,7 +3,7 @@
     "url": "https://core.hiveku.com/mcp",
     "bearer_token_env_var": "HIVEKU_TOKEN",
     "http_headers": {
-      "X-Hiveku-Client": "codex-plugin/0.3.79"
+      "X-Hiveku-Client": "codex-plugin/0.3.80"
     },
     "default_tools_approval_mode": "approve",
     "tools": {
@@ -365,6 +365,15 @@
         "approval_mode": "prompt"
       },
       "account_app_stores_expo_disconnect": {
+        "approval_mode": "prompt"
+      },
+      "customer_journey_public_link_set": {
+        "approval_mode": "prompt"
+      },
+      "before_after_grid_public_link_set": {
+        "approval_mode": "prompt"
+      },
+      "customer_avatar_public_link_set": {
         "approval_mode": "prompt"
       },
       "account_timezone_set": {
