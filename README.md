@@ -324,6 +324,8 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   `project_annotation_delete`, `project_annotation_comment_update`, `project_annotation_comment_delete`,
   `project_review_notify_set`, `project_review_notify_test`, `project_review_session_set`,
   `project_review_session_clear`, and `project_review_frame_url`, whose answer holds the saved reviewer login.
+  `account_domain_transfer_submit` prompts too: it charges a year of registration. The MCP serves it to the Hiveku app's
+  own key alone, so this is a second guard.
   The agency dashboard changes prompt too: all twelve `workspace_dashboard_*` writes, from
   `workspace_dashboard_create` to `workspace_dashboard_version_restore`, which change the person's own
   dashboards on Workspaces. Their reads do not prompt.
