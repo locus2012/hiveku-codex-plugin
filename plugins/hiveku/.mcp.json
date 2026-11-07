@@ -3,7 +3,7 @@
     "url": "https://core.hiveku.com/mcp",
     "bearer_token_env_var": "HIVEKU_TOKEN",
     "http_headers": {
-      "X-Hiveku-Client": "codex-plugin/0.3.80"
+      "X-Hiveku-Client": "codex-plugin/0.3.81"
     },
     "default_tools_approval_mode": "approve",
     "tools": {
@@ -637,6 +637,9 @@
       "ppc_negatives_remove": {
         "approval_mode": "prompt"
       },
+      "ppc_meta_url_tags_set": {
+        "approval_mode": "prompt"
+      },
       "ppc_bing_url_tracking_set": {
         "approval_mode": "prompt"
       },
@@ -797,6 +800,12 @@
         "approval_mode": "prompt"
       },
       "calendar_booking_create": {
+        "approval_mode": "prompt"
+      },
+      "calendar_meeting_type_create": {
+        "approval_mode": "prompt"
+      },
+      "calendar_meeting_type_update": {
         "approval_mode": "prompt"
       },
       "marketing_offline_conversions_go_live": {
