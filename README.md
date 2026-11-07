@@ -318,6 +318,12 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   `webflow_connection_disconnect` (ends a connection for every project that uses it),
   `webflow_webhooks_reregister`, `webflow_form_routing_set` (which form submissions reach Hiveku) and
   `webflow_form_submissions_backfill` (copies past submissions, with visitors' details, into Hiveku).
+  The cookie banner and tracker writes prompt too: `project_cookie_banner_set`, `project_consent_trackers_add`,
+  `project_consent_trackers_update` and `project_consent_trackers_remove` reach visitors at their next page load, with no
+  deploy. So do the Review page's: `project_annotation_create` (it tells the client's recipients),
+  `project_annotation_delete`, `project_annotation_comment_update`, `project_annotation_comment_delete`,
+  `project_review_notify_set`, `project_review_notify_test`, `project_review_session_set`,
+  `project_review_session_clear`, and `project_review_frame_url`, whose answer holds the saved reviewer login.
   The agency dashboard changes prompt too: all twelve `workspace_dashboard_*` writes, from
   `workspace_dashboard_create` to `workspace_dashboard_version_restore`, which change the person's own
   dashboards on Workspaces. Their reads do not prompt.
