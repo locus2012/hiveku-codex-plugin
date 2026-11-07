@@ -318,6 +318,9 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   `webflow_connection_disconnect` (ends a connection for every project that uses it),
   `webflow_webhooks_reregister`, `webflow_form_routing_set` (which form submissions reach Hiveku) and
   `webflow_form_submissions_backfill` (copies past submissions, with visitors' details, into Hiveku).
+  The agency dashboard changes prompt too: all twelve `workspace_dashboard_*` writes, from
+  `workspace_dashboard_create` to `workspace_dashboard_version_restore`, which change the person's own
+  dashboards on Workspaces. Their reads do not prompt.
   A site's cache clear prompts too: `project_cache_clear` and `project_cdn_invalidate`, the same clear under its
   older name. Each costs money past the free allowance and spends the limit of 6 clears an hour per environment and
   40 a day per account. Reading whether a clear finished does not prompt.
