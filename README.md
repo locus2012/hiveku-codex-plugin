@@ -281,8 +281,13 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   went out; Codex prompts per tool, so every edit prompts), `meet_recording_delete` and
   `discussion_recording_delete` (delete a meeting's or a call's recording with its transcripts and AI
   meeting notes; Hiveku takes them from the Hiveku app's own key alone, so from Codex they are refused
-  anyway), `discussion_channel_share` (shares a channel into another workspace at once, with nothing to
-  accept), `discussion_channel_unshare` (that workspace's people lose the channel at once) and
+  anyway), `discussion_channel_share` (shares a channel straight into a workspace the person runs; Hiveku
+  takes it from the Hiveku app's own key alone, so from Codex it is refused anyway),
+  `discussion_channel_share_request` (asks another workspace or an email address to take a channel, in the
+  person's name; nothing is shared until someone there accepts), `discussion_channel_share_request_cancel`
+  (cancels such a request while it waits), `discussion_update` (it can change who may read a channel or end
+  its sharing; Codex prompts per tool, so every edit of a channel prompts), `discussion_channel_unshare` (that
+  workspace's people lose the channel at once) and
   `discussion_delete` (deletes a channel for everyone, with its whole history). Listing and creating
   webinars, and reading recordings and a channel's sharing, do not prompt.
   Hiveku Meet's calendar sends prompt too: `crm_contact_booking_link_send` (emails or texts a contact a
