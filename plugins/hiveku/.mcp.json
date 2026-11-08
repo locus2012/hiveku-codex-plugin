@@ -3,7 +3,7 @@
     "url": "https://core.hiveku.com/mcp",
     "bearer_token_env_var": "HIVEKU_TOKEN",
     "http_headers": {
-      "X-Hiveku-Client": "codex-plugin/0.3.88"
+      "X-Hiveku-Client": "codex-plugin/0.3.89"
     },
     "default_tools_approval_mode": "approve",
     "tools": {
@@ -1920,6 +1920,102 @@
         "approval_mode": "prompt"
       },
       "dashboards_page_data_workflow_writer_stop": {
+        "approval_mode": "prompt"
+      },
+      "pm_project_tasks_copy": {
+        "approval_mode": "prompt"
+      },
+      "pm_tasks_create_bulk": {
+        "approval_mode": "prompt"
+      },
+      "pm_tasks_reassign_bulk": {
+        "approval_mode": "prompt"
+      },
+      "pm_sections_delete": {
+        "approval_mode": "prompt"
+      },
+      "pm_milestones_delete": {
+        "approval_mode": "prompt"
+      },
+      "pm_milestones_close": {
+        "approval_mode": "prompt"
+      },
+      "pm_task_time_log_create": {
+        "approval_mode": "prompt"
+      },
+      "crm_contact_merge": {
+        "approval_mode": "prompt"
+      },
+      "crm_delete_contact": {
+        "approval_mode": "prompt"
+      },
+      "crm_delete_company": {
+        "approval_mode": "prompt"
+      },
+      "crm_delete_deal": {
+        "approval_mode": "prompt"
+      },
+      "crm_delete_sequence": {
+        "approval_mode": "prompt"
+      },
+      "crm_delete_custom_field": {
+        "approval_mode": "prompt"
+      },
+      "crm_delete_tag": {
+        "approval_mode": "prompt"
+      },
+      "crm_delete_email_template": {
+        "approval_mode": "prompt"
+      },
+      "crm_contacts_bulk_create": {
+        "approval_mode": "prompt"
+      },
+      "crm_companies_bulk_create": {
+        "approval_mode": "prompt"
+      },
+      "crm_deals_bulk_create": {
+        "approval_mode": "prompt"
+      },
+      "crm_activities_bulk_create": {
+        "approval_mode": "prompt"
+      },
+      "crm_unenroll_sequence": {
+        "approval_mode": "prompt"
+      },
+      "crm_pause_sequence_enrollment": {
+        "approval_mode": "prompt"
+      },
+      "crm_resume_sequence_enrollment": {
+        "approval_mode": "prompt"
+      },
+      "crm_email_batch_cancel": {
+        "approval_mode": "prompt"
+      },
+      "crm_email_batch_reschedule": {
+        "approval_mode": "prompt"
+      },
+      "calendar_create_event": {
+        "approval_mode": "prompt"
+      },
+      "helpdesk_ticket_merge": {
+        "approval_mode": "prompt"
+      },
+      "helpdesk_ticket_set_status": {
+        "approval_mode": "prompt"
+      },
+      "helpdesk_ticket_create": {
+        "approval_mode": "prompt"
+      },
+      "helpdesk_ticket_transfer_to_voice": {
+        "approval_mode": "prompt"
+      },
+      "accounting_bill_schedule_create": {
+        "approval_mode": "prompt"
+      },
+      "accounting_vendor_delete": {
+        "approval_mode": "prompt"
+      },
+      "brand_guide_update": {
         "approval_mode": "prompt"
       }
     }
