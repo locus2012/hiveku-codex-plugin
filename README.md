@@ -329,6 +329,12 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   The agency dashboard changes prompt too: all twelve `workspace_dashboard_*` writes, from
   `workspace_dashboard_create` to `workspace_dashboard_version_restore`, which change the person's own
   dashboards on Workspaces. Their reads do not prompt.
+  The account dashboard and Your data writes prompt too: all 24 `dashboard_*` changes, from `dashboard_create`
+  to `dashboard_data_column_change`. They change dashboards others in the account may see, the shared home
+  everyone opens (`dashboard_publish`), who a dashboard is shared with (`dashboard_share`), and the Your data
+  tables and rows that dashboards read. The Client health writes prompt as well: `workspaces_page_attention_item_update` (takes, gives,
+  snoozes or closes an item for everyone who sees that client) and `workspaces_page_attention_recheck` (runs a live
+  check of a client's site and records it). Their reads do not prompt.
   A site's cache clear prompts too: `project_cache_clear` and `project_cdn_invalidate`, the same clear under its
   older name. Each costs money past the free allowance and spends the limit of 6 clears an hour per environment and
   40 a day per account. Reading whether a clear finished does not prompt.

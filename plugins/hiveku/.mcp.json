@@ -3,7 +3,7 @@
     "url": "https://core.hiveku.com/mcp",
     "bearer_token_env_var": "HIVEKU_TOKEN",
     "http_headers": {
-      "X-Hiveku-Client": "codex-plugin/0.3.85"
+      "X-Hiveku-Client": "codex-plugin/0.3.86"
     },
     "default_tools_approval_mode": "approve",
     "tools": {
@@ -1712,6 +1712,12 @@
       "workspaces_page_mc_task_transition": {
         "approval_mode": "prompt"
       },
+      "workspaces_page_attention_item_update": {
+        "approval_mode": "prompt"
+      },
+      "workspaces_page_attention_recheck": {
+        "approval_mode": "prompt"
+      },
       "workspaces_page_custom_field_create": {
         "approval_mode": "prompt"
       },
@@ -1779,6 +1785,78 @@
         "approval_mode": "prompt"
       },
       "workspace_dashboard_version_restore": {
+        "approval_mode": "prompt"
+      },
+      "dashboard_create": {
+        "approval_mode": "prompt"
+      },
+      "dashboard_update": {
+        "approval_mode": "prompt"
+      },
+      "dashboard_restore": {
+        "approval_mode": "prompt"
+      },
+      "dashboard_layout_update": {
+        "approval_mode": "prompt"
+      },
+      "dashboard_widget_create": {
+        "approval_mode": "prompt"
+      },
+      "dashboard_widget_update": {
+        "approval_mode": "prompt"
+      },
+      "dashboard_widget_delete": {
+        "approval_mode": "prompt"
+      },
+      "dashboard_page_create": {
+        "approval_mode": "prompt"
+      },
+      "dashboard_page_update": {
+        "approval_mode": "prompt"
+      },
+      "dashboard_page_delete": {
+        "approval_mode": "prompt"
+      },
+      "dashboard_control_create": {
+        "approval_mode": "prompt"
+      },
+      "dashboard_control_update": {
+        "approval_mode": "prompt"
+      },
+      "dashboard_control_delete": {
+        "approval_mode": "prompt"
+      },
+      "dashboard_data_source_create": {
+        "approval_mode": "prompt"
+      },
+      "dashboard_data_source_update": {
+        "approval_mode": "prompt"
+      },
+      "dashboard_data_rows_send": {
+        "approval_mode": "prompt"
+      },
+      "dashboard_data_rows_delete": {
+        "approval_mode": "prompt"
+      },
+      "dashboard_tally_add": {
+        "approval_mode": "prompt"
+      },
+      "dashboard_delete": {
+        "approval_mode": "prompt"
+      },
+      "dashboard_publish": {
+        "approval_mode": "prompt"
+      },
+      "dashboard_share": {
+        "approval_mode": "prompt"
+      },
+      "dashboard_version_restore": {
+        "approval_mode": "prompt"
+      },
+      "dashboard_data_source_delete": {
+        "approval_mode": "prompt"
+      },
+      "dashboard_data_column_change": {
         "approval_mode": "prompt"
       },
       "workspaces_page_partner_account_create": {
