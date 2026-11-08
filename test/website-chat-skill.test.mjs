@@ -161,19 +161,23 @@ test('the description loads the skill for any helpdesk ticket triage', () => {
   assert.match(desc, /Load before triaging, counting, assigning, merging, closing or replying to helpdesk tickets: every website chat is a ticket/);
 });
 
-test("a chat the assistant has is never merged, and Codex's unprompted tools are named", () => {
+test("a chat the assistant has is never merged, and Codex's prompted and unprompted tools are named", () => {
   const who = section('## Who has the chat');
   assert.match(who, /\(no reply, assign, escalation, priority change, merge or close\) unless the user names that chat/);
   assert.match(who, /Never merge it, as the source or the target/);
   const reply = section('## Replying on a chat');
-  assert.match(reply, /Codex does not prompt before `helpdesk_ticket_merge` or `helpdesk_ticket_set_status` either/);
+  assert.match(reply, /Codex prompts before\s+`helpdesk_ticket_merge` and `helpdesk_ticket_set_status`, but the prompt names only the tool/);
   assert.match(reply, /never merge a chat the assistant has, as the source or the target/);
-  // The claim "Codex does not prompt" must stay true of plugins/hiveku/.mcp.json.
+  // Both claims must stay true of plugins/hiveku/.mcp.json: the department agents' approval asks (2026-11-08)
+  // made the merge and the status change prompt; the take-overs and the note still run unprompted.
   const mcp = JSON.parse(fs.readFileSync(path.join(root, 'plugins/hiveku/.mcp.json'), 'utf8'));
   assert.equal(mcp.hiveku?.default_tools_approval_mode, 'approve');
   const tools = mcp.hiveku?.tools ?? {};
-  for (const name of ['helpdesk_ticket_assign', 'helpdesk_ticket_escalate_to_human', 'helpdesk_ticket_merge', 'helpdesk_ticket_set_status', 'helpdesk_ticket_add_message']) {
+  for (const name of ['helpdesk_ticket_assign', 'helpdesk_ticket_escalate_to_human', 'helpdesk_ticket_add_message']) {
     assert.notEqual(tools[name]?.approval_mode, 'prompt', `the skill says Codex runs ${name} without a prompt`);
+  }
+  for (const name of ['helpdesk_ticket_merge', 'helpdesk_ticket_set_status']) {
+    assert.equal(tools[name]?.approval_mode, 'prompt', `the skill says Codex prompts before ${name}`);
   }
 });
 
