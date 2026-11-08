@@ -1496,6 +1496,27 @@
       "social_post_retry": {
         "approval_mode": "prompt"
       },
+      "social_post_publish_now": {
+        "approval_mode": "prompt"
+      },
+      "social_post_approve": {
+        "approval_mode": "prompt"
+      },
+      "social_posts_bulk": {
+        "approval_mode": "prompt"
+      },
+      "social_account_disconnect": {
+        "approval_mode": "prompt"
+      },
+      "social_accounts_activate": {
+        "approval_mode": "prompt"
+      },
+      "social_accounts_import_gbp": {
+        "approval_mode": "prompt"
+      },
+      "social_posts_bulk_create": {
+        "approval_mode": "prompt"
+      },
       "webflow_project_cms_provider_set": {
         "approval_mode": "prompt"
       },
