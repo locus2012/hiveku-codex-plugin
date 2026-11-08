@@ -339,7 +339,10 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   everyone opens (`dashboard_publish`), who a dashboard is shared with (`dashboard_share`), and the Your data
   tables and rows that dashboards read. The Client health writes prompt as well: `workspaces_page_attention_item_update` (takes, gives,
   snoozes or closes an item for everyone who sees that client) and `workspaces_page_attention_recheck` (runs a live
-  check of a client's site and records it). Their reads do not prompt.
+  check of a client's site and records it). So do its round 3 writes: `workspaces_page_attention_lines_set` (when a
+  check opens a row for a client), `workspaces_page_attention_fields_set` (a client's Lead and Backup), and
+  `workspaces_page_attention_note_create`, `_note_update` and `_note_delete` (team notes about a client). Their reads do
+  not prompt.
   Matching a site's visitors to the account's ideal customers prompts too: `analytics_icp_matching_run` spends the
   account's AI credit. So does reading a session recording, `analytics_recording_get`, whose answer is one visitor's
   whole visit as they saw it on screen. Listing recordings and reading the match results do not prompt.

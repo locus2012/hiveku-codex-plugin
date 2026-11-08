@@ -1733,6 +1733,21 @@
       "workspaces_page_attention_recheck": {
         "approval_mode": "prompt"
       },
+      "workspaces_page_attention_lines_set": {
+        "approval_mode": "prompt"
+      },
+      "workspaces_page_attention_fields_set": {
+        "approval_mode": "prompt"
+      },
+      "workspaces_page_attention_note_create": {
+        "approval_mode": "prompt"
+      },
+      "workspaces_page_attention_note_update": {
+        "approval_mode": "prompt"
+      },
+      "workspaces_page_attention_note_delete": {
+        "approval_mode": "prompt"
+      },
       "workspaces_page_custom_field_create": {
         "approval_mode": "prompt"
       },
