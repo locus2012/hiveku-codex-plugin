@@ -349,6 +349,13 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   The account's settings writes prompt as well (Settings: billing plan, credits and cancel; domain register,
   transfer and DNS records; password, two-factor, sessions and computers; team invites, members, roles and
   ownership; API and AI provider keys; app store connections; team activity; profile, notifications and exports).
+  The actions Hiveku's own department agents stage for a person's approval prompt too: copying a project's
+  tasks into another (`pm_project_tasks_copy`), bulk task creation and reassignment, a section or milestone
+  deleted, a milestone closed and time logged on a task; a contact merge, the CRM deletes (contact, company,
+  deal, sequence, custom field, tag, email template) and imports (contacts, companies, deals, activities),
+  a sequence enrollment taken out, paused or resumed, a scheduled batch cancelled or rescheduled and a Google
+  Calendar event; a ticket merged, its status changed, a new ticket and a phone transfer; a recurring bill and
+  a vendor retired; and the brand guide. Their reads do not prompt.
   `hiveku_batch` prompts too: a batch runs its calls on the Hiveku server, and Codex asks by the
   name of the tool it calls, so without that entry a prompted tool placed inside a batch would run
   with no prompt. A batch of reads waits for a yes as well; single reads do not.

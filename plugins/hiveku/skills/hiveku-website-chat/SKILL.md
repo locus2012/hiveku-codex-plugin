@@ -68,10 +68,11 @@ as an aging pending ticket.
    dashboard gives a chat back.
 
 `helpdesk_ticket_assign` to a person and `helpdesk_ticket_escalate_to_human` also take a chat from
-the assistant, and Codex does not prompt before them: ask the user first. Codex does not prompt
-before `helpdesk_ticket_merge` or `helpdesk_ticket_set_status` either: a merge closes its source
-ticket and moves the thread, and a status change can close a chat the assistant is answering. Ask
-first, and never merge a chat the assistant has, as the source or the target.
+the assistant, and Codex does not prompt before them: ask the user first. Codex prompts before
+`helpdesk_ticket_merge` and `helpdesk_ticket_set_status`, but the prompt names only the tool: a merge
+closes its source ticket and moves the thread, and a status change can close a chat the assistant
+is answering. Say which ticket and why before the call, and never merge a chat the assistant has, as
+the source or the target.
 
 `helpdesk_ticket_add_message` with the default direction `internal` is a note the visitor never
 sees. Never pass direction `outbound`: on a chat it posts to the visitor and takes the chat from
