@@ -356,6 +356,10 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   a sequence enrollment taken out, paused or resumed, a scheduled batch cancelled or rescheduled and a Google
   Calendar event; a ticket merged, its status changed, a new ticket and a phone transfer; a recurring bill and
   a vendor retired; and the brand guide. Their reads do not prompt.
+  The Social Marketing writes a person makes in the Hiveku app prompt as well: publishing a post now
+  (`social_post_publish_now`), approving a held post, the bulk post actions, disconnecting a social account,
+  turning connected accounts on and bringing Google Business locations in; so does writing many drafts in one
+  call (`social_posts_bulk_create`).
   `hiveku_batch` prompts too: a batch runs its calls on the Hiveku server, and Codex asks by the
   name of the tool it calls, so without that entry a prompted tool placed inside a batch would run
   with no prompt. A batch of reads waits for a yes as well; single reads do not.
