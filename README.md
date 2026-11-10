@@ -187,7 +187,7 @@ curl -I https://<site>/                                             # HEAD is ne
 ```
 
 The firewall's 202 or 403 is a refusal, not an empty site and not a failed deploy. `fetch_url` and
-`deploy_doctor` run from Hiveku's own servers and are exempt; `web_scrape` and the other Firecrawl-backed
+`deploy_doctor` run from Hiveku's own servers and are exempt; `web_scrape` and the other hosted-browser web
 tools run from third-party browsers, so on a Hiveku-hosted site use a rendering format or `fetch_url`.
 
 ## Notes
