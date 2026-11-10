@@ -3,7 +3,7 @@
     "url": "https://core.hiveku.com/mcp",
     "bearer_token_env_var": "HIVEKU_TOKEN",
     "http_headers": {
-      "X-Hiveku-Client": "codex-plugin/0.3.92"
+      "X-Hiveku-Client": "codex-plugin/0.3.93"
     },
     "default_tools_approval_mode": "approve",
     "tools": {
@@ -513,6 +513,21 @@
         "approval_mode": "prompt"
       },
       "content_publish_to_site": {
+        "approval_mode": "prompt"
+      },
+      "content_editor_save": {
+        "approval_mode": "prompt"
+      },
+      "content_archive": {
+        "approval_mode": "prompt"
+      },
+      "content_unpublish": {
+        "approval_mode": "prompt"
+      },
+      "content_delete": {
+        "approval_mode": "prompt"
+      },
+      "content_unpublish_from_site": {
         "approval_mode": "prompt"
       },
       "content_schedule": {

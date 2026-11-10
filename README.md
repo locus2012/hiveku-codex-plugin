@@ -297,6 +297,10 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   `discussion_private_messages` and `discussion_private_search` (read only, and only on a connection the
   person turned that on for; the other people in those conversations never chose to show them to an AI).
   Reading, searching and posting in channels do not prompt.
+  Content Marketing changes that touch the live website prompt as well: `content_editor_save` (a scheduled
+  publish time queues the post's page to go public), `content_archive` and `content_delete` (with
+  remove_from_site they take the page off the site), `content_unpublish` and `content_unpublish_from_site`
+  (they take the page off the live website).
   Hiveku Meet's calendar sends prompt too: `crm_contact_booking_link_send` (emails or texts a contact a
   booking link from a connected inbox or the account's number, signed with your name; a sent email or text
   cannot be taken back) and `calendar_booking_create` (books a contact into a meeting, so Hiveku emails
