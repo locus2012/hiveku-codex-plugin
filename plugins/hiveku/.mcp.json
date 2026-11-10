@@ -256,6 +256,90 @@
       "checkpoint_delete": {
         "approval_mode": "prompt"
       },
+      "database_execute": {
+        "approval_mode": "prompt"
+      },
+      "supabase_migration_apply": {
+        "approval_mode": "prompt"
+      },
+      "supabase_table_row_insert": {
+        "approval_mode": "prompt"
+      },
+      "supabase_table_row_update": {
+        "approval_mode": "prompt"
+      },
+      "supabase_table_row_delete": {
+        "approval_mode": "prompt"
+      },
+      "supabase_policy_create": {
+        "approval_mode": "prompt"
+      },
+      "supabase_policy_update": {
+        "approval_mode": "prompt"
+      },
+      "supabase_policy_delete": {
+        "approval_mode": "prompt"
+      },
+      "supabase_auth_user_create": {
+        "approval_mode": "prompt"
+      },
+      "supabase_auth_user_update": {
+        "approval_mode": "prompt"
+      },
+      "supabase_auth_user_delete": {
+        "approval_mode": "prompt"
+      },
+      "supabase_auth_user_generate_link": {
+        "approval_mode": "prompt"
+      },
+      "supabase_auth_config_update": {
+        "approval_mode": "prompt"
+      },
+      "supabase_sync_redirect_urls": {
+        "approval_mode": "prompt"
+      },
+      "supabase_configure_oauth": {
+        "approval_mode": "prompt"
+      },
+      "supabase_configure_smtp": {
+        "approval_mode": "prompt"
+      },
+      "supabase_configure_hiveku_smtp": {
+        "approval_mode": "prompt"
+      },
+      "supabase_storage_create": {
+        "approval_mode": "prompt"
+      },
+      "supabase_storage_delete": {
+        "approval_mode": "prompt"
+      },
+      "supabase_storage_empty": {
+        "approval_mode": "prompt"
+      },
+      "supabase_storage_object_upload": {
+        "approval_mode": "prompt"
+      },
+      "supabase_storage_object_move": {
+        "approval_mode": "prompt"
+      },
+      "supabase_storage_object_copy": {
+        "approval_mode": "prompt"
+      },
+      "supabase_storage_object_delete": {
+        "approval_mode": "prompt"
+      },
+      "supabase_edge_functions_deploy": {
+        "approval_mode": "prompt"
+      },
+      "supabase_edge_functions_delete": {
+        "approval_mode": "prompt"
+      },
+      "supabase_edge_functions_invoke": {
+        "approval_mode": "prompt"
+      },
+      "supabase_edge_functions_set_secrets": {
+        "approval_mode": "prompt"
+      },
       "site_delete": {
         "approval_mode": "prompt"
       },
