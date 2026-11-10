@@ -290,6 +290,13 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   workspace's people lose the channel at once) and
   `discussion_delete` (deletes a channel for everyone, with its whole history). Listing and creating
   webinars, and reading recordings and a channel's sharing, do not prompt.
+  Making many Discussions channels at once prompts too: `discussion_channels_bulk_create` (makes up to 100
+  channels in one call, in the person's name, with the people it lists added and not told; Codex prompts per
+  tool, so its practice run, which makes nothing, prompts as well). So does every read of a person's own
+  direct messages, group messages and private channels: `discussion_private_list`,
+  `discussion_private_messages` and `discussion_private_search` (read only, and only on a connection the
+  person turned that on for; the other people in those conversations never chose to show them to an AI).
+  Reading, searching and posting in channels do not prompt.
   Hiveku Meet's calendar sends prompt too: `crm_contact_booking_link_send` (emails or texts a contact a
   booking link from a connected inbox or the account's number, signed with your name; a sent email or text
   cannot be taken back) and `calendar_booking_create` (books a contact into a meeting, so Hiveku emails
