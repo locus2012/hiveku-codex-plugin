@@ -2038,6 +2038,18 @@
       },
       "brand_guide_update": {
         "approval_mode": "prompt"
+      },
+      "discussion_channels_bulk_create": {
+        "approval_mode": "prompt"
+      },
+      "discussion_private_list": {
+        "approval_mode": "prompt"
+      },
+      "discussion_private_messages": {
+        "approval_mode": "prompt"
+      },
+      "discussion_private_search": {
+        "approval_mode": "prompt"
       }
     }
   },
