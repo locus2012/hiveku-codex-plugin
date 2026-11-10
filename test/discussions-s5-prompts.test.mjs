@@ -62,3 +62,17 @@ test('the orient skill teaches Discussions: the tools, the yes, the practice run
   assert.doesNotMatch(section, /\u2014|\u2013/);
   assert.doesNotMatch(section, /slack/i);
 });
+
+test('a tool is missing only when a search does not find it, and no AI app\'s connection sends in the person\'s own messages', () => {
+  const section = discussionsSection();
+  // Codex is listed only part of Hiveku's tools, so one missing from the list may still be there: look it up first.
+  assert.match(
+    section,
+    /A tool named here that a search does not find\*\* \(`hiveku_docs_search`, or `hiveku_tool_schema` with\s+its name\) has not reached your connection yet: say so plainly\./,
+  );
+  assert.match(section, /Your tool list may not show every tool,\s+so look one up before you say it is missing\./);
+  assert.doesNotMatch(section, /not among your tools/);
+  // The Hiveku app's own key sends in them for the person, so "no tool can send there" was untrue: no AI app's can.
+  assert.match(section, /No AI app's connection, yours included, can send, reply, react or start one\s+there\./);
+  assert.doesNotMatch(section, /No tool can send/);
+});
