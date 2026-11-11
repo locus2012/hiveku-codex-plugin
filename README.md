@@ -301,6 +301,14 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   publish time queues the post's page to go public), `content_archive` and `content_delete` (with
   remove_from_site they take the page off the site), `content_unpublish` and `content_unpublish_from_site`
   (they take the page off the live website).
+  Changes to a site's own database and its Supabase project prompt too: `database_execute` (it runs SQL
+  that can write), `database_provision` and `database_repair` (they set up or rebuild the site's database),
+  `supabase_migration_apply`, every Supabase row, policy, sign-in user, storage and edge function write or
+  delete, the sign-in settings tools (`supabase_auth_config_update`, `supabase_sync_redirect_urls` and the
+  `supabase_configure_*` tools), `supabase_auth_user_generate_link` (it emails a sign-in link),
+  `supabase_edge_functions_invoke` (it runs the site's own code) and `supabase_storage_object_signed_url` (a
+  link that opens a private file to whoever holds it). Reading a site's tables, users and settings does not
+  prompt.
   Hiveku Meet's calendar sends prompt too: `crm_contact_booking_link_send` (emails or texts a contact a
   booking link from a connected inbox or the account's number, signed with your name; a sent email or text
   cannot be taken back) and `calendar_booking_create` (books a contact into a meeting, so Hiveku emails
