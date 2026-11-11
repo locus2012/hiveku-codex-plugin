@@ -297,6 +297,13 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   `discussion_private_messages` and `discussion_private_search` (read only, and only on a connection the
   person turned that on for; the other people in those conversations never chose to show them to an AI).
   Reading, searching and posting in channels do not prompt.
+  Bringing a team's chat history over from a chat history export prompts too: `discussion_import_start`
+  (begins an upload of the whole company's chat history into Hiveku, its messages and its people's names and
+  emails), `discussion_import_run` (brings up to 500,000 messages into new channels of the workspace, which
+  the whole team can read), `discussion_import_cancel` (stops an import; before its run the uploaded file is
+  deleted) and `discussion_import_undo` (permanently deletes every channel and message the import brought).
+  Reading an import, finishing its upload (it starts a practice run that writes nothing) and matching its
+  people do not prompt.
   Content Marketing changes that touch the live website prompt as well: `content_editor_save` (a scheduled
   publish time queues the post's page to go public), `content_archive` and `content_delete` (with
   remove_from_site they take the page off the site), `content_unpublish` and `content_unpublish_from_site`
