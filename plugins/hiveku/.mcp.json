@@ -923,6 +923,18 @@
       "discussion_delete": {
         "approval_mode": "prompt"
       },
+      "discussion_import_start": {
+        "approval_mode": "prompt"
+      },
+      "discussion_import_run": {
+        "approval_mode": "prompt"
+      },
+      "discussion_import_cancel": {
+        "approval_mode": "prompt"
+      },
+      "discussion_import_undo": {
+        "approval_mode": "prompt"
+      },
       "marketing_referral_invite": {
         "approval_mode": "prompt"
       },
