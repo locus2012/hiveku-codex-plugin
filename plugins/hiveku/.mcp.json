@@ -259,6 +259,12 @@
       "database_execute": {
         "approval_mode": "prompt"
       },
+      "database_provision": {
+        "approval_mode": "prompt"
+      },
+      "database_repair": {
+        "approval_mode": "prompt"
+      },
       "supabase_migration_apply": {
         "approval_mode": "prompt"
       },
@@ -326,6 +332,9 @@
         "approval_mode": "prompt"
       },
       "supabase_storage_object_delete": {
+        "approval_mode": "prompt"
+      },
+      "supabase_storage_object_signed_url": {
         "approval_mode": "prompt"
       },
       "supabase_edge_functions_deploy": {

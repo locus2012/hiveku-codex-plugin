@@ -8,7 +8,12 @@
  * unprompted. Each is named here so a dropped or renamed entry fails, and the batch wrapper prompts too, because Codex
  * decides by the called name only. Their reads stay unprompted.
  *
- * The Claude Code plugin gates the same 28; its mirror test keeps the two lists equal when both checkouts sit side by
+ * The 2026-11-10 review added three: database_provision and database_repair write the connections the live site runs
+ * on (repair gives the database a new password at once), and supabase_storage_object_signed_url answers with a link
+ * that opens a private file for anyone for up to 7 days, which the builder treats as minting a credential. The
+ * database reads are named below with the storage and sign-in reads, and none of them prompts.
+ *
+ * The Claude Code plugin gates the same 31; its mirror test keeps the two lists equal when both checkouts sit side by
  * side.
  *
  * Run: node --test test/*.test.mjs
@@ -21,6 +26,8 @@ const config = JSON.parse(readFileSync(new URL('../plugins/hiveku/.mcp.json', im
 
 const WRITES = [
   'database_execute',
+  'database_provision',
+  'database_repair',
   'supabase_migration_apply',
   'supabase_table_row_insert',
   'supabase_table_row_update',
@@ -44,6 +51,7 @@ const WRITES = [
   'supabase_storage_object_move',
   'supabase_storage_object_copy',
   'supabase_storage_object_delete',
+  'supabase_storage_object_signed_url',
   'supabase_edge_functions_deploy',
   'supabase_edge_functions_delete',
   'supabase_edge_functions_invoke',
@@ -51,6 +59,10 @@ const WRITES = [
 ];
 
 const READS = [
+  'database_describe',
+  'database_query',
+  'database_status',
+  'database_tables',
   'supabase_auth_config_get',
   'supabase_auth_user_get',
   'supabase_auth_users_list',
@@ -61,7 +73,6 @@ const READS = [
   'supabase_policies_list',
   'supabase_storage_list',
   'supabase_storage_object_download',
-  'supabase_storage_object_signed_url',
   'supabase_storage_objects_list',
   'supabase_table_rows_list',
 ];
