@@ -109,6 +109,9 @@
       "project_files_bulk_save": {
         "approval_mode": "prompt"
       },
+      "project_vcs_ai_review_set": {
+        "approval_mode": "prompt"
+      },
       "project_vcs_commit": {
         "approval_mode": "prompt"
       },
@@ -2103,6 +2106,9 @@
         "approval_mode": "prompt"
       },
       "crm_delete_custom_field": {
+        "approval_mode": "prompt"
+      },
+      "helpdesk_ticket_field_delete": {
         "approval_mode": "prompt"
       },
       "crm_delete_tag": {
