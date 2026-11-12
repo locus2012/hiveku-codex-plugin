@@ -944,6 +944,9 @@
       "discussion_import_undo": {
         "approval_mode": "prompt"
       },
+      "discussion_notice_route_set": {
+        "approval_mode": "prompt"
+      },
       "marketing_referral_invite": {
         "approval_mode": "prompt"
       },

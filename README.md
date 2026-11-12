@@ -304,6 +304,10 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   deleted) and `discussion_import_undo` (permanently deletes every channel and message the import brought).
   Reading an import, finishing its upload (it starts a practice run that writes nothing) and matching its
   people do not prompt.
+  Sending a feature's alerts to a Discussions channel prompts as well: `discussion_notice_route_set` (turns
+  on or off the Discussions copy of help desk alerts, website form leads, site review comments or customer
+  reviews, and picks its channel; each later alert is posted there in the person's name, for everyone who
+  reads the channel, a workspace it is shared with included). Reading where each alert goes does not prompt.
   Content Marketing changes that touch the live website prompt as well: `content_editor_save` (a scheduled
   publish time queues the post's page to go public), `content_archive` and `content_delete` (with
   remove_from_site they take the page off the site), `content_unpublish` and `content_unpublish_from_site`
