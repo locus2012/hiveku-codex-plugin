@@ -163,6 +163,36 @@
       "project_vcs_checks_rerun": {
         "approval_mode": "prompt"
       },
+      "project_vcs_temp_env_create": {
+        "approval_mode": "prompt"
+      },
+      "project_vcs_temp_env_update": {
+        "approval_mode": "prompt"
+      },
+      "project_vcs_temp_env_extend": {
+        "approval_mode": "prompt"
+      },
+      "project_vcs_temp_env_revive": {
+        "approval_mode": "prompt"
+      },
+      "project_vcs_temp_env_try_again": {
+        "approval_mode": "prompt"
+      },
+      "project_vcs_temp_env_password_set": {
+        "approval_mode": "prompt"
+      },
+      "project_vcs_temp_env_settings_set": {
+        "approval_mode": "prompt"
+      },
+      "project_vcs_temp_env_delete": {
+        "approval_mode": "prompt"
+      },
+      "project_vcs_temp_env_request_dismiss": {
+        "approval_mode": "prompt"
+      },
+      "project_vcs_temp_env_open": {
+        "approval_mode": "prompt"
+      },
       "project_secrets_set": {
         "approval_mode": "prompt"
       },
