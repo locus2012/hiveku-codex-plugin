@@ -707,6 +707,9 @@
       "helpdesk_away_reply_set": {
         "approval_mode": "prompt"
       },
+      "email_connection_read_label": {
+        "approval_mode": "prompt"
+      },
       "voice_site_create": {
         "approval_mode": "prompt"
       },
