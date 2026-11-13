@@ -1166,6 +1166,21 @@
       "outbound_reply_draft_send": {
         "approval_mode": "prompt"
       },
+      "outbound_lead_resume": {
+        "approval_mode": "prompt"
+      },
+      "outbound_inbox_forward": {
+        "approval_mode": "prompt"
+      },
+      "outbound_lead_subsequence_push": {
+        "approval_mode": "prompt"
+      },
+      "outbound_blocklist_remove": {
+        "approval_mode": "prompt"
+      },
+      "outbound_campaign_email_accounts_detach": {
+        "approval_mode": "prompt"
+      },
       "outbound_leads_bulk_create": {
         "approval_mode": "prompt"
       },
