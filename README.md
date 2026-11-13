@@ -316,6 +316,9 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   unsubscribe link opens, and who campaigns and series with that topic leave out; an update can archive a
   topic off that page) and `marketing_template_copy_to_account` (writes a copy of a template into another
   client's account). Reading topics and the clients a template can be copied to does not prompt.
+  Limiting what Hiveku reads of a connected Gmail inbox prompts too: `email_connection_read_label` (limits
+  what Hiveku reads of the inbox to one Gmail label, changes the label, or removes the limit so the whole
+  mailbox is read again; only the inbox's own person may). Listing inboxes and their limits does not prompt.
   Content Marketing changes that touch the live website prompt as well: `content_editor_save` (a scheduled
   publish time queues the post's page to go public), `content_archive` and `content_delete` (with
   remove_from_site they take the page off the site), `content_unpublish` and `content_unpublish_from_site`

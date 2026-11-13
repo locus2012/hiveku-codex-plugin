@@ -349,6 +349,17 @@ connection".
   when it connects). For about a minute on Gmail,
   `email_inbox_setup_guide({ platform, section: 'instant_replies' })`: a Pub/Sub topic in the Gmail
   app's own project, run with the person's gcloud.
+- **One label only, when the owner asks.** An owner who does not want the whole mailbox read (an alias
+  like hello@ on their own Gmail) makes a Gmail filter in that mailbox (To: the address, Apply the
+  label; Hiveku cannot make filters), then
+  `email_connection_read_label({ connection_id, label_name: 'Hiveku', create: true })`, or `label_id`
+  from `gmail_list_labels`, with no new sign-in; `clear: true` removes the limit. Only the inbox's own
+  person may set, change or remove it, whatever their role (an inbox no one owns: an owner or admin; a
+  label someone else chose stays theirs while they are on the account). Anyone else is refused (403
+  `read_label_not_yours`, `read_label_owner_or_admin_required` or `read_label_chosen_by_someone_else`),
+  and Codex prompts before it runs. With a label set, Hiveku reads only mail with that label and the
+  owner's own sent mail in those conversations, so a reply without it does not stop a sequence or open
+  a ticket. Google's permission still covers the whole mailbox, and Outlook cannot be limited yet.
 
 ## Finding the right tool (there are ~1,000)
 Don't guess tool names. Discover with `hiveku_docs_search` / `hiveku_docs_get`, and use
