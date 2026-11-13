@@ -308,6 +308,14 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   on or off the Discussions copy of help desk alerts, website form leads, site review comments or customer
   reviews, and picks its channel; each later alert is posted there in the person's name, for everyone who
   reads the channel, a workspace it is shared with included). Reading where each alert goes does not prompt.
+  Email series, topics and template copies prompt where they send or change something live:
+  `email_sequence_connection_turn_on` (turns on a series connected to a form, tag or store, so each new
+  person it adds gets the series' emails), `marketing_form_confirm_signups_set` (Hiveku emails every new
+  sign-up on that form a Confirm button), `email_sequence_disconnect` (stops the live automation that adds
+  people to a series), `email_topic_create` and `email_topic_update` (they change the public page people's
+  unsubscribe link opens, and who campaigns and series with that topic leave out; an update can archive a
+  topic off that page) and `marketing_template_copy_to_account` (writes a copy of a template into another
+  client's account). Reading topics and the clients a template can be copied to does not prompt.
   Content Marketing changes that touch the live website prompt as well: `content_editor_save` (a scheduled
   publish time queues the post's page to go public), `content_archive` and `content_delete` (with
   remove_from_site they take the page off the site), `content_unpublish` and `content_unpublish_from_site`
