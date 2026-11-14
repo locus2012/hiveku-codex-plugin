@@ -400,7 +400,9 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   The Social Marketing writes a person makes in the Hiveku app prompt as well: publishing a post now
   (`social_post_publish_now`), approving a held post, the bulk post actions, disconnecting a social account,
   turning connected accounts on and bringing Google Business locations in; so does writing many drafts in one
-  call (`social_posts_bulk_create`).
+  call (`social_posts_bulk_create`). Sending a post for approval prompts too (`social_post_send_for_approval`:
+  a scheduled post then does not go out at its time until someone approves it). Listing who can approve does
+  not prompt.
   `hiveku_batch` prompts too: a batch runs its calls on the Hiveku server, and Codex asks by the
   name of the tool it calls, so without that entry a prompted tool placed inside a batch would run
   with no prompt. A batch of reads waits for a yes as well; single reads do not.
