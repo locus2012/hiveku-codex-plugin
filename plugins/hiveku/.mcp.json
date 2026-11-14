@@ -1676,6 +1676,9 @@
       "social_accounts_import_gbp": {
         "approval_mode": "prompt"
       },
+      "social_post_send_for_approval": {
+        "approval_mode": "prompt"
+      },
       "social_posts_bulk_create": {
         "approval_mode": "prompt"
       },
