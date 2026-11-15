@@ -319,6 +319,13 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   Limiting what Hiveku reads of a connected Gmail inbox prompts too: `email_connection_read_label` (limits
   what Hiveku reads of the inbox to one Gmail label, changes the label, or removes the limit so the whole
   mailbox is read again; only the inbox's own person may). Listing inboxes and their limits does not prompt.
+  Every temporary environment write prompts too (a temporary environment shows one branch of a site on its
+  own address and Hiveku link for 1, 3 or 7 days): `project_vcs_temp_env_create`, `project_vcs_temp_env_extend`,
+  `project_vcs_temp_env_revive` and `project_vcs_temp_env_try_again` (each adds 50 cents a day to the account's
+  bill), `project_vcs_temp_env_password_set`, `project_vcs_temp_env_settings_set` (a new link stops the old one),
+  `project_vcs_temp_env_delete`, `project_vcs_temp_env_update` (a rebuild on the branch's newest version),
+  `project_vcs_temp_env_request_dismiss` and `project_vcs_temp_env_open` (a 60-second link past its passcode).
+  Listing them, reading one and this month's usage do not prompt.
   Content Marketing changes that touch the live website prompt as well: `content_editor_save` (a scheduled
   publish time queues the post's page to go public), `content_archive` and `content_delete` (with
   remove_from_site they take the page off the site), `content_unpublish` and `content_unpublish_from_site`
