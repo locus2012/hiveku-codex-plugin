@@ -1712,6 +1712,9 @@
       "social_posts_bulk_create": {
         "approval_mode": "prompt"
       },
+      "social_post_strategy_review": {
+        "approval_mode": "prompt"
+      },
       "webflow_project_cms_provider_set": {
         "approval_mode": "prompt"
       },
