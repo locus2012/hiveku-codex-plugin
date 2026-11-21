@@ -126,9 +126,12 @@ the memory_* tools.
 - **Never ingest local agent config into a project push.** `.codex/config.toml`, `.mcp.json`, `.env*`
   carry this account's key/secrets — exclude them from every tar / bulk-save (the server refuses them
   too). Secrets belong in `project_secrets_*`, never in project code. Never read or print `.env.local`.
-- **A value the person must type** (an API key, token or password): never ask for it in chat or have them put it
-  in a file. Call `secure_value_request` if it is among your tools (the Hiveku desktop app); otherwise ask them to
-  add it in the Hiveku app under the site's Settings > Variables.
+- **A key, token or password a site needs:** never ask for it in chat, and never have the person put it in a
+  file, Finder or a terminal command. Call `secure_value_request` if it is among your tools (the Hiveku desktop
+  app); otherwise tell the person the variable's name and ask them to add it in the Hiveku app under the site's
+  Settings > Environment variables. A value an automation uses goes under Automations > More > Environment
+  variables, and an app's or a connection's secret follows its own steps (the Gmail and Outlook inbox lines,
+  below).
 - **Fetching a Hiveku-hosted site: identify as Hiveku.** Every terminal `curl` against a customer
   site carries `-A 'Hiveku-Session/1.0 (+https://hiveku.com)'`, or is a `curl -I` (HEAD) when only
   status and headers matter. Never spoof `Googlebot` or `Mozilla`: a spoofed Googlebot is refused
