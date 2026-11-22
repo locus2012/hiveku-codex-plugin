@@ -427,8 +427,10 @@ team scores a saved post and names its hard fails, and it spends the account's A
 person behind the key. Codex prompts before every call.
 - Read `social_post_strategy_review_get({ post_id })` first (a read; Codex does not prompt for it): a `fresh`
   review already answers, so show it and run nothing.
-- Otherwise ask the person first: say it uses the account's AI credit and that the cost shows once it has run,
-  and run it only on their yes, one post per yes, never on their behalf.
+- Otherwise ask the person first: say it uses the account's AI credit, that the cost shows once it has run, and
+  what the last failure cost when the read shows one (`last_failure`); run it only on their yes, one post per
+  yes, never on their behalf. Send `again: true` (a new review of a post whose review is current, charged again)
+  only on the person's word.
 - After a timeout or a 524, read `social_post_strategy_review_get` before anything else, and never send the
   review twice. A 403 `person_key_required` or `unattributed_key` is final for that key: ask the person to press
   Review with AI on the post in the Hiveku app.
