@@ -1,6 +1,9 @@
 /**
  * Codex prompts before a before/after grid row or a design layer is removed, and never for the steps that build
- * them (2026-11-13, MCP 837cfd4b).
+ * them (2026-11-13, MCP 837cfd4b). The two layer removes of the Creative Studio's layer tools for agents joined them
+ * on 2026-11-21 (S54; MCP #629, builder #2397): design_layers_delete removes many layers at once, and
+ * design_layer_folder_delete removes a layer folder, with keep_layers false its layers too. Each is its own tool so a
+ * prompt can name it; the steps that change, order, duplicate or fold many layers at once follow the default.
  *
  * The tool server builds a before/after grid one row at a time and a design one layer at a time, so a person who has
  * the grid or the design open watches it fill in. The two removes ask, as customer_journey_stage_delete does: a version
@@ -17,15 +20,15 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
 const config = JSON.parse(readFileSync(new URL('../plugins/hiveku/.mcp.json', import.meta.url), 'utf8')).hiveku;
-const REMOVES = ['before_after_grid_row_delete', 'design_layer_delete'];
+const REMOVES = ['before_after_grid_row_delete', 'design_layer_delete', 'design_layers_delete', 'design_layer_folder_delete'];
 
-test('removing a grid row or a design layer requires a prompt, right after the journey stage delete', () => {
+test('removing a grid row, a design layer, many layers or a layer folder requires a prompt, right after the journey stage delete', () => {
   assert.equal(config.default_tools_approval_mode, 'approve');
   for (const name of REMOVES) assert.deepEqual(config.tools[name], { approval_mode: 'prompt' }, name);
   const names = Object.keys(config.tools);
   for (const name of REMOVES) assert.equal(names.filter((each) => each === name).length, 1, `${name} is listed once`);
   const at = names.indexOf('customer_journey_stage_delete');
-  assert.deepEqual(names.slice(at + 1, at + 3), REMOVES, 'beside the journey stage delete');
+  assert.deepEqual(names.slice(at + 1, at + 1 + REMOVES.length), REMOVES, 'beside the journey stage delete');
 });
 
 test('the steps that build a grid or a design, and the grid state read, are not added', () => {
@@ -37,6 +40,10 @@ test('the steps that build a grid or a design, and the grid state read, are not 
     'design_layer_add',
     'design_layer_update',
     'design_layer_move',
+    'design_layers_update',
+    'design_layers_arrange',
+    'design_layer_folder',
+    'design_layers_list',
   ]) {
     assert.equal(config.tools[name], undefined, `${name} follows the default and must not prompt`);
   }

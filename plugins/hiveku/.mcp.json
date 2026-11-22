@@ -1580,6 +1580,12 @@
       "design_layer_delete": {
         "approval_mode": "prompt"
       },
+      "design_layers_delete": {
+        "approval_mode": "prompt"
+      },
+      "design_layer_folder_delete": {
+        "approval_mode": "prompt"
+      },
       "media_delete": {
         "approval_mode": "prompt"
       },
