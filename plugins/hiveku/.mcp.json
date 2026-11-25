@@ -677,6 +677,12 @@
       "workflow_email_step_test_send": {
         "approval_mode": "prompt"
       },
+      "marketing_template_test_send": {
+        "approval_mode": "prompt"
+      },
+      "email_send_test": {
+        "approval_mode": "prompt"
+      },
       "email_send": {
         "approval_mode": "prompt"
       },
@@ -719,6 +725,9 @@
       "crm_estimate_send": {
         "approval_mode": "prompt"
       },
+      "accounting_invoice_send": {
+        "approval_mode": "prompt"
+      },
       "helpdesk_ticket_send_reply": {
         "approval_mode": "prompt"
       },
@@ -759,6 +768,9 @@
         "approval_mode": "prompt"
       },
       "marketing_report_send": {
+        "approval_mode": "prompt"
+      },
+      "survey_send": {
         "approval_mode": "prompt"
       },
       "ppc_budget_update": {
