@@ -421,6 +421,25 @@ playbooks, this section carries its rules.
   `discussion_create` makes starts the workspace's "discussion created" automations, and each person
   `discussion_participant_add` adds gets a line in the channel saying so.
 
+## Review with AI of a social post (charged)
+`social_post_strategy_review({ post_id })` is the post's Review with AI button in the Hiveku app: the Social
+team scores a saved post and names its hard fails, and it spends the account's AI credit in the name of the
+person behind the key. Codex prompts before every call.
+- Read `social_post_strategy_review_get({ post_id })` first (a read; Codex does not prompt for it): a `fresh`
+  review already answers, so show it and run nothing.
+- Otherwise ask the person first: say it uses the account's AI credit, that the cost shows once it has run, and
+  what the last failure cost when the read shows one (`last_failure`); run it only on their yes, one post per
+  yes, never on their behalf. Send `again: true` (a new review of a post whose review is current, charged again)
+  only on the person's word, and with it `expected_ran_at`: the `ran_at` of the stored review you read with
+  `social_post_strategy_review_get` (null when there was none). If the review changed since, the answer is 409
+  `state_changed` and nothing is charged: read it again and ask the person before running again; never resend it
+  by itself.
+- After a timeout or a 524, read `social_post_strategy_review_get` before anything else, and never send the
+  review twice. A 403 `person_key_required` or `unattributed_key` is final for that key: ask the person to press
+  Review with AI on the post in the Hiveku app.
+- Nothing a review says blocks a post. `social_analytics_who_for` (who the posts were for, by ICP and by
+  journey stage, and the gaps) is a read too.
+
 ## Your plan and its limits
 Every key, on every profile, can call `account_usage_get`: one read of where the account stands
 against its plan. Each number the plan counts is a level (`websites`, `contacts`,
