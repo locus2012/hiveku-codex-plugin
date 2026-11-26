@@ -1688,6 +1688,12 @@
       "social_linkedin_comment_delete": {
         "approval_mode": "prompt"
       },
+      "social_comment_reply_delete": {
+        "approval_mode": "prompt"
+      },
+      "social_comment_reply_edit": {
+        "approval_mode": "prompt"
+      },
       "social_post_reject": {
         "approval_mode": "prompt"
       },
