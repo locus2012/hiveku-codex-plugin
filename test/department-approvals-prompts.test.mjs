@@ -23,6 +23,7 @@ const DEPARTMENT_APPROVALS = [
   'crm_delete_tag',
   'crm_delete_email_template',
   'crm_contacts_bulk_create',
+  'crm_contacts_import_file',
   'crm_companies_bulk_create',
   'crm_deals_bulk_create',
   'crm_activities_bulk_create',
