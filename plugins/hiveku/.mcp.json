@@ -1430,6 +1430,9 @@
       "seo_gbp_location_update": {
         "approval_mode": "prompt"
       },
+      "seo_gbp_google_updates_resolve": {
+        "approval_mode": "prompt"
+      },
       "seo_gbp_attributes_update": {
         "approval_mode": "prompt"
       },
@@ -2249,6 +2252,9 @@
       "helpdesk_ticket_merge": {
         "approval_mode": "prompt"
       },
+      "helpdesk_ticket_delete": {
+        "approval_mode": "prompt"
+      },
       "helpdesk_ticket_set_status": {
         "approval_mode": "prompt"
       },
@@ -2262,6 +2268,12 @@
         "approval_mode": "prompt"
       },
       "accounting_vendor_delete": {
+        "approval_mode": "prompt"
+      },
+      "accounting_invoice_delete": {
+        "approval_mode": "prompt"
+      },
+      "accounting_invoice_void": {
         "approval_mode": "prompt"
       },
       "brand_guide_update": {
