@@ -1,9 +1,9 @@
 ---
 name: hiveku-diagnose-deploy
-description: "Diagnose a Hiveku deploy that reports ready but the live URL 403s / 404s / serves blank, or a deploy that failed with 'live site FAILS verification'. Runs deploy_doctor and acts on its findings — never guess, never delete infrastructure blindly."
+description: "Diagnose a Hiveku deploy that reports ready but the live URL 403s / 404s / serves blank. The post-deploy check only logs and never fails a deploy, so a ready deploy is not proof it serves. Runs deploy_doctor and acts on its findings — never guess, never delete infrastructure blindly."
 ---
-When a deployed Hiveku URL misbehaves (403/404/blank while the deploy said ready, or a deploy failed
-verification), do **not** guess and do **not** propose deleting or recreating a Lambda / distribution.
+When a deployed Hiveku URL misbehaves (403/404/blank while the deploy said ready), do **not** guess
+and do **not** propose deleting or recreating a Lambda / distribution.
 The serving path has layers you can't see from tool output; diagnose it.
 
 ## Steps

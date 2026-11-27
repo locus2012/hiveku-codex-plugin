@@ -51,14 +51,16 @@ is live in the preview but is not a version, and a version is not live until you
      production deploy saves anything still pending as a version itself (`data.vcs_commit_id` is the
      version it ships) but with a generic name, so version first. A real build takes minutes; a
      sub-minute "build" means it took the static path.
-6. **READ the deploy response `warnings[]`.** Every deploy is smoke-verified — the pipeline requests the
-   live URL through the CDN and only reports success if real routes serve. Act on:
+6. **READ the deploy response `warnings[]`.** A deploy that reports ready is not proof the site serves:
+   after it, the homepage and a few routes are checked through the CDN in the background, and that check
+   only logs. It does not fail or undo the deploy, and it does not check the images or files a page
+   links, so load the pages and files you changed yourself (`fetch_url`). Act on:
    - `reserved_cdn_prefix_page_collision` → a PAGE route sits under a reserved CDN asset prefix
      (`videos/`, `media/`, `images/`, `img/`, `icons/`, `documents/`, `fonts/`, `audio/`, `screenshots/`,
      `brand/`, …) and WILL 403 on the deployed URL. Rename the route (e.g. `/videos` → `/video`). See
      `hiveku_docs_get("Reserved CDN Asset Path Prefixes")`.
-   - A deploy that FAILS with "live site FAILS verification" → the artifacts shipped but the site is not
-     serving. Do NOT blindly retry (it reproduces the same result). Switch to the
+   - A ready deploy whose live URL answers 403/404/5xx on real routes → the artifacts shipped but the
+     site is not serving. Do NOT blindly retry (it reproduces the same result). Switch to the
      `hiveku-diagnose-deploy` skill.
 7. **Confirm** the live URL returns 200 - from a terminal send `-A 'Hiveku-Session/1.0 (+https://hiveku.com)'`
    or use `curl -I`; a 202 with an empty body, or a 403 with `x-hiveku-firewall: blocked`, is the edge
