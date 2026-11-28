@@ -69,11 +69,23 @@ test('the README names the copies with the other group writes, and the Webflow l
   }
 });
 
+/** A phrase as a pattern whose spaces match any run of spaces and line breaks (the skill wraps its lines). */
+const phrase = (words) => new RegExp(words.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/ /g, '\\s+'));
+
 test('the orient skill teaches the copies and that a Production value stays in Production', () => {
   const orient = readFileSync(new URL('../plugins/hiveku/skills/hiveku-orient/SKILL.md', import.meta.url), 'utf8');
   assert.match(orient, /never ask for it in chat/);
-  assert.match(orient, /global\s+variables \(an environment group\), with a note on each name/);
-  assert.match(orient, /Choose a stored key by its name\s+and note/);
-  assert.match(orient, /`env_group_copy_from_site` puts a site's value into a group, then `env_group_link` or `env_group_pick`/);
+  assert.match(orient, phrase('global variables (an environment group), with a note on each name saying what it is for'));
+  assert.match(orient, phrase('Choose a key by its name and note'));
+  assert.match(orient, phrase('to share a site\'s key with other sites, copy it into a group with `env_group_copy_from_site`, then link the group (`env_group_link`) or pick the name (`env_group_pick`)'));
+  // A copy from a group is the site's own value from then on: without this line, an agent shares a global key by
+  // copying it, and the site keeps the old value after the group's key is rotated.
+  assert.match(orient, phrase('copying from a group into a site (`project_secrets_copy_from_group`) makes it that site\'s own value, which later group changes never reach, so to follow the group, link or pick instead'));
   assert.match(orient, /A Production value stays in Production/);
+});
+
+test('the orient skill says only what is true of values: the reads return none, and a person can approve a reveal', () => {
+  const orient = readFileSync(new URL('../plugins/hiveku/skills/hiveku-orient/SKILL.md', import.meta.url), 'utf8');
+  assert.doesNotMatch(orient, /to you\s+or anyone/);
+  assert.match(orient, phrase('these reads never return a value. A site\'s value that is not hidden reaches you only through `project_secrets_reveal`, after a person approves it; a hidden value, and a group\'s, never does'));
 });
