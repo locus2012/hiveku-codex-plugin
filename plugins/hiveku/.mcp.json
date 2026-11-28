@@ -247,6 +247,12 @@
       "env_group_unlink": {
         "approval_mode": "prompt"
       },
+      "env_group_pick": {
+        "approval_mode": "prompt"
+      },
+      "env_group_unpick": {
+        "approval_mode": "prompt"
+      },
       "project_ab_test_create": {
         "approval_mode": "prompt"
       },
