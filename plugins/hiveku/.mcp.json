@@ -3,7 +3,7 @@
     "url": "https://core.hiveku.com/mcp",
     "bearer_token_env_var": "HIVEKU_TOKEN",
     "http_headers": {
-      "X-Hiveku-Client": "codex-plugin/0.3.118"
+      "X-Hiveku-Client": "codex-plugin/0.3.119"
     },
     "default_tools_approval_mode": "approve",
     "tools": {
@@ -251,6 +251,15 @@
         "approval_mode": "prompt"
       },
       "env_group_unpick": {
+        "approval_mode": "prompt"
+      },
+      "env_group_copy_from_site": {
+        "approval_mode": "prompt"
+      },
+      "project_secrets_copy_from_group": {
+        "approval_mode": "prompt"
+      },
+      "project_secrets_copy_between_environments": {
         "approval_mode": "prompt"
       },
       "project_ab_test_create": {
@@ -1787,7 +1796,22 @@
       "webflow_cms_item_delete_bulk": {
         "approval_mode": "prompt"
       },
+      "webflow_cms_item_create_live": {
+        "approval_mode": "prompt"
+      },
+      "webflow_cms_item_update_live": {
+        "approval_mode": "prompt"
+      },
+      "webflow_cms_item_update_live_bulk": {
+        "approval_mode": "prompt"
+      },
       "webflow_asset_delete": {
+        "approval_mode": "prompt"
+      },
+      "webflow_script_register_inline": {
+        "approval_mode": "prompt"
+      },
+      "webflow_script_register_hosted": {
         "approval_mode": "prompt"
       },
       "webflow_site_customcode_set": {
@@ -1797,6 +1821,9 @@
         "approval_mode": "prompt"
       },
       "webflow_hiveku_snippet_install": {
+        "approval_mode": "prompt"
+      },
+      "webflow_hiveku_snippet_remove": {
         "approval_mode": "prompt"
       },
       "webflow_google_tag_upsert": {
@@ -1821,6 +1848,15 @@
         "approval_mode": "prompt"
       },
       "webflow_order_refund": {
+        "approval_mode": "prompt"
+      },
+      "webflow_product_create": {
+        "approval_mode": "prompt"
+      },
+      "webflow_product_update": {
+        "approval_mode": "prompt"
+      },
+      "webflow_inventory_update": {
         "approval_mode": "prompt"
       },
       "webflow_redirect_create": {
