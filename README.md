@@ -230,8 +230,11 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   way: `env_group_set` (every linked site's live functions get the change), `env_group_link` and
   `env_group_unlink` (a site gains or loses the group's variables at once), `env_group_pick` and
   `env_group_unpick` (a site gains or loses only the variables it picked, at once), `env_group_create`,
-  `env_group_update` and `env_group_delete` (the group's values are deleted with it); reading groups
-  does not. Because the reveal prompts here, the plugin's
+  `env_group_update` and `env_group_delete` (the group's values are deleted with it), and the three
+  server-side copies, `env_group_copy_from_site` (a site's value into a group, which every site using the
+  group gets at once), `project_secrets_copy_from_group` (a group's value into a site) and
+  `project_secrets_copy_between_environments` (between a site's environments), each of which overwrites a
+  value nobody can see to compare when called with `replace: true`; reading groups does not. Because the reveal prompts here, the plugin's
   `.mcp.json` declares that with the header `X-Hiveku-Client: codex-plugin/<version>` (set by the plugin,
   never by the model), and Hiveku then lets a reveal through after your Codex prompt instead of also
   asking for a dashboard approval. A reveal inside `hiveku_batch` still gets the dashboard approval,
@@ -372,6 +375,12 @@ tools run from third-party browsers, so on a Hiveku-hosted site use a rendering 
   `webflow_connection_disconnect` (ends a connection for every project that uses it),
   `webflow_webhooks_reregister`, `webflow_form_routing_set` (which form submissions reach Hiveku) and
   `webflow_form_submissions_backfill` (copies past submissions, with visitors' details, into Hiveku).
+  The Webflow live writes prompt too: `webflow_cms_item_create_live`, `webflow_cms_item_update_live` and
+  `webflow_cms_item_update_live_bulk` (visitors see the CMS item at once, with no site publish),
+  `webflow_script_register_inline` and `webflow_script_register_hosted` (the script stays registered on the
+  site for good), `webflow_hiveku_snippet_remove` (the Hiveku snippet leaves every page on the next publish),
+  and `webflow_product_create`, `webflow_product_update` and `webflow_inventory_update` (the live store can
+  change at once).
   The cookie banner and tracker writes prompt too: `project_cookie_banner_set`, `project_consent_trackers_add`,
   `project_consent_trackers_update` and `project_consent_trackers_remove` reach visitors at their next page load, with no
   deploy. So do the Review page's: `project_annotation_create` (it tells the client's recipients),

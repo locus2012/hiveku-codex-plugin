@@ -132,6 +132,14 @@ the memory_* tools.
   Settings > Environment variables. A value an automation uses goes under Automations > More > Environment
   variables, and an app's or a connection's secret follows its own steps (the Gmail and Outlook inbox lines,
   below).
+- **A key several sites use, or one Hiveku already stores:** a key several sites use belongs in the account's global
+  variables (an environment group), with a note on each name saying what it is for. Choose a stored key by its name
+  and note (`env_group_get`, or `project_secrets_list` with `metadata_only: true`): values are never returned, to you
+  or anyone. To share a stored key, have the server copy it, never through you, when the copy tools are among your
+  tools: `env_group_copy_from_site` puts a site's value into a group, then `env_group_link` or `env_group_pick` gives
+  it to other sites; `project_secrets_copy_from_group` and `project_secrets_copy_between_environments` copy into one
+  site. A Production value stays in Production: Hiveku refuses to copy or move it into another environment, so the
+  person adds it for that environment on the Add a key card (`secure_value_request`) or in the app.
 - **Fetching a Hiveku-hosted site: identify as Hiveku.** Every terminal `curl` against a customer
   site carries `-A 'Hiveku-Session/1.0 (+https://hiveku.com)'`, or is a `curl -I` (HEAD) when only
   status and headers matter. Never spoof `Googlebot` or `Mozilla`: a spoofed Googlebot is refused
