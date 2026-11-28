@@ -2314,6 +2314,9 @@
       },
       "marketing_template_copy_to_account": {
         "approval_mode": "prompt"
+      },
+      "crm_activity_recording_finalize": {
+        "approval_mode": "prompt"
       }
     }
   },
